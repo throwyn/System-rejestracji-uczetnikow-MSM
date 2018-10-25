@@ -58,6 +58,11 @@ namespace SRUK
 
             app.UseAuthentication();
 
+            AutoMapper.Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<ApplicationUser, UserDTO>();
+            });
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

@@ -18,6 +18,11 @@ namespace SRUK.Entities
 
         [MaxLength(100)]
         public string Organisation { get; set; }
-        
+
+        [Required]
+        public DateTime CreationDate { get; set; }
+
+        [Required]
+        public DateTime EditDate { get; set; }
     }
 }
