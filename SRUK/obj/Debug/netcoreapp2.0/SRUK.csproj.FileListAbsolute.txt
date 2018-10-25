@@ -1,0 +1,12 @@
+C:\Users\Damian\Desktop\SRUK\SRUK\bin\Debug\netcoreapp2.0\SRUK.deps.json
+C:\Users\Damian\Desktop\SRUK\SRUK\bin\Debug\netcoreapp2.0\SRUK.runtimeconfig.json
+C:\Users\Damian\Desktop\SRUK\SRUK\bin\Debug\netcoreapp2.0\SRUK.runtimeconfig.dev.json
+C:\Users\Damian\Desktop\SRUK\SRUK\bin\Debug\netcoreapp2.0\SRUK.dll
+C:\Users\Damian\Desktop\SRUK\SRUK\bin\Debug\netcoreapp2.0\SRUK.pdb
+C:\Users\Damian\Desktop\SRUK\SRUK\obj\Debug\netcoreapp2.0\SRUK.csprojAssemblyReference.cache
+C:\Users\Damian\Desktop\SRUK\SRUK\obj\Debug\netcoreapp2.0\SRUK.csproj.CoreCompileInputs.cache
+C:\Users\Damian\Desktop\SRUK\SRUK\obj\Debug\netcoreapp2.0\UserSecretsAssemblyInfo.cs
+C:\Users\Damian\Desktop\SRUK\SRUK\obj\Debug\netcoreapp2.0\SRUK.AssemblyInfoInputs.cache
+C:\Users\Damian\Desktop\SRUK\SRUK\obj\Debug\netcoreapp2.0\SRUK.AssemblyInfo.cs
+C:\Users\Damian\Desktop\SRUK\SRUK\obj\Debug\netcoreapp2.0\SRUK.dll
+C:\Users\Damian\Desktop\SRUK\SRUK\obj\Debug\netcoreapp2.0\SRUK.pdb
