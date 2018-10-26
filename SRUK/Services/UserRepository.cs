@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using SRUK.Data;
 using SRUK.Models;
 using SRUK.Services.Interfaces;
 
-namespace SRUK.Services.Repositories
+namespace SRUK.Services
 {
     public class UserRepository : IUserRepository
     {
@@ -17,6 +18,7 @@ namespace SRUK.Services.Repositories
             _context = context;
         }
 
+        [HttpGet]
         public UserDTO GetUser(string Id)
         {
             var entityUser = _context.Users.SingleOrDefault(u => u.Id == Id);
@@ -29,6 +31,11 @@ namespace SRUK.Services.Repositories
             var entityUser = _context.Users.OrderBy(u=>u.Id);
             var user = Mapper.Map<IEnumerable<UserDTO>>(entityUser);
             return user;
+        }
+
+        public bool Save()
+        {
+            return (_context.SaveChanges() >= 0);
         }
     }
 }

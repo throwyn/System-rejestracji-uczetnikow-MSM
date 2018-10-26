@@ -11,9 +11,10 @@ using System;
 namespace SRUK.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181026163847_CreateBetaModelMigration")]
+    partial class CreateBetaModelMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -207,8 +208,7 @@ namespace SRUK.Data.Migrations
 
                     b.Property<string>("ReceiverId");
 
-                    b.Property<string>("SenderId")
-                        .IsRequired();
+                    b.Property<string>("SenderId");
 
                     b.HasKey("Id");
 
@@ -224,8 +224,7 @@ namespace SRUK.Data.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AuthorId")
-                        .IsRequired();
+                    b.Property<string>("AuthorId");
 
                     b.Property<DateTime>("CreationDate");
 
@@ -282,8 +281,7 @@ namespace SRUK.Data.Migrations
 
                     b.Property<DateTime>("CreationDate");
 
-                    b.Property<string>("CriticId")
-                        .IsRequired();
+                    b.Property<string>("CriticId");
 
                     b.Property<DateTime>("EditDate");
 
@@ -388,16 +386,14 @@ namespace SRUK.Data.Migrations
 
                     b.HasOne("SRUK.Entities.ApplicationUser", "Sender")
                         .WithMany()
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("SenderId");
                 });
 
             modelBuilder.Entity("SRUK.Entities.Paper", b =>
                 {
                     b.HasOne("SRUK.Entities.ApplicationUser", "Author")
                         .WithMany("Papers")
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("AuthorId");
 
                     b.HasOne("SRUK.Entities.Season", "Season")
                         .WithMany()
@@ -417,8 +413,7 @@ namespace SRUK.Data.Migrations
                 {
                     b.HasOne("SRUK.Entities.ApplicationUser", "Critic")
                         .WithMany("Reviews")
-                        .HasForeignKey("CriticId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CriticId");
 
                     b.HasOne("SRUK.Entities.PaperVersion", "PaperVersion")
                         .WithMany()

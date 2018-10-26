@@ -12,6 +12,7 @@ using SRUK.Data;
 using SRUK.Models;
 using SRUK.Entities;
 using SRUK.Services;
+using SRUK.Services.Interfaces;
 
 namespace SRUK
 {
@@ -36,6 +37,7 @@ namespace SRUK
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddMvc();
         }

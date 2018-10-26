@@ -11,9 +11,10 @@ using System;
 namespace SRUK.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181026151639_CreateEditDates")]
+    partial class CreateEditDates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -207,8 +208,7 @@ namespace SRUK.Data.Migrations
 
                     b.Property<string>("ReceiverId");
 
-                    b.Property<string>("SenderId")
-                        .IsRequired();
+                    b.Property<string>("SenderId");
 
                     b.HasKey("Id");
 
@@ -217,122 +217,6 @@ namespace SRUK.Data.Migrations
                     b.HasIndex("SenderId");
 
                     b.ToTable("Messages");
-                });
-
-            modelBuilder.Entity("SRUK.Entities.Paper", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("AuthorId")
-                        .IsRequired();
-
-                    b.Property<DateTime>("CreationDate");
-
-                    b.Property<DateTime>("EditDate");
-
-                    b.Property<bool>("IsPaid");
-
-                    b.Property<long>("SeasonId");
-
-                    b.Property<short>("Status");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
-
-                    b.HasIndex("SeasonId");
-
-                    b.ToTable("Paper");
-                });
-
-            modelBuilder.Entity("SRUK.Entities.PaperVersion", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("CreationDate");
-
-                    b.Property<DateTime>("EditDate");
-
-                    b.Property<string>("FileName")
-                        .IsRequired();
-
-                    b.Property<long>("PaperId");
-
-                    b.Property<short>("Status");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PaperId");
-
-                    b.ToTable("PaperVersion");
-                });
-
-            modelBuilder.Entity("SRUK.Entities.Review", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Comment");
-
-                    b.Property<DateTime>("CreationDate");
-
-                    b.Property<string>("CriticId")
-                        .IsRequired();
-
-                    b.Property<DateTime>("EditDate");
-
-                    b.Property<bool>("EditorialErrors");
-
-                    b.Property<string>("FileName")
-                        .IsRequired();
-
-                    b.Property<bool>("IsPositive");
-
-                    b.Property<bool>("IsPulp");
-
-                    b.Property<long>("PaperVersionId");
-
-                    b.Property<bool>("RepeatReview");
-
-                    b.Property<bool>("TechnicalErrors");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CriticId");
-
-                    b.HasIndex("PaperVersionId");
-
-                    b.ToTable("Review");
-                });
-
-            modelBuilder.Entity("SRUK.Entities.Season", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("CreationDate");
-
-                    b.Property<DateTime>("EditDate");
-
-                    b.Property<DateTime>("EndDate");
-
-                    b.Property<string>("LogoFileName")
-                        .IsRequired();
-
-                    b.Property<string>("MainImageFileName")
-                        .IsRequired();
-
-                    b.Property<DateTime>("StartDate");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Season");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -388,42 +272,7 @@ namespace SRUK.Data.Migrations
 
                     b.HasOne("SRUK.Entities.ApplicationUser", "Sender")
                         .WithMany()
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("SRUK.Entities.Paper", b =>
-                {
-                    b.HasOne("SRUK.Entities.ApplicationUser", "Author")
-                        .WithMany("Papers")
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("SRUK.Entities.Season", "Season")
-                        .WithMany()
-                        .HasForeignKey("SeasonId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("SRUK.Entities.PaperVersion", b =>
-                {
-                    b.HasOne("SRUK.Entities.Paper", "Paper")
-                        .WithMany("PaperVersions")
-                        .HasForeignKey("PaperId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("SRUK.Entities.Review", b =>
-                {
-                    b.HasOne("SRUK.Entities.ApplicationUser", "Critic")
-                        .WithMany("Reviews")
-                        .HasForeignKey("CriticId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("SRUK.Entities.PaperVersion", "PaperVersion")
-                        .WithMany()
-                        .HasForeignKey("PaperVersionId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("SenderId");
                 });
 #pragma warning restore 612, 618
         }

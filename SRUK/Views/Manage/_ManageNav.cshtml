@@ -1,4 +1,6 @@
 ﻿@using SRUK.Views.Manage
+@using SRUK.Entities
+
 @inject SignInManager<ApplicationUser> SignInManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();

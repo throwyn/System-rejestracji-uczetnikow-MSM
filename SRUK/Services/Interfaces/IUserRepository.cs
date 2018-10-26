@@ -6,7 +6,7 @@ using SRUK.Models;
 
 namespace SRUK.Services.Interfaces
 {
-    interface IUserRepository
+    public interface IUserRepository
     {
         IEnumerable<UserDTO> GetUsers();
 

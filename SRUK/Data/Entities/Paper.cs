@@ -1,5 +1,4 @@
-﻿using SRUK.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,30 +7,35 @@ using System.Threading.Tasks;
 
 namespace SRUK.Entities
 {
-    public class Message
+    public class Paper
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
 
-        [ForeignKey("SenderId")]
-        public ApplicationUser Sender { get; set; }
+        [Required]
+        public ApplicationUser Author { get; set; }
+        public string AuthorId { get; set; }
 
-        public string SenderId { get; set; }
+        [Required]
+        public Season Season { get; set; }
+        public long SeasonId { get; set; }
 
-        [ForeignKey("ReceiverId")]
-        public ApplicationUser Receiver { get; set; }
-
-        public string ReceiverId { get; set; }
 
         [Required]
         [MaxLength(200)]
-        public string Content { get; set; }
+        public string Title { get; set; }
+        
+        public short Status { get; set; }
+        
+        public bool IsPaid { get; set; }
 
         [Required]
         public DateTime CreationDate { get; set; }
 
         [Required]
         public DateTime EditDate { get; set; }
+
+        public ICollection<PaperVersion> PaperVersions { get; set; }
     }
 }

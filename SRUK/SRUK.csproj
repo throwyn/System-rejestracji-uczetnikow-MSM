@@ -5,6 +5,11 @@
     <UserSecretsId>aspnet-SRUK-1ECA6CCA-59BE-4A86-94CC-EC0952453BCB</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20181026170043_RequiredUsersUpdateMigration.cs" />
+    <Compile Remove="Data\Migrations\20181026170043_RequiredUsersUpdateMigration.Designer.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.1" />
