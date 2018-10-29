@@ -17,21 +17,20 @@ namespace SRUK.Services
         {
             _context = context;
         }
+        
+        //public UserDTO GetUser(string Id)
+        //{
+        //    var entityUser = _context.Users.SingleOrDefault(u => u.Id == Id);
+        //    var user = Mapper.Map<UserDTO>(entityUser);
+        //    return user;
+        //}
 
-        [HttpGet]
-        public UserDTO GetUser(string Id)
-        {
-            var entityUser = _context.Users.SingleOrDefault(u => u.Id == Id);
-            var user = Mapper.Map<UserDTO>(entityUser);
-            return user;
-        }
-
-        public IEnumerable<UserDTO> GetUsers()
-        {
-            var entityUser = _context.Users.OrderBy(u=>u.Id);
-            var user = Mapper.Map<IEnumerable<UserDTO>>(entityUser);
-            return user;
-        }
+        //public IEnumerable<UserIndexViewModel> GetUsers()
+        //{
+        //    var entityUser = _context.Users.OrderBy(u=>u.Id);
+        //    var user = Mapper.Map<IEnumerable<UserIndexViewModel>>(entityUser);
+        //    return user;
+        //}
 
         public bool Save()
         {

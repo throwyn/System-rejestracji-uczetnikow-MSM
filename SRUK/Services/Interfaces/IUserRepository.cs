@@ -8,9 +8,9 @@ namespace SRUK.Services.Interfaces
 {
     public interface IUserRepository
     {
-        IEnumerable<UserDTO> GetUsers();
+        //IEnumerable<UserIndexViewModel> GetUsers();
 
-        UserDTO GetUser(string Id);
+        //UserDTO GetUser(string Id);
 
     }
 }

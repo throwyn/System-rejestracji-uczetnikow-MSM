@@ -1,17 +1,21 @@
-﻿@model SRUK.Models.UserCreateViewModel
+﻿@model SRUK.Models.UserEditViewModel
 
 @{
-    ViewData["Title"] = "Create user";
+    ViewData["Title"] = "Edit user";
 }
 
-<h2>Create</h2>
+<h2>Edit</h2>
 
 <h4>User</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Edit">
             <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label class="control-label">ID</label>
+                <input asp-for="Id" class="form-control" readonly="@(true)"/>
+            </div>
             <div class="form-group">
                 <label class="control-label">First name</label>
                 <input asp-for="FirstName" class="form-control" />
@@ -66,14 +70,14 @@
                 <div class="checkbox">
                     @foreach (var role in ViewBag.Roles)
                     {
-                        <input asp-for="Role" value="@role.Name" type="radio" />
-                        <label>@role.Name</label>
-                        <br />
+                    <input asp-for="Role" value="@role.Name" type="radio" />
+                    <label>@role.Name</label>
+                    <br />
                     }
                 </div>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Edit"  class="btn btn-default" />
             </div>
         </form>
     </div>

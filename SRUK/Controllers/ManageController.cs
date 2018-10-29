@@ -14,6 +14,7 @@ using SRUK.Models;
 using SRUK.Entities;
 using SRUK.Models.ManageViewModels;
 using SRUK.Services;
+using AutoMapper;
 
 namespace SRUK.Controllers
 {
@@ -56,15 +57,8 @@ namespace SRUK.Controllers
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            var model = new IndexViewModel
-            {
-                Username = user.UserName,
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber,
-                IsEmailConfirmed = user.EmailConfirmed,
-                StatusMessage = StatusMessage
-            };
-
+            var model = Mapper.Map<IndexViewModel>(user);
+            model.StatusMessage = StatusMessage;
             return View(model);
         }
 
@@ -72,39 +66,41 @@ namespace SRUK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(IndexViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
-
-            var email = user.Email;
-            if (model.Email != email)
-            {
-                var setEmailResult = await _userManager.SetEmailAsync(user, model.Email);
-                if (!setEmailResult.Succeeded)
+            //try
+            //{
+                if (!ModelState.IsValid)
                 {
-                    throw new ApplicationException($"Unexpected error occurred setting email for user with ID '{user.Id}'.");
+                    return View(model);
                 }
-            }
 
-            var phoneNumber = user.PhoneNumber;
-            if (model.PhoneNumber != phoneNumber)
-            {
-                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, model.PhoneNumber);
-                if (!setPhoneResult.Succeeded)
+                var user = await _userManager.GetUserAsync(User);
+                if (user == null)
                 {
-                    throw new ApplicationException($"Unexpected error occurred setting phone number for user with ID '{user.Id}'.");
+                    throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
                 }
-            }
 
-            StatusMessage = "Your profile has been updated";
-            return RedirectToAction(nameof(Index));
+                //user = Mapper.Map<ApplicationUser>(model);
+                user.Email = model.Email;
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
+                user.Organisation = model.Organisation;
+                user.PhoneNumber = model.PhoneNumber;
+                user.SecurityStamp = Guid.NewGuid().ToString();
+                var result = await _userManager.UpdateAsync(user);
+                if (result.Succeeded)
+                {
+
+                    StatusMessage = "Your profile has been updated";
+                    return RedirectToAction(nameof(Index));
+                }
+                StatusMessage = "Ops, something went wrong.";
+                return RedirectToAction(nameof(Index));
+            //}
+            //catch
+            //{
+            //    StatusMessage = "Ops, something went wrong.";
+            //    return RedirectToAction(nameof(Index));
+            //}
         }
 
         [HttpPost]

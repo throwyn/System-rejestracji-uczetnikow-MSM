@@ -13,6 +13,8 @@ using SRUK.Models;
 using SRUK.Entities;
 using SRUK.Services;
 using SRUK.Services.Interfaces;
+using SRUK.Data.Entities;
+using SRUK.Models.ManageViewModels;
 
 namespace SRUK
 {
@@ -31,9 +33,17 @@ namespace SRUK
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            var lockoutOptions = new LockoutOptions()
+            {
+                AllowedForNewUsers = true,
+                DefaultLockoutTimeSpan = TimeSpan.FromHours(1),
+                MaxFailedAccessAttempts = 10
+            };
+
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>{options.Lockout = lockoutOptions;})
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
@@ -62,7 +72,26 @@ namespace SRUK
 
             AutoMapper.Mapper.Initialize(cfg =>
             {
+                //Users
                 cfg.CreateMap<ApplicationUser, UserDTO>();
+                cfg.CreateMap<ApplicationUser, UserIndexViewModel>();
+                cfg.CreateMap<ApplicationUser, UserDetailsViewModel>();
+                cfg.CreateMap<ApplicationUser, UserEditViewModel>();
+                cfg.CreateMap<ApplicationUser, IndexViewModel>();
+
+                cfg.CreateMap<IndexViewModel, ApplicationUser>()
+                .ForMember(dest => dest.Email, opt=>opt.MapFrom(src=> src.Email))
+                .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber));
+
+                cfg.CreateMap<UserCreateViewModel, ApplicationUser>();
+                cfg.CreateMap<UserEditViewModel, ApplicationUser>();
+
+                //Roles
+                cfg.CreateMap<ApplicationRole, RoleDTO>();
+
+
             });
 
             app.UseMvc(routes =>
