@@ -26,6 +26,7 @@ namespace SRUK.Models.AccountViewModels
 
         [Display(Name = "Phone number")]
         [DataType(DataType.PhoneNumber)]
+        [MaxLength(15)]
         public string PhoneNumber { get; set; }
 
         [Required]

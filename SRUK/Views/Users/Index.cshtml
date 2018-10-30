@@ -1,15 +1,16 @@
-﻿@model IEnumerable<SRUK.Models.UserIndexViewModel>
+﻿@model UserIndexViewModel
 
 @{
     ViewData["Title"] = "Index";
 }
 
 <h2>Users</h2>
+@Html.Partial("_StatusMessage", Model.StatusMessage)
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table" style=" width: 100%; word-wrap:break-word;
+<table class="table table-hover" style=" width: 100%; word-wrap:break-word;
              table-layout: fixed;">
     <thead>
         <tr>
@@ -19,63 +20,64 @@
             <th style="width:100px;">
                 Last name
             </th>
-            <th style="width:200px;">
+            <th style="width:250px;">
                 Ogranisation
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
+            <th style="width:230px;">
+                Email
             </th>
-            <th>
+            <th style="width:150px;">
                 Phone number
             </th>
-            <th>
+            <th style="width:85px;">
                 Role
             </th>
-            <th>
+            <th style="width:140px;">
                 Blocked to
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+        @foreach (var item in Model.User)
+        {
 
-        <tr @if (item.LockoutEnd>DateTime.Now){@Html.Raw(@" style='color: gray; '")}>
+            <tr @if (item.LockoutEnd > DateTime.Now) { @Html.Raw(@" style='color: gray; '") }>
 
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Organisation)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-                @if (item.EmailConfirmed)
-                {<span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>}
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PhoneNumber)
-                @if (item.PhoneNumberConfirmed)
-                {<span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>}
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Role)
-            </td>
-            <td>
-                @if (item.LockoutEnd > DateTime.Now)
-                {
-                    @Html.Label(item.LockoutEnd.ToString($"dd-MM-yyyy HH:mm"))
-                }
-            </td>
-            <td style='color: black; '>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Organisation)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                    @if (item.EmailConfirmed)
+                    {<span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>}
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PhoneNumber)
+                    @if (item.PhoneNumberConfirmed)
+                    {<span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>}
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Role)
+                </td>
+                <td>
+                    @if (item.LockoutEnd > DateTime.Now)
+                    {
+                        @Html.Label(item.LockoutEnd.ToString($"dd-MM-yyyy HH:mm"))
+                    }
+                </td>
+                <td style='color: black; '>
+                    <a asp-action="Edit" asp-route-id="@item.Id"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a> |
+                    <a asp-action="Details" asp-route-id="@item.Id"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

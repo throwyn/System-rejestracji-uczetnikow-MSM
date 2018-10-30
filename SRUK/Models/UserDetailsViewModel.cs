@@ -47,5 +47,7 @@ namespace SRUK.Models
 
         [Display(Name = "Role")]
         public string Role { get; set; }
+
+        public string StatusMessage { get; set; }
     }
 }

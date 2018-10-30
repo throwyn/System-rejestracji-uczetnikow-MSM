@@ -50,6 +50,8 @@ namespace SRUK.Controllers
             _roleManager = roleManager;
         }
 
+        [TempData]
+        public string StatusMessage { get; set; }
 
         // GET: Users
         public ActionResult Index()
@@ -73,18 +75,20 @@ namespace SRUK.Controllers
             //await UserManager.AddToRoleAsync(user, "Participant");
 
 
-            var entityUsers = _userManager.Users.ToList();
+            var entityUsers = _userManager.Users.Where(u => u.IsDeleted == false).ToList();
             if (entityUsers == null) { return NotFound(); }
 
-            var users = new List<UserIndexViewModel>();
+            var model = new UserIndexViewModel();
+            model.User = new List<UserShortDTO>();
             
             foreach(var entityUser in entityUsers)
             {
-                var user = Mapper.Map<UserIndexViewModel>(entityUser);
+                var user = Mapper.Map<UserShortDTO>(entityUser);
                 user.Role = _userManager.GetRolesAsync(entityUser).Result.FirstOrDefault();
-                users.Add(user);
+                model.User.Add(user);
             }
-            return View(users);
+            model.StatusMessage = StatusMessage;
+            return View(model);
         }
 
         // GET: Users/Details/5
@@ -92,10 +96,15 @@ namespace SRUK.Controllers
         [Route("Details/{id}")]
         public ActionResult Details(string id)
         {
-            var entityUser = _userManager.Users.SingleOrDefault(u=>u.Id == id);
-            if(entityUser == null) { return NotFound(); }
+            var entityUser = _userManager.FindByIdAsync(id).Result;
+            if (entityUser == null)
+            {
+                StatusMessage = "Error. User do not exists.";
+                return RedirectToAction(nameof(Index));
+            }
             var user = Mapper.Map<UserDetailsViewModel>(entityUser);
             user.Role = _userManager.GetRolesAsync(entityUser).Result.FirstOrDefault();
+            user.StatusMessage = StatusMessage;
             return View(user);
         }
 
@@ -104,7 +113,9 @@ namespace SRUK.Controllers
         public ActionResult Create()
         {
             ViewBag.Roles = _roleManager.Roles.ToList();
-            return View(new UserCreateViewModel());
+            var model = new UserCreateViewModel();
+            model.StatusMessage = StatusMessage;
+            return View(model);
         }
 
         // POST: Users/Create
@@ -122,6 +133,8 @@ namespace SRUK.Controllers
                 
                 var user = Mapper.Map<ApplicationUser>(model);
                 user.UserName = model.Email;
+                user.CreationDate = DateTime.UtcNow;
+                user.EditDate = DateTime.UtcNow;
 
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
@@ -129,22 +142,29 @@ namespace SRUK.Controllers
                     await _userManager.AddToRoleAsync(user, model.Role);
                     _logger.LogInformation(User.Identity.Name+" created a new account.");
 
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
-                    await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
-                    
+                    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    //var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
+                    //await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
+                    StatusMessage = "Success. User created.";
                     return RedirectToAction(nameof(Index));
+                }
+                else if(result.Errors.FirstOrDefault().Code == "DuplicateUserName")
+                {
+                    StatusMessage = "Error. Email is already taken.";
+                    return RedirectToAction(nameof(Create));
                 }
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
+
+                model.StatusMessage = StatusMessage;
                 return RedirectToAction(nameof(Create));
             }
         }
 
         // GET: Users/Edit/5
-        [Route("Edit")]
+        [Route("Edit/{id}")]
         public ActionResult Edit(string id)
         {
             ViewBag.Roles = _roleManager.Roles.ToList();
@@ -152,6 +172,7 @@ namespace SRUK.Controllers
             var user = Mapper.Map<UserEditViewModel>(entityUser);
             user.Role = _userManager.GetRolesAsync(entityUser).Result.FirstOrDefault();
 
+            user.StatusMessage = StatusMessage;
             return View(user);
         }
 
@@ -161,17 +182,40 @@ namespace SRUK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditAsync(UserEditViewModel model)
         {
-            //try
-            //{
+            try
+            {
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
                 }
+                ApplicationUser user = await _userManager.FindByIdAsync(model.Id);
 
-                var user = Mapper.Map<ApplicationUser>(model);
+                if (model.Password != null)
+                {
+                    await _userManager.RemovePasswordAsync(user);
+                    var setPasstordResult = await _userManager.AddPasswordAsync(user, model.Password);
+                    if (!setPasstordResult.Succeeded)
+                    {
+                        StatusMessage = "Error. Password update went wrong.";
+                        model.StatusMessage = StatusMessage;
+                        return View(model);
+                    }
+                }
+
+                //var user = Mapper.Map<ApplicationUser>(model);
                 user.UserName = model.Email;
-
+                user.Email = model.Email;
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
+                user.Organisation = model.Organisation;
+                user.PhoneNumber = model.PhoneNumber;
+                user.EmailConfirmed = model.EmailConfirmed;
+                user.PhoneNumberConfirmed = model.PhoneNumberConfirmed;
+                user.EditDate = DateTime.UtcNow;
+                user.SecurityStamp = Guid.NewGuid().ToString();
+                
                 var result = await _userManager.UpdateAsync(user);
+
                 if (result.Succeeded)
                 {
                     var roles = _userManager.GetRolesAsync(user).Result.ToAsyncEnumerable().ToEnumerable();
@@ -181,30 +225,55 @@ namespace SRUK.Controllers
 
                     return RedirectToAction(nameof(Index));
                 }
+                StatusMessage = "Error. Update went wrong.";
                 return RedirectToAction(nameof(Index));
-            //}
-            //catch
-            //{
-            //    return RedirectToAction(nameof(Edit));
-            //}
+            }
+            catch
+            {
+                StatusMessage = "Error. Something went wrong.";
+                return RedirectToAction(nameof(Edit));
+            }
         }
 
         // GET: Users/Delete/5
         [Route("Delete/{id}")]
         public ActionResult Delete(string id)
         {
-            return View();
+            var entityUser = _userManager.FindByIdAsync(id).Result;
+            if (entityUser == null) { return NotFound(); }
+            var user = Mapper.Map<UserDetailsViewModel>(entityUser);
+            user.Role = _userManager.GetRolesAsync(entityUser).Result.FirstOrDefault();
+            return View(user);
         }
 
         // POST: Users/Delete/5
         [HttpPost]
         [Route("Delete/{id}")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(string id, IFormCollection collection)
+        public async Task<ActionResult> DeleteAsync(string id, IFormCollection collection)
         {
             try
             {
-                // TODO: Add delete logic here
+                var user = _userManager.FindByIdAsync(id).Result;
+                //await _userManager.RemovePasswordAsync(user);
+                //user = _userManager.FindByIdAsync(id).Result;
+                //var user = Mapper.Map<ApplicationUser>(model);
+                user.UserName = user.Id;
+                user.NormalizedUserName = null;
+                user.NormalizedEmail = null;
+                user.AccessFailedCount = 0;
+                user.Email = "deleted";
+                user.FirstName = null;
+                user.LastName = null;
+                user.Organisation = null;
+                user.PhoneNumber = null;
+                user.EmailConfirmed = false;
+                user.PhoneNumberConfirmed = false;
+                user.EditDate = DateTime.UtcNow;
+                var roles = _userManager.GetRolesAsync(user).Result.ToAsyncEnumerable().ToEnumerable();
+                await _userManager.RemoveFromRolesAsync(user, roles);
+
+                var result = await _userManager.UpdateAsync(user);
 
                 return RedirectToAction(nameof(Index));
             }

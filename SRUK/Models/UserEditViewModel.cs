@@ -29,6 +29,7 @@ namespace SRUK.Models
         
         [DataType(DataType.PhoneNumber)]
         [Display(Name = "Phone number")]
+        [MaxLength(15)]
         public string PhoneNumber { get; set; }
 
         [Required]
@@ -53,5 +54,7 @@ namespace SRUK.Models
         [Required]
         [Display(Name = "Role")]
         public string Role { get; set; }
+
+        public string StatusMessage { get; set; }
     }
 }

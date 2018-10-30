@@ -66,8 +66,8 @@ namespace SRUK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(IndexViewModel model)
         {
-            //try
-            //{
+            try
+            {
                 if (!ModelState.IsValid)
                 {
                     return View(model);
@@ -86,6 +86,7 @@ namespace SRUK.Controllers
                 user.Organisation = model.Organisation;
                 user.PhoneNumber = model.PhoneNumber;
                 user.SecurityStamp = Guid.NewGuid().ToString();
+
                 var result = await _userManager.UpdateAsync(user);
                 if (result.Succeeded)
                 {
@@ -93,14 +94,14 @@ namespace SRUK.Controllers
                     StatusMessage = "Your profile has been updated";
                     return RedirectToAction(nameof(Index));
                 }
-                StatusMessage = "Ops, something went wrong.";
+                StatusMessage = "Error, something went wrong.";
                 return RedirectToAction(nameof(Index));
-            //}
-            //catch
-            //{
-            //    StatusMessage = "Ops, something went wrong.";
-            //    return RedirectToAction(nameof(Index));
-            //}
+            }
+            catch
+            {
+                StatusMessage = "Error, something went wrong.";
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         [HttpPost]

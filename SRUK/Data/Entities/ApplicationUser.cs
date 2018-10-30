@@ -25,6 +25,9 @@ namespace SRUK.Entities
         [Required]
         public DateTime EditDate { get; set; }
 
+        [Required]
+        public bool IsDeleted { get; set; }
+
         public ICollection<Paper> Papers { get; set; }
         public ICollection<Review> Reviews { get; set; }
     }

@@ -18,6 +18,7 @@ namespace SRUK.Models.ManageViewModels
 
         [Phone]
         [Display(Name = "Phone number")]
+        [MaxLength(15)]
         public string PhoneNumber { get; set; }
 
         public string StatusMessage { get; set; }

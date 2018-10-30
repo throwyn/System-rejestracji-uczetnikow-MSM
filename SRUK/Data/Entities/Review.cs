@@ -62,5 +62,8 @@ namespace SRUK.Entities
 
         [Required]
         public DateTime EditDate { get; set; }
+
+        [Required]
+        public bool IsDeleted { get; set; }
     }
 }

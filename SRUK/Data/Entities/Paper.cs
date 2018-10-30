@@ -37,5 +37,8 @@ namespace SRUK.Entities
         public DateTime EditDate { get; set; }
 
         public ICollection<PaperVersion> PaperVersions { get; set; }
+
+        [Required]
+        public bool IsDeleted { get; set; }
     }
 }

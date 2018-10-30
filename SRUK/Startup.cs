@@ -77,7 +77,7 @@ namespace SRUK
                 cfg.CreateMap<ApplicationUser, UserIndexViewModel>();
                 cfg.CreateMap<ApplicationUser, UserDetailsViewModel>();
                 cfg.CreateMap<ApplicationUser, UserEditViewModel>();
-                cfg.CreateMap<ApplicationUser, IndexViewModel>();
+                cfg.CreateMap<ApplicationUser, UserShortDTO>();
 
                 cfg.CreateMap<IndexViewModel, ApplicationUser>()
                 .ForMember(dest => dest.Email, opt=>opt.MapFrom(src=> src.Email))
