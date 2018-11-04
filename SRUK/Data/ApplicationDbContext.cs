@@ -15,7 +15,6 @@ namespace SRUK.Data
             : base(options)
         {
         }
-        public DbSet<Message> Message { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -50,6 +49,10 @@ namespace SRUK.Data
                 .HasDefaultValueSql("getutcdate()");
         }
 
+        public DbSet<SRUK.Entities.Message> Message { get; set; }
         public DbSet<SRUK.Entities.Season> Season { get; set; }
+        public DbSet<SRUK.Entities.Paper> Paper { get; set; }
+        public DbSet<SRUK.Entities.PaperVersion> PaperVerison { get; set; }
+        public DbSet<SRUK.Entities.Review> Review { get; set; }
     }
 }

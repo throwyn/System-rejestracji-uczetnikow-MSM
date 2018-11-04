@@ -37,7 +37,7 @@ namespace SRUK.Services
         public async Task<int> AddSeasonAsync(SeasonDTO season)
         {
             Season newSeason = Mapper.Map<Season>(season);
-            await _context.Season.AddAsync(newSeason);
+            var status = await _context.Season.AddAsync(newSeason);
 
             int result = await _context.SaveChangesAsync();
             return result;
@@ -57,6 +57,19 @@ namespace SRUK.Services
 
             return result;
             
+        }
+
+        public async Task<int> DeleteSeasonAsync(long id)
+        {
+            if(_context.Paper.Where(p => p.Season.Id == id).Count() > 0)
+            {
+                return 0;
+            }
+            Season season = await _context.Season.FirstOrDefaultAsync(s => s.Id == id);
+            _context.Season.Remove(season);
+
+            int result = await _context.SaveChangesAsync();
+            return result;
         }
     }
 }

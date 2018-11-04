@@ -79,6 +79,7 @@ namespace SRUK
                 cfg.CreateMap<ApplicationUser, UserDetailsViewModel>();
                 cfg.CreateMap<ApplicationUser, UserEditViewModel>();
                 cfg.CreateMap<ApplicationUser, UserShortDTO>();
+                cfg.CreateMap<ApplicationUser, IndexViewModel>();
 
 
                 cfg.CreateMap<IndexViewModel, ApplicationUser>()
@@ -99,6 +100,7 @@ namespace SRUK
                 cfg.CreateMap<SeasonCreateViewModel, SeasonDTO>();
                 cfg.CreateMap<SeasonDTO, SeasonEditViewModel>();
                 cfg.CreateMap<SeasonEditViewModel, SeasonDTO>();
+                cfg.CreateMap<SeasonDTO, SeasonDeleteViewModel>();
 
             });
 

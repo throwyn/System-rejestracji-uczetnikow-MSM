@@ -66,6 +66,7 @@ namespace SRUK.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Route("Create")]
         [ValidateAntiForgeryToken]
         public IActionResult Create(SeasonCreateViewModel model)
         {
@@ -78,7 +79,11 @@ namespace SRUK.Controllers
             {
                 SeasonDTO season = Mapper.Map<SeasonDTO>(model);
                 var result = _seasonRepository.AddSeasonAsync(season);
-
+                if (result.Result == 1)
+                {
+                    StatusMessage = "Succesfully created.";
+                    return RedirectToAction(nameof(Index));
+                }
                 return RedirectToAction(nameof(Index));
             }
             StatusMessage = "Error. Data that you entered is not valid.";
@@ -86,6 +91,7 @@ namespace SRUK.Controllers
         }
 
         // GET: Seasons/Edit/5
+        [Route("Edit")]
         public IActionResult Edit(long? id)
         {
             if (id == null)
@@ -109,6 +115,7 @@ namespace SRUK.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Route("Edit")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditAsync(SeasonEditViewModel model)
         {
@@ -135,33 +142,42 @@ namespace SRUK.Controllers
         }
 
         //// GET: Seasons/Delete/5
-        //public async Task<IActionResult> Delete(long? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
+        [Route("Delete")]
+        public IActionResult Delete(long? id)
+        {
+            if (id == null)
+            {
+                StatusMessage = "Error. Enter id of season.";
+                return RedirectToAction(nameof(Index));
+            }
 
-        //    var season = await _context.Season
-        //        .SingleOrDefaultAsync(m => m.Id == id);
-        //    if (season == null)
-        //    {
-        //        return NotFound();
-        //    }
+            var season = _seasonRepository.GetSeason((long)id);
 
-        //    return View(season);
-        //}
+            if (season == null)
+            {
+                StatusMessage = "Error. Season do not exists.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var model = Mapper.Map<SeasonDeleteViewModel>(season);
+            return View(model);
+        }
 
         //// POST: Seasons/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> DeleteConfirmed(long id)
-        //{
-        //    var season = await _context.Season.SingleOrDefaultAsync(m => m.Id == id);
-        //    _context.Season.Remove(season);
-        //    await _context.SaveChangesAsync();
-        //    return RedirectToAction(nameof(Index));
-        //}
+        [HttpPost]
+        [Route("Delete")]                                                                                                                                                                                                                                                                                                                               
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(long id)
+        {
+            var result = await _seasonRepository.DeleteSeasonAsync(id);
+            if (result == 1)
+            {
+                StatusMessage = "Succesfully deleted.";
+                return RedirectToAction(nameof(Index));
+            }
+            StatusMessage = "Error. Something went wrong.";
+            return RedirectToAction(nameof(Index));
+        }
 
         //private bool SeasonExists(long id)
         //{

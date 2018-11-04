@@ -21,9 +21,6 @@ namespace SRUK.Models.ManageViewModels
         [MaxLength(15)]
         public string PhoneNumber { get; set; }
 
-        public string StatusMessage { get; set; }
-
-
         [Required]
         [Display(Name = "First name")]
         [StringLength(50, ErrorMessage = "{0} must be at least {2} characters long.", MinimumLength = 2)]
@@ -36,6 +33,8 @@ namespace SRUK.Models.ManageViewModels
 
         [Display(Name = "Organisation")]
         public string Organisation { get; set; }
+
+        public string StatusMessage { get; set; }
 
     }
 }
