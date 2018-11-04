@@ -14,10 +14,13 @@ namespace SRUK.Models
         
         public string LogoFileName { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:g}")]
         public DateTime StartDate { get; set; }
-        
+
+        [DisplayFormat(DataFormatString = "{0:g}")]
         public DateTime EndDate { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:g}")]
         public DateTime CreationDate { get; set; }
     }
 }

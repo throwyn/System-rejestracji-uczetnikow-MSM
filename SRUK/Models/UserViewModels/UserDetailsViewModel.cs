@@ -42,6 +42,7 @@ namespace SRUK.Models
         [Display(Name = "Creation date")]
         public DateTime CreationDate { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:g}")]
         [Display(Name = "Edit date")]
         public DateTime EditDate { get; set; }
 

@@ -65,6 +65,7 @@ namespace SRUK.Controllers
         }
 
         // GET: Seasons/Create
+        [Route("Create")]
         public IActionResult Create()
         {
             if (!User.IsInRole("Admin"))
@@ -207,9 +208,5 @@ namespace SRUK.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        //private bool SeasonExists(long id)
-        //{
-        //    return _context.Season.Any(e => e.Id == id);
-        //}
     }
 }

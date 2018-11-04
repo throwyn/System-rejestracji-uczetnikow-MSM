@@ -28,6 +28,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Views\Papers\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Papers\_StatusMessage.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Seasons\_StatusMessage.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
@@ -42,7 +48,6 @@
   <ItemGroup>
     <Folder Include="Models\ReviewViewModel\" />
     <Folder Include="Models\PaperVersionViewModel\" />
-    <Folder Include="Models\PaperViewModel\" />
   </ItemGroup>
 
 </Project>

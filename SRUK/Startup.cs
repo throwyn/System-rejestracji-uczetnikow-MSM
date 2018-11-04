@@ -49,6 +49,7 @@ namespace SRUK
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ISeasonRepository, SeasonRepository>();
+            services.AddScoped<IPaperRepository, PaperRepository>();
 
             services.AddMvc();
         }
@@ -101,6 +102,13 @@ namespace SRUK
                 cfg.CreateMap<SeasonDTO, SeasonEditViewModel>();
                 cfg.CreateMap<SeasonEditViewModel, SeasonDTO>();
                 cfg.CreateMap<SeasonDTO, SeasonDeleteViewModel>();
+
+                //Papers
+                cfg.CreateMap<Paper, PaperDTO>();
+                //cfg.CreateMap<Paper, PaperDTO>();
+                //<IEnumerable<PaperShortDTO>>
+                //PaperVersion
+                cfg.CreateMap<PaperVersion, PaperVersionDTO>();
 
             });
 
