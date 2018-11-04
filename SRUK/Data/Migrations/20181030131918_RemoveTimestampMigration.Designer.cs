@@ -11,9 +11,10 @@ using System;
 namespace SRUK.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181030131918_RemoveTimestampMigration")]
+    partial class RemoveTimestampMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -138,9 +139,7 @@ namespace SRUK.Data.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
-                    b.Property<DateTime>("CreationDate")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("getutcdate()");
+                    b.Property<DateTime>("CreationDate");
 
                     b.Property<DateTime>("EditDate");
 
@@ -205,9 +204,7 @@ namespace SRUK.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(200);
 
-                    b.Property<DateTime>("CreationDate")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("getutcdate()");
+                    b.Property<DateTime>("CreationDate");
 
                     b.Property<DateTime>("EditDate");
 
@@ -234,9 +231,7 @@ namespace SRUK.Data.Migrations
                     b.Property<string>("AuthorId")
                         .IsRequired();
 
-                    b.Property<DateTime>("CreationDate")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("getutcdate()");
+                    b.Property<DateTime>("CreationDate");
 
                     b.Property<DateTime>("EditDate");
 
@@ -266,9 +261,7 @@ namespace SRUK.Data.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CreationDate")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("getutcdate()");
+                    b.Property<DateTime>("CreationDate");
 
                     b.Property<DateTime>("EditDate");
 
@@ -295,9 +288,7 @@ namespace SRUK.Data.Migrations
 
                     b.Property<string>("Comment");
 
-                    b.Property<DateTime>("CreationDate")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("getutcdate()");
+                    b.Property<DateTime>("CreationDate");
 
                     b.Property<string>("CriticId")
                         .IsRequired();
@@ -335,9 +326,7 @@ namespace SRUK.Data.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("CreationDate")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("getutcdate()");
+                    b.Property<DateTime>("CreationDate");
 
                     b.Property<DateTime>("EditDate");
 

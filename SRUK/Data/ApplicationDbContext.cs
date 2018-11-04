@@ -14,26 +14,6 @@ namespace SRUK.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-            var objectContext = ((IObjectContextAdapter)this).ObjectContext;
-            objectContext.SavingChanges += (sender, args) =>
-            {
-                var now = DateTimeOffset.Now;
-                foreach (var entry in this.ChangeTracker.Entries<IDatedEntity>())
-                {
-                    var entity = entry.Entity;
-                    switch (entry.State)
-                    {
-                        case EntityState.Added:
-                            entity.Created = now;
-                            entity.Updated = now;
-                            break;
-                        case EntityState.Modified:
-                            entity.Updated = now;
-                            break;
-                    }
-                }
-                this.ChangeTracker.DetectChanges();
-            };
         }
         public DbSet<Message> Message { get; set; }
 
@@ -44,6 +24,32 @@ namespace SRUK.Data
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
+
+            builder.Entity<ApplicationUser>()
+                .Property(b => b.CreationDate)
+                .HasDefaultValueSql("getutcdate()");
+
+            builder.Entity<Paper>()
+                .Property(b => b.CreationDate)
+                .HasDefaultValueSql("getutcdate()");
+
+            builder.Entity<PaperVersion>()
+                .Property(b => b.CreationDate)
+                .HasDefaultValueSql("getutcdate()");
+
+            builder.Entity<Review>()
+                .Property(b => b.CreationDate)
+                .HasDefaultValueSql("getutcdate()");
+
+            builder.Entity<Season>()
+                .Property(b => b.CreationDate)
+                .HasDefaultValueSql("getutcdate()");
+
+            builder.Entity<Message>()
+                .Property(b => b.CreationDate)
+                .HasDefaultValueSql("getutcdate()");
         }
+
+        public DbSet<SRUK.Entities.Season> Season { get; set; }
     }
 }

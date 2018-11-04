@@ -133,8 +133,6 @@ namespace SRUK.Controllers
                 
                 var user = Mapper.Map<ApplicationUser>(model);
                 user.UserName = model.Email;
-                user.CreationDate = DateTime.UtcNow;
-                user.EditDate = DateTime.UtcNow;
 
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
@@ -170,6 +168,11 @@ namespace SRUK.Controllers
             ViewBag.Roles = _roleManager.Roles.ToList();
             var entityUser = _userManager.FindByIdAsync(id).Result;
             var user = Mapper.Map<UserEditViewModel>(entityUser);
+            if(entityUser == null)
+            {
+                StatusMessage = "Error. User do not exists.";
+                return RedirectToAction(nameof(Index));
+            }
             user.Role = _userManager.GetRolesAsync(entityUser).Result.FirstOrDefault();
 
             user.StatusMessage = StatusMessage;
@@ -178,7 +181,7 @@ namespace SRUK.Controllers
 
         // POST: Users/Edit/5
         [HttpPost]
-        [Route("Edit")]
+        [Route("Edit/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditAsync(UserEditViewModel model)
         {
@@ -211,7 +214,6 @@ namespace SRUK.Controllers
                 user.PhoneNumber = model.PhoneNumber;
                 user.EmailConfirmed = model.EmailConfirmed;
                 user.PhoneNumberConfirmed = model.PhoneNumberConfirmed;
-                user.EditDate = DateTime.UtcNow;
                 user.SecurityStamp = Guid.NewGuid().ToString();
                 
                 var result = await _userManager.UpdateAsync(user);
@@ -269,7 +271,6 @@ namespace SRUK.Controllers
                 user.PhoneNumber = null;
                 user.EmailConfirmed = false;
                 user.PhoneNumberConfirmed = false;
-                user.EditDate = DateTime.UtcNow;
                 var roles = _userManager.GetRolesAsync(user).Result.ToAsyncEnumerable().ToEnumerable();
                 await _userManager.RemoveFromRolesAsync(user, roles);
 

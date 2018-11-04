@@ -69,7 +69,7 @@
                 <td>
                     @if (item.LockoutEnd > DateTime.Now)
                     {
-                        @Html.Label(item.LockoutEnd.ToString($"dd-MM-yyyy HH:mm"))
+                        @Html.Label(item.LockoutEnd.ToString(@"dd-MM-yyyy HH:mm"))
                     }
                 </td>
                 <td style='color: black; '>

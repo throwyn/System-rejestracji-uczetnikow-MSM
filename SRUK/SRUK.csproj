@@ -8,11 +8,14 @@
   <ItemGroup>
     <Compile Remove="Data\Migrations\20181026170043_RequiredUsersUpdateMigration.cs" />
     <Compile Remove="Data\Migrations\20181026170043_RequiredUsersUpdateMigration.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181030114930_IMessedInDbContext2Migration.cs" />
+    <Compile Remove="Data\Migrations\20181030114930_IMessedInDbContext2Migration.Designer.cs" />
   </ItemGroup>
 
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.1" />
+    <PackageReference Include="Bootstrap.v3.Datetimepicker.CSS" Version="4.17.45" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.3" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.4" PrivateAssets="All" />
@@ -25,12 +28,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Views\Seasons\_StatusMessage.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Users\Edit.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Users\_StatusMessage.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\ReviewViewModel\" />
+    <Folder Include="Models\PaperVersionViewModel\" />
+    <Folder Include="Models\PaperViewModel\" />
   </ItemGroup>
 
 </Project>

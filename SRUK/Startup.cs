@@ -48,6 +48,7 @@ namespace SRUK
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ISeasonRepository, SeasonRepository>();
 
             services.AddMvc();
         }
@@ -79,18 +80,25 @@ namespace SRUK
                 cfg.CreateMap<ApplicationUser, UserEditViewModel>();
                 cfg.CreateMap<ApplicationUser, UserShortDTO>();
 
+
                 cfg.CreateMap<IndexViewModel, ApplicationUser>()
                 .ForMember(dest => dest.Email, opt=>opt.MapFrom(src=> src.Email))
                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
                 .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber));
-
                 cfg.CreateMap<UserCreateViewModel, ApplicationUser>();
                 cfg.CreateMap<UserEditViewModel, ApplicationUser>();
 
                 //Roles
                 cfg.CreateMap<ApplicationRole, RoleDTO>();
 
+                //Seasons
+                cfg.CreateMap<Season, SeasonDTO>();
+                cfg.CreateMap<Season, SeasonShortDTO>();
+                cfg.CreateMap<SeasonDTO, Season>();
+                cfg.CreateMap<SeasonCreateViewModel, SeasonDTO>();
+                cfg.CreateMap<SeasonDTO, SeasonEditViewModel>();
+                cfg.CreateMap<SeasonEditViewModel, SeasonDTO>();
 
             });
 

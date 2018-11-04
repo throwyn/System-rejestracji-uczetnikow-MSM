@@ -1,0 +1,60 @@
+﻿@model SeasonIndexViewModel
+
+@{
+    ViewData["Title"] = "Seasons";
+}
+
+<h2>Seasons</h2>
+@Html.Partial("_StatusMessage", Model.StatusMessage)
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Main image filename
+            </th>
+            <th>
+                Logo filename
+            </th>
+            <th>
+                Start date
+            </th>
+            <th>
+                End date
+            </th>
+            <th>
+                Creation date
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Seasons)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MainImageFileName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LogoFileName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreationDate)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

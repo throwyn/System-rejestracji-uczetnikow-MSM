@@ -1,0 +1,88 @@
+﻿@model SeasonEditViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<h4>Season</h4>
+@Html.Partial("_StatusMessage", Model.StatusMessage)
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="MainImageFileName" class="control-label"></label>
+                <input asp-for="MainImageFileName" class="form-control" />
+                <span asp-validation-for="MainImageFileName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LogoFileName" class="control-label"></label>
+                <input asp-for="LogoFileName" class="form-control" />
+                <span asp-validation-for="LogoFileName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StartDate" class="control-label"></label>
+                <div class="form-group">
+                    <div class='input-group date' id='datetimepickerstart'>
+                        <input asp-for="StartDate" class="form-control" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndDate" class="control-label"></label>
+                <div class="form-group">
+                    <div class='input-group date' id='datetimepickerend'>
+                        <input asp-for="EndDate" class="form-control" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="IsDeleted" /> @Html.DisplayNameFor(model => model.IsDeleted)
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+        $(function () {
+            $('#datetimepickerstart').datetimepicker();
+            $('#datetimepickerend').datetimepicker({
+                useCurrent: false, //Important! See issue #1075
+            });
+            $('#datetimepickerend').data("DateTimePicker").defaultDate("@Model.EndDate.ToString()").format("DD.MM.YYYY HH:mm");
+            $('#datetimepickerstart').data("DateTimePicker").defaultDate("@Model.StartDate.ToString()").format("DD.MM.YYYY HH:mm");
+
+            $("#datetimepickerstart").on("dp.change", function (e) {
+                $('#datetimepickerend').data("DateTimePicker").minDate(e.date);
+            });
+            $("#datetimepickerend").on("dp.change", function (e) {
+                $('#datetimepickerstart').data("DateTimePicker").maxDate(e.date);
+            });
+        });
+    </script>
+}

@@ -222,8 +222,6 @@ namespace SRUK.Controllers
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                user.CreationDate = DateTime.UtcNow;
-                user.EditDate = DateTime.UtcNow;
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

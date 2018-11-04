@@ -14,6 +14,22 @@
           "lib/netcoreapp2.0/AutoMapper.dll": {}
         }
       },
+      "bootstrap/3.3.0": {
+        "type": "package",
+        "dependencies": {
+          "jquery": "1.9.0"
+        }
+      },
+      "Bootstrap.v3.Datetimepicker.CSS/4.17.45": {
+        "type": "package",
+        "dependencies": {
+          "Moment.js": "2.9.0",
+          "bootstrap": "3.3.0"
+        }
+      },
+      "jQuery/1.9.0": {
+        "type": "package"
+      },
       "Libuv/1.10.0": {
         "type": "package",
         "dependencies": {
@@ -2817,6 +2833,9 @@
           }
         }
       },
+      "Moment.js/2.9.0": {
+        "type": "package"
+      },
       "NETStandard.Library/2.0.0": {
         "type": "package",
         "dependencies": {
@@ -5064,6 +5083,62 @@
         "lib/netstandard2.0/AutoMapper.dll",
         "lib/netstandard2.0/AutoMapper.pdb",
         "lib/netstandard2.0/AutoMapper.xml"
+      ]
+    },
+    "bootstrap/3.3.0": {
+      "sha512": "BeFmQgpmPCUwWzibAqAMuK2Jit+NRxrRFfZb0bNOdjXtlj4o8tl0P1JrcHm+a7G5SPx7GxfY71b+XclFrVwxNg==",
+      "type": "package",
+      "path": "bootstrap/3.3.0",
+      "files": [
+        ".signature.p7s",
+        "bootstrap.3.3.0.nupkg.sha512",
+        "bootstrap.nuspec",
+        "content/Content/bootstrap-theme.css",
+        "content/Content/bootstrap-theme.css.map",
+        "content/Content/bootstrap-theme.min.css",
+        "content/Content/bootstrap.css",
+        "content/Content/bootstrap.css.map",
+        "content/Content/bootstrap.min.css",
+        "content/Scripts/bootstrap.js",
+        "content/Scripts/bootstrap.min.js",
+        "content/Scripts/npm.js",
+        "content/fonts/glyphicons-halflings-regular.eot",
+        "content/fonts/glyphicons-halflings-regular.svg",
+        "content/fonts/glyphicons-halflings-regular.ttf",
+        "content/fonts/glyphicons-halflings-regular.woff"
+      ]
+    },
+    "Bootstrap.v3.Datetimepicker.CSS/4.17.45": {
+      "sha512": "CLNTxJbb6gP52h0j6k1bJQbRwviKw9lkkUiYbvPXCgu1K1Cpc8gqvOO2LphOj0exu7Y1BZ9NzxxuLAAffmUJKg==",
+      "type": "package",
+      "path": "bootstrap.v3.datetimepicker.css/4.17.45",
+      "files": [
+        ".signature.p7s",
+        "bootstrap.v3.datetimepicker.css.4.17.45.nupkg.sha512",
+        "bootstrap.v3.datetimepicker.css.nuspec",
+        "content/Content/bootstrap-datetimepicker.css",
+        "content/Content/bootstrap-datetimepicker.min.css",
+        "content/Scripts/bootstrap-datetimepicker.js",
+        "content/Scripts/bootstrap-datetimepicker.min.js",
+        "tools/install.ps1"
+      ]
+    },
+    "jQuery/1.9.0": {
+      "sha512": "rl82HRANOh4pSAzCfGUl/7kpKsa1FfyndY/YwC+wm1yBPFgBjmulU6MHba8V8htYnVaT8YfeDtHm1ZifcJGR/w==",
+      "type": "package",
+      "path": "jquery/1.9.0",
+      "files": [
+        ".signature.p7s",
+        "Content/Scripts/jquery-1.9.0-vsdoc.js",
+        "Content/Scripts/jquery-1.9.0.js",
+        "Content/Scripts/jquery-1.9.0.min.js",
+        "Content/Scripts/jquery-1.9.0.min.map",
+        "Tools/common.ps1",
+        "Tools/install.ps1",
+        "Tools/jquery-1.9.0.intellisense.js",
+        "Tools/uninstall.ps1",
+        "jquery.1.9.0.nupkg.sha512",
+        "jquery.nuspec"
       ]
     },
     "Libuv/1.10.0": {
@@ -8003,6 +8078,20 @@
         "runtimes/win/lib/netstandard1.3/Microsoft.Win32.Registry.dll",
         "useSharedDesignerContext.txt",
         "version.txt"
+      ]
+    },
+    "Moment.js/2.9.0": {
+      "sha512": "YEVC3WRUsmTn5SWcEYZ09Wxme9r6Jnz0Unc5slGW5ZPboM2DXwPTDb7ZAsfYQImy9w/xlNNNWzmiipva2OrEVg==",
+      "type": "package",
+      "path": "moment.js/2.9.0",
+      "files": [
+        ".signature.p7s",
+        "Content/Scripts/moment-with-locales.js",
+        "Content/Scripts/moment-with-locales.min.js",
+        "Content/Scripts/moment.js",
+        "Content/Scripts/moment.min.js",
+        "moment.js.2.9.0.nupkg.sha512",
+        "moment.js.nuspec"
       ]
     },
     "NETStandard.Library/2.0.0": {
@@ -13288,6 +13377,7 @@
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.0": [
       "AutoMapper >= 7.0.1",
+      "Bootstrap.v3.Datetimepicker.CSS >= 4.17.45",
       "Microsoft.AspNetCore.All >= 2.0.9",
       "Microsoft.EntityFrameworkCore.Tools >= 2.0.3",
       "Microsoft.NETCore.App >= 2.0.0",
@@ -13338,6 +13428,10 @@
           "AutoMapper": {
             "target": "Package",
             "version": "[7.0.1, )"
+          },
+          "Bootstrap.v3.Datetimepicker.CSS": {
+            "target": "Package",
+            "version": "[4.17.45, )"
           },
           "Microsoft.AspNetCore.All": {
             "target": "Package",
