@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,8 @@ using SRUK.Services.Interfaces;
 
 namespace SRUK.Controllers
 {
+    [Authorize]
+    [Route("[controller]")]
     public class SeasonsController : Controller
     {
         private readonly ISeasonRepository _seasonRepository;
@@ -28,6 +31,9 @@ namespace SRUK.Controllers
         // GET: Seasons
         public IActionResult Index()
         {
+            if (!User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Home");
+
             var seasons = _seasonRepository.GetSeasons();
             var model = new SeasonIndexViewModel();
             model.Seasons = seasons.ToList();
@@ -36,8 +42,12 @@ namespace SRUK.Controllers
         }
 
         // GET: Seasons/Details/5
+        [Route("Details/{id}")]
         public IActionResult Details(long? id)
         {
+            if (!User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Home");
+
             if (id == null)
             {
                 StatusMessage = "Error. Enter id of season.";
@@ -57,6 +67,9 @@ namespace SRUK.Controllers
         // GET: Seasons/Create
         public IActionResult Create()
         {
+            if (!User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Home");
+
             var model = new SeasonCreateViewModel();
             model.StatusMessage = StatusMessage;
             return View(model);
@@ -70,7 +83,10 @@ namespace SRUK.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(SeasonCreateViewModel model)
         {
-            if(model == null)
+            if (!User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Home");
+
+            if (model == null)
             {
                 StatusMessage = "Error. Something went wrong.";
                 return View(model);
@@ -91,9 +107,12 @@ namespace SRUK.Controllers
         }
 
         // GET: Seasons/Edit/5
-        [Route("Edit")]
+        [Route("Edit/{id}")]
         public IActionResult Edit(long? id)
         {
+            if (!User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Home");
+
             if (id == null)
             {
                 StatusMessage = "Error. Enter id of season.";
@@ -115,10 +134,13 @@ namespace SRUK.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [Route("Edit")]
+        [Route("Edit/{id}")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditAsync(SeasonEditViewModel model)
         {
+            if (!User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Home");
+
             if (ModelState.IsValid)
             {
                 try
@@ -142,9 +164,12 @@ namespace SRUK.Controllers
         }
 
         //// GET: Seasons/Delete/5
-        [Route("Delete")]
+        [Route("Delete/{id}")]
         public IActionResult Delete(long? id)
         {
+            if (!User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Home");
+
             if (id == null)
             {
                 StatusMessage = "Error. Enter id of season.";
@@ -165,10 +190,13 @@ namespace SRUK.Controllers
 
         //// POST: Seasons/Delete/5
         [HttpPost]
-        [Route("Delete")]                                                                                                                                                                                                                                                                                                                               
+        [Route("Delete/{id}")]                                                                                                                                                                                                                                                                                                                               
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
+            if (!User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Home");
+
             var result = await _seasonRepository.DeleteSeasonAsync(id);
             if (result == 1)
             {

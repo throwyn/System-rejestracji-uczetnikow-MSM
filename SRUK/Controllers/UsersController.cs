@@ -21,7 +21,7 @@ using AutoMapper;
 
 namespace SRUK.Controllers
 {
-    //[Authorize]
+    [Authorize]
     //[Route("[controller]/[action]")]
     [Route("[controller]")]
     public class UsersController : Controller
@@ -74,6 +74,9 @@ namespace SRUK.Controllers
             //var user = await UserManager.FindByEmailAsync("participant@prz.pl");
             //await UserManager.AddToRoleAsync(user, "Participant");
 
+            if (!User.IsInRole("Admin"))
+                return RedirectToAction("Index","Home");
+
 
             var entityUsers = _userManager.Users.Where(u => u.IsDeleted == false).ToList();
             if (entityUsers == null) { return NotFound(); }
@@ -96,6 +99,9 @@ namespace SRUK.Controllers
         [Route("Details/{id}")]
         public ActionResult Details(string id)
         {
+            if (!User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Home");
+
             var entityUser = _userManager.FindByIdAsync(id).Result;
             if (entityUser == null)
             {
@@ -112,6 +118,9 @@ namespace SRUK.Controllers
         [Route("Create")]
         public ActionResult Create()
         {
+            if (!User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Home");
+
             ViewBag.Roles = _roleManager.Roles.ToList();
             var model = new UserCreateViewModel();
             model.StatusMessage = StatusMessage;
@@ -124,6 +133,9 @@ namespace SRUK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateAsync(UserCreateViewModel model)
         {
+            if (!User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Home");
+
             try
             {
                 if (!ModelState.IsValid)
@@ -165,6 +177,9 @@ namespace SRUK.Controllers
         [Route("Edit/{id}")]
         public ActionResult Edit(string id)
         {
+            if (!User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Home");
+
             ViewBag.Roles = _roleManager.Roles.ToList();
             var entityUser = _userManager.FindByIdAsync(id).Result;
             var user = Mapper.Map<UserEditViewModel>(entityUser);
@@ -185,6 +200,9 @@ namespace SRUK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditAsync(UserEditViewModel model)
         {
+            if (!User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Home");
+
             try
             {
                 if (!ModelState.IsValid)
@@ -241,6 +259,9 @@ namespace SRUK.Controllers
         [Route("Delete/{id}")]
         public ActionResult Delete(string id)
         {
+            if (!User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Home");
+
             var entityUser = _userManager.FindByIdAsync(id).Result;
             if (entityUser == null) { return NotFound(); }
             var user = Mapper.Map<UserDetailsViewModel>(entityUser);
@@ -254,6 +275,9 @@ namespace SRUK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteAsync(string id, IFormCollection collection)
         {
+            if (!User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Home");
+
             try
             {
                 var user = _userManager.FindByIdAsync(id).Result;
