@@ -20,71 +20,92 @@ namespace SRUK.Services
             _context = context;
         }
 
-        public Task<int> AddPaperAsync(PaperDTO season)
+        public async Task<int> AddPaperAsync(PaperDTO paper)
         {
-            throw new NotImplementedException();
-        }
+            Paper newPaper = Mapper.Map<Paper>(paper);
+            await _context.Paper.AddAsync(newPaper);
 
-        public Task<int> DeletePaperAsync(long id)
-        {
-            throw new NotImplementedException();
+            int result = await _context.SaveChangesAsync();
+            return result;
         }
 
         public async Task<PaperDTO> GetPaperAsync(long id)
         {
-            var entityPaper = await _context.Paper.SingleOrDefaultAsync(u => u.Id == id);
+            var entityPaper = await _context.Paper.Include(p => p.Author).Include(p => p.Season).SingleOrDefaultAsync(u => u.Id == id);
             var paper = Mapper.Map<PaperDTO>(entityPaper);
             return paper;
+        }
+        public IEnumerable<PaperShortDTO> GetUserPapers(string userId)
+        {
+            var entityPapers = _context.Paper.Where(p => p.IsDeleted == false && p.Author.Id == userId).ToAsyncEnumerable().ToEnumerable();
+            var papers = Mapper.Map<IEnumerable<PaperShortDTO>>(entityPapers);
+            return papers;
         }
 
         public IEnumerable<PaperShortDTO> GetPapers()
         {
-            var entityPapers = _context.Paper.Where(s => s.IsDeleted == false).ToAsyncEnumerable();
-            var papers = Mapper.Map<IEnumerable<PaperShortDTO>>(entityPapers.ToEnumerable());
+            var entityPapers = _context.Paper.Where(p => p.IsDeleted == false).Include(p => p.Author).ToAsyncEnumerable().ToEnumerable();
+            var papers = Mapper.Map<IEnumerable<PaperShortDTO>>(entityPapers);
             return papers;
         }
 
-        public Task<int> UpdatePaperAsync(PaperDTO season)
+        public async Task<int> UpdatePaperAsync(PaperDTO paper)
         {
-            throw new NotImplementedException();
+            Paper paperNew = Mapper.Map<Paper>(paper);
+            var paperToUpdate = await _context.Paper.FindAsync(paper.Id);
+
+            paperToUpdate.IsPaid = paperNew.IsPaid;
+            paperToUpdate.Title = paperNew.Title;
+            paperToUpdate.Status = paperNew.Status;
+
+            int result = await _context.SaveChangesAsync();
+
+            return result;
+
         }
 
-        //public async Task<int> AddSeasonAsync(SeasonDTO season)
-        //{
-        //    Season newSeason = Mapper.Map<Season>(season);
-        //    var status = await _context.Season.AddAsync(newSeason);
+        public async Task<int> DeletePaperAsync(long id)
+        {
+            
+            Paper paper = await _context.Paper.FirstOrDefaultAsync(s => s.Id == id);
+            paper.IsDeleted = true;
 
-        //    int result = await _context.SaveChangesAsync();
-        //    return result;
-        //}
+            int result = await _context.SaveChangesAsync();
+            return result;
+        }
+        public async Task<int> ApproveTopic(long id)
+        {
+            int result;
+            var paper = await _context.Paper.FindAsync(id);
+            if (paper.Status == 0)
+            {
+                paper.Status = 1;
+                result = await _context.SaveChangesAsync();
+            }
+            else
+            {
+                result = 2;
+            }
 
-        //public async Task<int> UpdateSeasonAsync(SeasonDTO season)
-        //{
-        //    Season seasonNew = Mapper.Map<Season>(season);
-        //    var seasonToUpdate = await _context.Season.FindAsync(season.Id);
+            return result;
 
-        //    seasonToUpdate.LogoFileName = seasonNew.LogoFileName;
-        //    seasonToUpdate.MainImageFileName = seasonNew.MainImageFileName;
-        //    seasonToUpdate.StartDate = seasonNew.StartDate;
-        //    seasonToUpdate.EndDate = seasonNew.EndDate;
+        }
+        public async Task<int> RejectTopic(long id)
+        {
+            int result;
+            var paper = await _context.Paper.FindAsync(id);
+            if (paper.Status == 0)
+            {
+                paper.Status = 2;
+                result = await _context.SaveChangesAsync();
+            }
+            else
+            {
+                result = 2;
+            }
 
-        //    int result = await _context.SaveChangesAsync();
+            return result;
 
-        //    return result;
-
-        //}
-
-        //public async Task<int> DeleteSeasonAsync(long id)
-        //{
-        //    if (_context.Paper.Where(p => p.Season.Id == id).Count() > 0)
-        //    {
-        //        return 0;
-        //    }
-        //    Season season = await _context.Season.FirstOrDefaultAsync(s => s.Id == id);
-        //    _context.Season.Remove(season);
-
-        //    int result = await _context.SaveChangesAsync();
-        //    return result;
-        //}
+        }
     }
 }

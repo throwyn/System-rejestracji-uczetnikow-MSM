@@ -48,5 +48,6 @@ namespace SRUK.Entities
         public bool IsDeleted { get; set; }
 
 
+        public ICollection<Review> Reviews { get; set; }
     }
 }

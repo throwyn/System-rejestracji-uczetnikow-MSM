@@ -26,6 +26,7 @@ namespace SRUK.Models
         
         public bool IsDeleted { get; set; }
 
+        public ICollection<ReviewDTO> Reviews { get; set; }
 
     }
 }

@@ -17,7 +17,7 @@ namespace SRUK.Services
         {
             _context = context;
         }
-        
+
         //public UserDTO GetUser(string Id)
         //{
         //    var entityUser = _context.Users.SingleOrDefault(u => u.Id == Id);
@@ -25,12 +25,12 @@ namespace SRUK.Services
         //    return user;
         //}
 
-        //public IEnumerable<UserIndexViewModel> GetUsers()
-        //{
-        //    var entityUser = _context.Users.OrderBy(u=>u.Id);
-        //    var user = Mapper.Map<IEnumerable<UserIndexViewModel>>(entityUser);
-        //    return user;
-        //}
+        public IEnumerable<UserShortDTO> GetUsers()
+        {
+            var entityUser = _context.Users.Where(u => u.IsDeleted == false).OrderBy(u => u.Id).ToAsyncEnumerable().ToEnumerable();
+            var users = Mapper.Map<IEnumerable<UserShortDTO>>(entityUser);
+            return users;
+        }
 
         public bool Save()
         {

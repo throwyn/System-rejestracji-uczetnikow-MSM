@@ -71,5 +71,16 @@ namespace SRUK.Services
             int result = await _context.SaveChangesAsync();
             return result;
         }
+        public async Task<bool> IsRegistrationOpenedAsync()
+        {
+            Season season = await _context.Season.Where(s => s.StartDate < DateTime.UtcNow && s.EndDate > DateTime.UtcNow).SingleOrDefaultAsync();
+            return (season != null);
+        }
+
+        public async Task<long> GetCurrentSeasonIdAsync()
+        {
+            var season = await _context.Season.Where(s => s.StartDate < DateTime.UtcNow && s.EndDate > DateTime.UtcNow).SingleOrDefaultAsync();
+            return season.Id;
+        }
     }
 }

@@ -13,5 +13,7 @@ namespace SRUK.Services.Interfaces
         Task<int> AddSeasonAsync(SeasonDTO season);
         Task<int> UpdateSeasonAsync(SeasonDTO season);
         Task<int> DeleteSeasonAsync(long id);
+        Task<long> GetCurrentSeasonIdAsync();
+        Task<bool> IsRegistrationOpenedAsync();
     }
 }

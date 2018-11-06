@@ -15,6 +15,7 @@ using SRUK.Services;
 using SRUK.Services.Interfaces;
 using SRUK.Data.Entities;
 using SRUK.Models.ManageViewModels;
+using System.Globalization;
 
 namespace SRUK
 {
@@ -105,7 +106,12 @@ namespace SRUK
 
                 //Papers
                 cfg.CreateMap<Paper, PaperDTO>();
-                //cfg.CreateMap<Paper, PaperDTO>();
+                cfg.CreateMap<PaperCreateViewModel, PaperDTO>();
+                cfg.CreateMap<PaperDTO, PaperEditViewModel>();
+                cfg.CreateMap<PaperEditViewModel, PaperDTO>();
+                cfg.CreateMap<PaperDTO, PaperDetailsViewModel>();
+                cfg.CreateMap<PaperDTO, PaperDeleteViewModel>();
+                
                 //<IEnumerable<PaperShortDTO>>
                 //PaperVersion
                 cfg.CreateMap<PaperVersion, PaperVersionDTO>();
@@ -118,6 +124,8 @@ namespace SRUK
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+            
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("pl-PL");
         }
     }
 }

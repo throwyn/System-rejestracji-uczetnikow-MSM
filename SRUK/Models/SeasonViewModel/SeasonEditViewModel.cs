@@ -21,12 +21,12 @@ namespace SRUK.Models
 
         [Required]
         [Display(Name = "Start date")]
-        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:g}")]
         public DateTime StartDate { get; set; }
 
         [Required]
         [Display(Name = "End date")]
-        [DataType(DataType.DateTime)]
+        [DisplayFormat(DataFormatString = "{0:g}")]
         public DateTime EndDate { get; set; }
 
         public bool IsDeleted { get; set; }

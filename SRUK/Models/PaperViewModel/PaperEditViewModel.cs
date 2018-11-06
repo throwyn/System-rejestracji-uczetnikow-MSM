@@ -6,31 +6,30 @@ using System.Threading.Tasks;
 
 namespace SRUK.Models
 {
-    public class PaperDTO
+    public class PaperEditViewModel
     {
+        [Required]
+        [Display(Name = "ID")]
         public long Id { get; set; }
         
-        public UserDTO Author { get; set; }
+        [Display(Name = "Author")]
         public string AuthorId { get; set; }
+        public UserDTO Author { get; set; }
         
-        public SeasonDTO Season { get; set; }
+        [Display(Name = "Season")]
         public long SeasonId { get; set; }
-
+        public SeasonDTO Season { get; set; }
 
         [Required]
         [MaxLength(200)]
         public string Title { get; set; }
-        
+
+        [Required]
         public short Status { get; set; }
         
+        [Display(Name = "Is paid")]
         public bool IsPaid { get; set; }
-        
-        public DateTime CreationDate { get; set; }
-        
-        public DateTime EditDate { get; set; }
 
-        public ICollection<PaperVersionDTO> PaperVersions { get; set; }
-        
-        public bool IsDeleted { get; set; }
+        public string StatusMessage { get; set; }
     }
 }
