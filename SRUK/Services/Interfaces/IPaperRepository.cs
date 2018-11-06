@@ -12,10 +12,13 @@ namespace SRUK.Services.Interfaces
         Task<PaperDTO> GetPaperAsync(long id);
         IEnumerable<PaperShortDTO> GetUserPapers(string userId);
 
-        Task<int> AddPaperAsync(PaperDTO season);
-        Task<int> UpdatePaperAsync(PaperDTO season);
+        Task<int> AddPaperAsync(PaperDTO paper);
+        Task<int> UpdatePaperAsync(PaperDTO paper);
         Task<int> DeletePaperAsync(long id);
         Task<int> ApproveTopic(long id);
         Task<int> RejectTopic(long id);
+
+
+        Task<int> UpdatePaperTitleAsync(PaperDTO paper);
     }
 }

@@ -418,7 +418,7 @@ namespace SRUK.Controllers
                 return RedirectToAction(nameof(MyPapers));
             }
 
-            var model = Mapper.Map<PaperEditViewModel>(paper);
+            var model = Mapper.Map<PaperUserEditViewModel>(paper);
 
             return View(model);
         }
@@ -427,14 +427,14 @@ namespace SRUK.Controllers
         [HttpPost]
         [Route("EditMyPaper/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditMyPaper(PaperEditViewModel model)
+        public async Task<IActionResult> EditMyPaper(PaperUserEditViewModel model)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
                     var paper = Mapper.Map<PaperDTO>(model);
-                    var result = await _paperRepository.UpdatePaperAsync(paper);
+                    var result = await _paperRepository.UpdatePaperTitleAsync(paper);
                     if (result == 1)
                     {
                         StatusMessage = "Succesfully updated.";

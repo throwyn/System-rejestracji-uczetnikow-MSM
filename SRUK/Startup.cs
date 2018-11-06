@@ -111,7 +111,9 @@ namespace SRUK
                 cfg.CreateMap<PaperEditViewModel, PaperDTO>();
                 cfg.CreateMap<PaperDTO, PaperDetailsViewModel>();
                 cfg.CreateMap<PaperDTO, PaperDeleteViewModel>();
-                
+                cfg.CreateMap<PaperDTO, PaperUserEditViewModel>();
+                cfg.CreateMap<PaperUserEditViewModel,PaperDTO>();
+
                 //<IEnumerable<PaperShortDTO>>
                 //PaperVersion
                 cfg.CreateMap<PaperVersion, PaperVersionDTO>();

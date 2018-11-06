@@ -107,5 +107,17 @@ namespace SRUK.Services
             return result;
 
         }
+
+        public async Task<int> UpdatePaperTitleAsync(PaperDTO paper)
+        {
+            var paperToUpdate = await _context.Paper.FindAsync(paper.Id);
+
+            paperToUpdate.Title = paper.Title;
+            paperToUpdate.Status = 0;
+
+            int result = await _context.SaveChangesAsync();
+
+            return result;
+        }
     }
 }
