@@ -18,6 +18,8 @@ namespace SRUK.Services.Interfaces
         Task<int> ApproveTopic(long id);
         Task<int> RejectTopic(long id);
 
+        Task<bool> PaperExists(string title);
+
 
         Task<int> UpdatePaperTitleAsync(PaperDTO paper);
     }

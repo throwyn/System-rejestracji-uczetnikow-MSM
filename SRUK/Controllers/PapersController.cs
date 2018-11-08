@@ -67,7 +67,7 @@ namespace SRUK.Controllers
                 model.StatusMessage = StatusMessage;
                 return View(model);
             }
-                return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Home");
 
         }
 
@@ -112,7 +112,7 @@ namespace SRUK.Controllers
 
             var users = _userRepository.GetUsers();
             ViewBag.Users = new List<SelectListItem>();
-            foreach(var user in users){
+            foreach (var user in users) {
                 ViewBag.Users.Add(new SelectListItem { Text = user.Email, Value = user.Id });
             };
 
@@ -146,6 +146,12 @@ namespace SRUK.Controllers
             }
             if (ModelState.IsValid)
             {
+                if (_paperRepository.PaperExists(model.Title).Result)
+                {
+                    StatusMessage = "Error. This title is already taken.";
+                    return RedirectToAction(nameof(Create));
+                }
+
                 PaperDTO paper = Mapper.Map<PaperDTO>(model);
                 var result = _paperRepository.AddPaperAsync(paper);
                 if (result.Result == 1)
@@ -188,6 +194,7 @@ namespace SRUK.Controllers
             };
 
             var model = Mapper.Map<PaperEditViewModel>(paper);
+            model.StatusMessage = StatusMessage;
             return View(model);
         }
 
@@ -206,6 +213,11 @@ namespace SRUK.Controllers
             {
                 try
                 {
+                    if (_paperRepository.PaperExists(model.Title).Result)
+                    {
+                        StatusMessage = "Error. This title is already taken.";
+                        return RedirectToAction(nameof(Edit), model.Id);
+                    }
                     var paper = Mapper.Map<PaperDTO>(model);
                     var result = await _paperRepository.UpdatePaperAsync(paper);
                     if (result == 1)
@@ -334,7 +346,6 @@ namespace SRUK.Controllers
 
             var model = new PaperCreateViewModel();
             model.AuthorId = user.Id;
-            model.IsPaid = false;
             model.SeasonId = _seasonRepository.GetCurrentSeasonIdAsync().Result;
             model.Status = 0;
 
@@ -357,11 +368,15 @@ namespace SRUK.Controllers
             }
             if (ModelState.IsValid)
             {
+                if (_paperRepository.PaperExists(model.Title).Result)
+                {
+                    StatusMessage = "Error. This title is already taken.";
+                    return RedirectToAction(nameof(Add));
+                }
                 var user = await _userManager.GetUserAsync(HttpContext.User);
 
                 PaperDTO paper = Mapper.Map<PaperDTO>(model);
                 paper.AuthorId = user.Id;
-                paper.IsPaid = false;
                 paper.SeasonId = _seasonRepository.GetCurrentSeasonIdAsync().Result;
                 paper.Status = 0;
 
@@ -380,23 +395,19 @@ namespace SRUK.Controllers
         [Route("MyPapers")]
         public async Task<ActionResult> MyPapers()
         {
-             if (User.IsInRole("Participant"))
-            {
-                var user = await _userManager.GetUserAsync(HttpContext.User);
-                var papers = _paperRepository.GetUserPapers(user.Id);
-                var model = new PaperIndexViewModel();
-                model.Papers = papers.ToList();
-                model.StatusMessage = StatusMessage;
-                ViewBag.IsRegistrationOpened = _seasonRepository.IsRegistrationOpenedAsync().Result;
-                return View(model);
-            }
-            return RedirectToAction("Index", "Home");
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var papers = _paperRepository.GetUserPapers(user.Id);
+            var model = new PaperIndexViewModel();
+            model.Papers = papers.ToList();
+            model.StatusMessage = StatusMessage;
+            ViewBag.IsRegistrationOpened = _seasonRepository.IsRegistrationOpenedAsync().Result;
+            return View(model);
 
         }
 
         // GET: Papers/EditMyPaper/5
         [Route("EditMyPaper/{id}")]
-        public async Task<IActionResult> EditMyPaperAsync(long? id)
+        public async Task<IActionResult> EditMyPaper(long? id)
         {
             if (id == null)
             {
@@ -406,20 +417,21 @@ namespace SRUK.Controllers
 
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var paper = _paperRepository.GetPaperAsync((long)id).Result;
-            if(paper.Author.Id != user.Id)
-            {
-                StatusMessage = "Error. You can edit only yours papers.";
-                return RedirectToAction(nameof(MyPapers));
-            }
 
             if (paper == null)
             {
                 StatusMessage = "Error. Paper do not exists.";
                 return RedirectToAction(nameof(MyPapers));
             }
+            if (paper.Author.Id != user.Id)
+            {
+                StatusMessage = "Error. You can edit only yours papers.";
+                return RedirectToAction(nameof(MyPapers));
+            }
 
             var model = Mapper.Map<PaperUserEditViewModel>(paper);
 
+            model.StatusMessage = StatusMessage;
             return View(model);
         }
 
@@ -433,22 +445,28 @@ namespace SRUK.Controllers
             {
                 try
                 {
+                    if (_paperRepository.PaperExists(model.Title).Result)
+                    {
+                        StatusMessage = "Error. This title is already taken.";
+                        return RedirectToAction(nameof(EditMyPaper), model.Id);
+                    }
+
                     var paper = Mapper.Map<PaperDTO>(model);
                     var result = await _paperRepository.UpdatePaperTitleAsync(paper);
                     if (result == 1)
                     {
                         StatusMessage = "Succesfully updated.";
-                        return RedirectToAction(nameof(Index));
+                        return RedirectToAction(nameof(MyPapers));
                     }
                 }
                 catch
                 {
                     StatusMessage = "Error. Something went wrong.";
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction(nameof(MyPapers));
                 }
             }
             StatusMessage = "Error. Something went wrong.";
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(MyPapers));
         }
 
 

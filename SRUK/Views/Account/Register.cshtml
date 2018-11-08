@@ -26,6 +26,11 @@
                 <input asp-for="ConfirmPassword" class="form-control" />
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
+            <div class="form-group col-md-12">
+                <label asp-for="Degree"></label>
+                <select asp-for="Degree" class="form-control" asp-items="ViewBag.Degrees"></select>
+                <span asp-validation-for="Degree" class="text-danger"></span>
+            </div>
             <div class="form-group col-md-6">
                 <label asp-for="FirstName"></label>
                 <input asp-for="FirstName" class="form-control" />
@@ -40,6 +45,11 @@
                 <label asp-for="Organisation"></label>
                 <input asp-for="Organisation" class="form-control" />
                 <span asp-validation-for="Organisation" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-12">
+                <label asp-for="VATID"></label>
+                <input asp-for="VATID" class="form-control" />
+                <span asp-validation-for="VATID" class="text-danger"></span>
             </div>
             <div class="form-group col-md-12">
                 <label asp-for="PhoneNumber"></label>(not required)
@@ -59,7 +69,7 @@
             </div>
         </form>
     </div>
-    <div class="col-md-5 col-md-push-1">
+    <div class="col-md-6 col-md-push-1">
 
         <img src="~/images/logo_msm_en.png" alt="MSM" class="img-responsive" />
     </div>

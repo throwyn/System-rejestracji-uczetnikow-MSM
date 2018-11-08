@@ -36,9 +36,6 @@ else if (User.IsInRole("Admin"))
                     Status
                 </th>
                 <th>
-                    Is paid
-                </th>
-                <th>
                     Creation date
                 </th>
                 @if (Model.Papers.Where(p => p.Status == 0).Count() > 0)
@@ -72,10 +69,6 @@ else if (User.IsInRole("Admin"))
                                 break;
                         }
                         @*@Html.DisplayFor(modelItem => item.Status)*@
-                    </td>
-
-                    <td style='color: black; text-align: center; '>
-                        @Html.DisplayFor(modelItem => item.IsPaid)
                     </td>
 
                     <td style='color: black; text-align: center; '>

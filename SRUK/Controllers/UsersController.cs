@@ -122,6 +122,8 @@ namespace SRUK.Controllers
                 return RedirectToAction("Index", "Home");
 
             ViewBag.Roles = _roleManager.Roles.ToList();
+
+            ViewBag.Degrees = new AcademicDegrees().SelectListItems;
             var model = new UserCreateViewModel();
             model.StatusMessage = StatusMessage;
             return View(model);
@@ -190,6 +192,9 @@ namespace SRUK.Controllers
             }
             user.Role = _userManager.GetRolesAsync(entityUser).Result.FirstOrDefault();
 
+
+            ViewBag.Degrees = new AcademicDegrees().SelectListItems;
+
             user.StatusMessage = StatusMessage;
             return View(user);
         }
@@ -229,6 +234,8 @@ namespace SRUK.Controllers
                 user.FirstName = model.FirstName;
                 user.LastName = model.LastName;
                 user.Organisation = model.Organisation;
+                user.Degree = model.Degree;
+                user.VATID = model.VATID;
                 user.PhoneNumber = model.PhoneNumber;
                 user.EmailConfirmed = model.EmailConfirmed;
                 user.PhoneNumberConfirmed = model.PhoneNumberConfirmed;
@@ -292,6 +299,8 @@ namespace SRUK.Controllers
                 user.FirstName = null;
                 user.LastName = null;
                 user.Organisation = null;
+                user.Degree = null;
+                user.VATID = null;
                 user.PhoneNumber = null;
                 user.EmailConfirmed = false;
                 user.PhoneNumberConfirmed = false;

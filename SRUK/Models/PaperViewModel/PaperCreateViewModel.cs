@@ -23,10 +23,6 @@ namespace SRUK.Models
         [Required]
         public short Status { get; set; }
 
-        [Required]
-        [Display(Name = "Is paid")]
-        public bool IsPaid { get; set; }
-
         public string StatusMessage { get; set; }
     }
 }

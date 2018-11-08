@@ -40,6 +40,7 @@ namespace SRUK.Models
         public int AccessFailedCount { get; set; }
 
         [Display(Name = "Creation date")]
+        [DisplayFormat(DataFormatString = "{0:g}")]
         public DateTime CreationDate { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:g}")]
@@ -48,6 +49,12 @@ namespace SRUK.Models
 
         [Display(Name = "Role")]
         public string Role { get; set; }
+
+        [Display(Name = "Academic title")]
+        public string Degree { get; set; }
+
+        [Display(Name = "VAT ID")]
+        public string VATID { get; set; }
 
         public string StatusMessage { get; set; }
     }

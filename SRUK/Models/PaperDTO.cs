@@ -23,8 +23,6 @@ namespace SRUK.Models
         
         public short Status { get; set; }
         
-        public bool IsPaid { get; set; }
-        
         public DateTime CreationDate { get; set; }
         
         public DateTime EditDate { get; set; }

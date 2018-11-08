@@ -15,9 +15,7 @@ namespace SRUK.Models
         public string EndSeason { get { return Season.EndDate.Year.ToString(); } }
         public string Title { get; set; }
         public short Status { get; set; }
-
-        [Display(Name = "Is paid")]
-        public bool IsPaid { get; set; }
+        
         public ICollection<PaperVersionDTO> PaperVersions { get; set; }
 
         [Display(Name = "Is deleted")]

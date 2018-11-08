@@ -15,6 +15,7 @@ using SRUK.Entities;
 using SRUK.Models.ManageViewModels;
 using SRUK.Services;
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace SRUK.Controllers
 {
@@ -57,6 +58,8 @@ namespace SRUK.Controllers
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
+            ViewBag.Degrees = new AcademicDegrees().SelectListItems;
+
             var model = Mapper.Map<IndexViewModel>(user);
             model.StatusMessage = StatusMessage;
             return View(model);
@@ -85,6 +88,8 @@ namespace SRUK.Controllers
                 user.LastName = model.LastName;
                 user.Organisation = model.Organisation;
                 user.PhoneNumber = model.PhoneNumber;
+                user.Degree = model.Degree;
+                user.VATID = model.VATID;
                 user.SecurityStamp = Guid.NewGuid().ToString();
 
                 var result = await _userManager.UpdateAsync(user);
@@ -225,269 +230,57 @@ namespace SRUK.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ExternalLogins()
+        public IActionResult DeleteAccount()
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
-
-            var model = new ExternalLoginsViewModel { CurrentLogins = await _userManager.GetLoginsAsync(user) };
-            model.OtherLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync())
-                .Where(auth => model.CurrentLogins.All(ul => auth.Name != ul.LoginProvider))
-                .ToList();
-            model.ShowRemoveButton = await _userManager.HasPasswordAsync(user) || model.CurrentLogins.Count > 1;
-            model.StatusMessage = StatusMessage;
-
+            var model = new DeleteAccountViewModel { StatusMessage = StatusMessage };
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LinkLogin(string provider)
-        {
-            // Clear the existing external cookie to ensure a clean login process
-            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
-
-            // Request a redirect to the external login provider to link a login for the current user
-            var redirectUrl = Url.Action(nameof(LinkLoginCallback));
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl, _userManager.GetUserId(User));
-            return new ChallengeResult(provider, properties);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> LinkLoginCallback()
+        public async Task<IActionResult> DeleteAccount(DeleteAccountViewModel model)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
-
-            var info = await _signInManager.GetExternalLoginInfoAsync(user.Id);
-            if (info == null)
+            try
             {
-                throw new ApplicationException($"Unexpected error occurred loading external login info for user with ID '{user.Id}'.");
-            }
+                var passwordIsCorrect = await _userManager.CheckPasswordAsync(user, model.Password);
+                if (passwordIsCorrect)
+                {
+                    user.UserName = user.Id;
+                    user.NormalizedUserName = null;
+                    user.NormalizedEmail = null;
+                    user.AccessFailedCount = 0;
+                    user.Email = "deleted";
+                    user.FirstName = null;
+                    user.LastName = null;
+                    user.Organisation = null;
+                    user.Degree = null;
+                    user.VATID = null;
+                    user.PhoneNumber = null;
+                    user.EmailConfirmed = false;
+                    user.PhoneNumberConfirmed = false;
+                    user.IsDeleted = true;
+                    var roles = _userManager.GetRolesAsync(user).Result.ToAsyncEnumerable().ToEnumerable();
+                    await _userManager.RemoveFromRolesAsync(user, roles);
 
-            var result = await _userManager.AddLoginAsync(user, info);
-            if (!result.Succeeded)
+                    var result = await _userManager.UpdateAsync(user);
+
+                    await _signInManager.SignOutAsync();
+                    _logger.LogInformation("User logged out.");
+                    return RedirectToAction(nameof(HomeController.Index), "Home");
+                }
+                return View();
+            }
+            catch
             {
-                throw new ApplicationException($"Unexpected error occurred adding external login for user with ID '{user.Id}'.");
+                return View();
             }
-
-            // Clear the existing external cookie to ensure a clean login process
-            await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
-
-            StatusMessage = "The external login was added.";
-            return RedirectToAction(nameof(ExternalLogins));
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RemoveLogin(RemoveLoginViewModel model)
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
-
-            var result = await _userManager.RemoveLoginAsync(user, model.LoginProvider, model.ProviderKey);
-            if (!result.Succeeded)
-            {
-                throw new ApplicationException($"Unexpected error occurred removing external login for user with ID '{user.Id}'.");
-            }
-
-            await _signInManager.SignInAsync(user, isPersistent: false);
-            StatusMessage = "The external login was removed.";
-            return RedirectToAction(nameof(ExternalLogins));
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> TwoFactorAuthentication()
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
-
-            var model = new TwoFactorAuthenticationViewModel
-            {
-                HasAuthenticator = await _userManager.GetAuthenticatorKeyAsync(user) != null,
-                Is2faEnabled = user.TwoFactorEnabled,
-                RecoveryCodesLeft = await _userManager.CountRecoveryCodesAsync(user),
-            };
-
-            return View(model);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Disable2faWarning()
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
-
-            if (!user.TwoFactorEnabled)
-            {
-                throw new ApplicationException($"Unexpected error occured disabling 2FA for user with ID '{user.Id}'.");
-            }
-
-            return View(nameof(Disable2fa));
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Disable2fa()
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
-
-            var disable2faResult = await _userManager.SetTwoFactorEnabledAsync(user, false);
-            if (!disable2faResult.Succeeded)
-            {
-                throw new ApplicationException($"Unexpected error occured disabling 2FA for user with ID '{user.Id}'.");
-            }
-
-            _logger.LogInformation("User with ID {UserId} has disabled 2fa.", user.Id);
-            return RedirectToAction(nameof(TwoFactorAuthentication));
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> EnableAuthenticator()
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
-
-            var model = new EnableAuthenticatorViewModel();
-            await LoadSharedKeyAndQrCodeUriAsync(user, model);
-
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EnableAuthenticator(EnableAuthenticatorViewModel model)
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                await LoadSharedKeyAndQrCodeUriAsync(user, model);
-                return View(model);
-            }
-
-            // Strip spaces and hypens
-            var verificationCode = model.Code.Replace(" ", string.Empty).Replace("-", string.Empty);
-
-            var is2faTokenValid = await _userManager.VerifyTwoFactorTokenAsync(
-                user, _userManager.Options.Tokens.AuthenticatorTokenProvider, verificationCode);
-
-            if (!is2faTokenValid)
-            {
-                ModelState.AddModelError("Code", "Verification code is invalid.");
-                await LoadSharedKeyAndQrCodeUriAsync(user, model);
-                return View(model);
-            }
-
-            await _userManager.SetTwoFactorEnabledAsync(user, true);
-            _logger.LogInformation("User with ID {UserId} has enabled 2FA with an authenticator app.", user.Id);
-            var recoveryCodes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);
-            TempData[RecoveryCodesKey] = recoveryCodes.ToArray();
-
-            return RedirectToAction(nameof(ShowRecoveryCodes));
-        }
-
-        [HttpGet]
-        public IActionResult ShowRecoveryCodes()
-        {
-            var recoveryCodes = (string[])TempData[RecoveryCodesKey];
-            if (recoveryCodes == null)
-            {
-                return RedirectToAction(nameof(TwoFactorAuthentication));
-            }
-
-            var model = new ShowRecoveryCodesViewModel { RecoveryCodes = recoveryCodes };
-            return View(model);
-        }
-
-        [HttpGet]
-        public IActionResult ResetAuthenticatorWarning()
-        {
-            return View(nameof(ResetAuthenticator));
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ResetAuthenticator()
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
-
-            await _userManager.SetTwoFactorEnabledAsync(user, false);
-            await _userManager.ResetAuthenticatorKeyAsync(user);
-            _logger.LogInformation("User with id '{UserId}' has reset their authentication app key.", user.Id);
-
-            return RedirectToAction(nameof(EnableAuthenticator));
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GenerateRecoveryCodesWarning()
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
-
-            if (!user.TwoFactorEnabled)
-            {
-                throw new ApplicationException($"Cannot generate recovery codes for user with ID '{user.Id}' because they do not have 2FA enabled.");
-            }
-
-            return View(nameof(GenerateRecoveryCodes));
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> GenerateRecoveryCodes()
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
-
-            if (!user.TwoFactorEnabled)
-            {
-                throw new ApplicationException($"Cannot generate recovery codes for user with ID '{user.Id}' as they do not have 2FA enabled.");
-            }
-
-            var recoveryCodes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);
-            _logger.LogInformation("User with ID {UserId} has generated new 2FA recovery codes.", user.Id);
-
-            var model = new ShowRecoveryCodesViewModel { RecoveryCodes = recoveryCodes.ToArray() };
-
-            return View(nameof(ShowRecoveryCodes), model);
-        }
 
         #region Helpers
 
@@ -524,20 +317,7 @@ namespace SRUK.Controllers
                 _urlEncoder.Encode(email),
                 unformattedKey);
         }
-
-        private async Task LoadSharedKeyAndQrCodeUriAsync(ApplicationUser user, EnableAuthenticatorViewModel model)
-        {
-            var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
-            if (string.IsNullOrEmpty(unformattedKey))
-            {
-                await _userManager.ResetAuthenticatorKeyAsync(user);
-                unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
-            }
-
-            model.SharedKey = FormatKey(unformattedKey);
-            model.AuthenticatorUri = GenerateQrCodeUri(user.Email, unformattedKey);
-        }
-
+        
         #endregion
     }
 }

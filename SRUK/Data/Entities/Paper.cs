@@ -27,8 +27,6 @@ namespace SRUK.Entities
         public string Title { get; set; }
         
         public short Status { get; set; }
-        
-        public bool IsPaid { get; set; }
 
         [Required]
         public DateTime CreationDate { get; set; }

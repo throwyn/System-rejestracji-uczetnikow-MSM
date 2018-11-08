@@ -49,6 +49,12 @@ namespace SRUK.Models
         [Display(Name = "Phone number confirmed")]
         public bool PhoneNumberConfirmed { get; set; }
 
+        [Display(Name = "Academic title")]
+        public string Degree { get; set; }
+
+        [Display(Name = "VAT ID")]
+        public string VATID { get; set; }
+
         [Required]
         [Display(Name = "Role")]
         public string Role { get; set; }

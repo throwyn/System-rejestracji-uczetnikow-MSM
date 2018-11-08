@@ -55,6 +55,12 @@ namespace SRUK.Models
         [Display(Name = "Role")]
         public string Role { get; set; }
 
+        [Display(Name = "Academic title")]
+        public string Degree { get; set; }
+
+        [Display(Name = "VAT ID")]
+        public string VATID { get; set; }
+
         public string StatusMessage { get; set; }
     }
 }

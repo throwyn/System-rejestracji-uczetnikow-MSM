@@ -34,6 +34,12 @@ namespace SRUK.Models.ManageViewModels
         [Display(Name = "Organisation")]
         public string Organisation { get; set; }
 
+        [Display(Name = "Academic title")]
+        public string Degree { get; set; }
+
+        [Display(Name = "VAT Identification Number(NIP)")]
+        public string VATID { get; set; }
+
         public string StatusMessage { get; set; }
 
     }

@@ -18,7 +18,5 @@ namespace SRUK.Models
 
         [DisplayFormat(DataFormatString = "{0:g}")]
         public DateTime CreationDate { get; set; }
-
-        public bool IsPaid { get; set; }
     }
 }

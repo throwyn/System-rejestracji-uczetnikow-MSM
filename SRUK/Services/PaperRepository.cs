@@ -35,6 +35,14 @@ namespace SRUK.Services
             var paper = Mapper.Map<PaperDTO>(entityPaper);
             return paper;
         }
+
+        public async Task<bool> PaperExists(string title)
+        {
+            var paper = await _context.Paper.FirstOrDefaultAsync(u => u.Title == title);
+            if(paper == null) 
+                return false;
+            return true;
+        }
         public IEnumerable<PaperShortDTO> GetUserPapers(string userId)
         {
             var entityPapers = _context.Paper.Where(p => p.IsDeleted == false && p.Author.Id == userId).ToAsyncEnumerable().ToEnumerable();
@@ -53,8 +61,7 @@ namespace SRUK.Services
         {
             Paper paperNew = Mapper.Map<Paper>(paper);
             var paperToUpdate = await _context.Paper.FindAsync(paper.Id);
-
-            paperToUpdate.IsPaid = paperNew.IsPaid;
+            
             paperToUpdate.Title = paperNew.Title;
             paperToUpdate.Status = paperNew.Status;
 

@@ -16,8 +16,12 @@ namespace SRUK.Entities
         [MaxLength(50)]
         public string LastName { get; set; }
 
+        public string Degree { get; set; }
+
         [MaxLength(100)]
         public string Organisation { get; set; }
+
+        public string VATID { get; set; }
 
         [Required]
         public DateTime CreationDate { get; set; }
@@ -27,6 +31,7 @@ namespace SRUK.Entities
 
         [Required]
         public bool IsDeleted { get; set; }
+
 
         public ICollection<Paper> Papers { get; set; }
         public ICollection<Review> Reviews { get; set; }

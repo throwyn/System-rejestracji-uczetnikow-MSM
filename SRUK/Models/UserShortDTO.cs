@@ -14,6 +14,7 @@ namespace SRUK.Models
         public string PhoneNumber { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string Degree { get; set; }
         public string Organisation { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:g}")]

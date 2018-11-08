@@ -10,6 +10,8 @@
     <Compile Remove="Data\Migrations\20181026170043_RequiredUsersUpdateMigration.Designer.cs" />
     <Compile Remove="Data\Migrations\20181030114930_IMessedInDbContext2Migration.cs" />
     <Compile Remove="Data\Migrations\20181030114930_IMessedInDbContext2Migration.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181108132434_RemovedIsPaidAddedNIPAndDegreeMigration.cs" />
+    <Compile Remove="Data\Migrations\20181108132434_RemovedIsPaidAddedNIPAndDegreeMigration.Designer.cs" />
   </ItemGroup>
 
 
@@ -28,7 +30,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Views\Manage\DeleteAccount.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Papers\Add.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Papers\.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Papers\Edit.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Papers\MyPapers.cshtml">
