@@ -1,0 +1,69 @@
+﻿@model PaperVersionIndexViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Versions</h2>
+@Html.Partial("_StatusMessage", Model.StatusMessage)
+
+@if (Model.Versions.Count > 0)
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th style="width:350px;">
+                    Title
+                </th>
+                <th style="width:250px;">
+                    Author
+                </th>
+                <th>
+                    Status
+                </th>
+                <th>
+                    Creation date
+                </th>
+                <th></th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Versions)
+            {
+                <tr>
+                    <td>
+                        @Html.ActionLink(item.Paper.Title, "Details", "Papers", new { Id = item.Paper.Id })
+                    </td>
+                    <td>
+                        @Html.ActionLink(item.Paper.Author.FirstName + " " + item.Paper.Author.LastName, "Details", "Users", new { Id = item.Paper.AuthorId })
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+
+                    <td style='color: black; text-align: center; '>
+                        @Html.DisplayFor(modelItem => item.CreationDate)
+                    </td>
+                    @if (item.Status == 0)
+                    {
+                        <td style='color: black; text-align: center; '>
+                            <a asp-action="ChooseCritic" asp-controller="Review" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-text-color " aria-hidden="true" data-toggle="tooltip" title="Choose critic"></span></a> |
+                            <a asp-action="RejectVersion" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-remove" aria-hidden="true" data-toggle="tooltip" title="Reject version"></span></a>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+
+}
+
+<style>
+    th {
+        text-align: center;
+    }
+</style>

@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Papers</h2>
+<h2>My Papers</h2>
 @Html.Partial("_StatusMessage", Model.StatusMessage)
 
 
@@ -36,7 +36,7 @@
             {
                 <tr>
                     <td>
-                        @Html.ActionLink(item.Title, "Details", "Papers", new { Id = item.Id })
+                        @Html.ActionLink(item.Title, "MyPaper", "Papers", new { Id = item.Id })
                     </td>
                     <td>
                         @switch (item.Status)
@@ -60,13 +60,9 @@
                     <td style='color: black; text-align: center; '>
                         @if (item.Status == 0 || item.Status == 2)
                         {
-                            <a asp-action="EditMyPaper" asp-route-id="@item.Id"><span class="glyphicon glyphicon-pencil" aria-hidden="true" data-toggle="tooltip" title="Edit"></span></a>
+                            <a asp-action="MyPaperEdit" asp-route-id="@item.Id"><span class="glyphicon glyphicon-pencil" aria-hidden="true" data-toggle="tooltip" title="Edit"></span></a> <text>|</text>
                         }
-                        else if(item.Status == 1)
-                        {
-                            <span class="glyphicon glyphicon-file" aria-hidden="true" data-toggle="tooltip" title="Add paper"></span>
-                        }|
-                        <a asp-action="Details" asp-route-id="@item.Id"><span class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Details"></span></a> |
+                        <a asp-action="MyPaper" asp-route-id="@item.Id"><span class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Details"></span></a> |
                         <a asp-action="Delete" asp-route-id="@item.Id"><span class="glyphicon glyphicon-trash" aria-hidden="true" data-toggle="tooltip" title="Delete"></span></a>
                     </td>
                 </tr>

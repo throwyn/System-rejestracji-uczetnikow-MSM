@@ -21,31 +21,6 @@ namespace SRUK.Entities
         public PaperVersion PaperVersion { get; set; }
         public long PaperVersionId { get; set; }
 
-
-        public Paper Paper
-        {
-            get
-            {
-                return PaperVersion.Paper;
-            }
-        }
-
-        public ApplicationUser Author
-        {
-            get
-            {
-                return PaperVersion.Author;
-            }
-        }
-
-        public Season Season
-        {
-            get
-            {
-                return PaperVersion.Season;
-            }
-        }
-
         public bool EditorialErrors { get; set; }
         public bool TechnicalErrors { get; set; }
         public bool RepeatReview { get; set; }

@@ -31,7 +31,7 @@ namespace SRUK.Services
 
         public async Task<PaperDTO> GetPaperAsync(long id)
         {
-            var entityPaper = await _context.Paper.Include(p => p.Author).Include(p => p.Season).SingleOrDefaultAsync(u => u.Id == id);
+            var entityPaper = await _context.Paper.Include(p => p.Author).Include(p => p.Season).Include(p => p.PaperVersions).SingleOrDefaultAsync(u => u.Id == id);
             var paper = Mapper.Map<PaperDTO>(entityPaper);
             return paper;
         }
@@ -80,6 +80,20 @@ namespace SRUK.Services
             int result = await _context.SaveChangesAsync();
             return result;
         }
+
+        public async Task<int> UpdatePaperTitleAsync(PaperDTO paper)
+        {
+            var paperToUpdate = await _context.Paper.FindAsync(paper.Id);
+
+            paperToUpdate.Title = paper.Title;
+            paperToUpdate.Status = 0;
+
+            int result = await _context.SaveChangesAsync();
+
+            return result;
+        }
+
+        //Status changers
         public async Task<int> ApproveTopic(long id)
         {
             int result;
@@ -113,18 +127,6 @@ namespace SRUK.Services
 
             return result;
 
-        }
-
-        public async Task<int> UpdatePaperTitleAsync(PaperDTO paper)
-        {
-            var paperToUpdate = await _context.Paper.FindAsync(paper.Id);
-
-            paperToUpdate.Title = paper.Title;
-            paperToUpdate.Status = 0;
-
-            int result = await _context.SaveChangesAsync();
-
-            return result;
         }
     }
 }

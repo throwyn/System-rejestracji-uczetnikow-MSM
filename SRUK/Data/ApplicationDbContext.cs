@@ -54,5 +54,6 @@ namespace SRUK.Data
         public DbSet<SRUK.Entities.Paper> Paper { get; set; }
         public DbSet<SRUK.Entities.PaperVersion> PaperVerison { get; set; }
         public DbSet<SRUK.Entities.Review> Review { get; set; }
+        public DbSet<SRUK.Models.PaperVersionDeleteViewModel> PaperVersionDeleteViewModel { get; set; }
     }
 }

@@ -7,25 +7,22 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SRUK.Entities
 {
-    public class PaperVersion
+    public class Comment
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
         
         [Required]
-        public Paper Paper { get; set; }
-        public long PaperId { get; set; }
+        public PaperVersion PaperVersion { get; set; }
+        public long PaperVersionId { get; set; }
 
         [Required]
-        public string FileName { get; set; }
+        public ApplicationUser Author { get; set; }
+        public string AuthorId { get; set; }
 
         [Required]
-        public string OriginalFileName { get; set; }
-
-        [Required]
-        public short Status { get; set; }
-
+        public string Content { get; set; }
 
         [Required]
         public DateTime CreationDate { get; set; }
@@ -35,9 +32,5 @@ namespace SRUK.Entities
 
         [Required]
         public bool IsDeleted { get; set; }
-
-
-        public ICollection<Comment> Comments { get; set; }
-        public ICollection<Review> Reviews { get; set; }
     }
 }

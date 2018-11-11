@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace SRUK.Models
 {
-    public class MyPaperEditViewModel
+    public class MyPaperDetailsViewModel
     {
-        [Required]
-        [Display(Name = "ID")]
         public long Id { get; set; }
 
-        [Required]
-        [MaxLength(200)]
+        public SeasonDTO Season { get; set; }
+        public string EndSeason { get { return Season.EndDate.Year.ToString(); } }
         public string Title { get; set; }
-
+        public short Status { get; set; }
+        
+        public ICollection<PaperVersionDTO> PaperVersions { get; set; }
         public string StatusMessage { get; set; }
     }
 }

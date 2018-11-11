@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -6,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace SRUK.Models
 {
-    public class MyPaperEditViewModel
+    public class PaperVersionsAddViewModel
     {
         [Required]
         [Display(Name = "ID")]
-        public long Id { get; set; }
+        public long PaperId { get; set; }
 
         [Required]
-        [MaxLength(200)]
-        public string Title { get; set; }
+        [Display(Name = "Paper file")]
+        public IFormFile File { get; set; }
 
         public string StatusMessage { get; set; }
     }

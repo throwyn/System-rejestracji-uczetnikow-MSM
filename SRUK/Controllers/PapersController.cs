@@ -56,7 +56,7 @@ namespace SRUK.Controllers
         public string StatusMessage { get; set; }
 
         // GET: Papers
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
 
             if (User.IsInRole("Admin"))
@@ -84,13 +84,13 @@ namespace SRUK.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var season = _paperRepository.GetPaperAsync((long)id).Result;
-            if (season == null)
+            var paper = _paperRepository.GetPaperAsync((long)id).Result;
+            if (paper == null)
             {
                 StatusMessage = "Error. Paper do not exists.";
                 return RedirectToAction(nameof(Index));
             }
-            var model = Mapper.Map<PaperDetailsViewModel>(season);
+            var model = Mapper.Map<PaperDetailsViewModel>(paper);
             model.StatusMessage = StatusMessage;
             return View(model);
         }
@@ -405,9 +405,9 @@ namespace SRUK.Controllers
 
         }
 
-        // GET: Papers/EditMyPaper/5
-        [Route("EditMyPaper/{id}")]
-        public async Task<IActionResult> EditMyPaper(long? id)
+        // GET: Papers/MyPaperEdit/5
+        [Route("MyPaperEdit/{id}")]
+        public async Task<IActionResult> MyPaperEdit(long? id)
         {
             if (id == null)
             {
@@ -429,17 +429,17 @@ namespace SRUK.Controllers
                 return RedirectToAction(nameof(MyPapers));
             }
 
-            var model = Mapper.Map<PaperUserEditViewModel>(paper);
+            var model = Mapper.Map<MyPaperEditViewModel>(paper);
 
             model.StatusMessage = StatusMessage;
             return View(model);
         }
 
-        // POST: Papers/EditMyPaper/5
+        // POST: Papers/MyPaperEdit/5
         [HttpPost]
-        [Route("EditMyPaper/{id}")]
+        [Route("MyPaperEdit/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditMyPaper(PaperUserEditViewModel model)
+        public async Task<IActionResult> MyPaperEdit(MyPaperEditViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -448,7 +448,7 @@ namespace SRUK.Controllers
                     if (_paperRepository.PaperExists(model.Title).Result)
                     {
                         StatusMessage = "Error. This title is already taken.";
-                        return RedirectToAction(nameof(EditMyPaper), model.Id);
+                        return RedirectToAction(nameof(MyPaperEdit), model.Id);
                     }
 
                     var paper = Mapper.Map<PaperDTO>(model);
@@ -469,6 +469,39 @@ namespace SRUK.Controllers
             return RedirectToAction(nameof(MyPapers));
         }
 
+        // GET: Papers
+        [Route("MyPaper/{id}")]
+        public async Task<ActionResult> MyPaper(long? id)
+        {
+            if (id == null)
+            {
+                StatusMessage = "Error. Enter id of paper.";
+                return RedirectToAction(nameof(MyPapers));
+            }
+
+            if (User.IsInRole("Admin"))
+                return RedirectToAction(nameof(Details),id);
+
+
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var paper = _paperRepository.GetPaperAsync((long)id).Result;
+
+            if (paper == null)
+            {
+                StatusMessage = "Error. Paper do not exists.";
+                return RedirectToAction(nameof(MyPapers));
+            }
+            if (user.Id != paper.AuthorId)
+            {
+                StatusMessage = "Error. You can see only your own papers.";
+                return RedirectToAction(nameof(MyPapers));
+            }
+            var model = Mapper.Map<MyPaperDetailsViewModel>(paper);
+            model.StatusMessage = StatusMessage;
+            ViewBag.IsRegistrationOpened = _seasonRepository.IsRegistrationOpenedAsync().Result;
+            return View(model);
+
+        }
 
 
 

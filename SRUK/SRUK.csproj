@@ -12,6 +12,8 @@
     <Compile Remove="Data\Migrations\20181030114930_IMessedInDbContext2Migration.Designer.cs" />
     <Compile Remove="Data\Migrations\20181108132434_RemovedIsPaidAddedNIPAndDegreeMigration.cs" />
     <Compile Remove="Data\Migrations\20181108132434_RemovedIsPaidAddedNIPAndDegreeMigration.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181110212026_deletedAuthorAndSeasonFromPaperVersionMigration.cs" />
+    <Compile Remove="Data\Migrations\20181110212026_deletedAuthorAndSeasonFromPaperVersionMigration.Designer.cs" />
   </ItemGroup>
 
 
@@ -39,6 +41,9 @@
     <Content Update="Views\Papers\.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Papers\MyPaper.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Papers\Edit.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
@@ -49,6 +54,12 @@
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Papers\_StatusMessage.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\PaperVersions\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\PaperVersions\_StatusMessage.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Seasons\_StatusMessage.cshtml">
@@ -63,8 +74,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Files\Reviews\" />
+    <Folder Include="Files\Papers\" />
     <Folder Include="Models\ReviewViewModel\" />
-    <Folder Include="Models\PaperVersionViewModel\" />
   </ItemGroup>
 
 </Project>

@@ -15,18 +15,18 @@ namespace SRUK.Models
         public long PaperId { get; set; }
         
         public string FileName { get; set; }
-        
+
+        public string OriginalFileName { get; set; }
+
         public short Status { get; set; }
 
-        public UserDTO Author { get; set; }
-
-        public SeasonDTO Season { get; set; } 
-        
+        [DisplayFormat(DataFormatString = "{0:g}")]
         public DateTime CreationDate { get; set; }
         
         public bool IsDeleted { get; set; }
 
         public ICollection<ReviewDTO> Reviews { get; set; }
+        public ICollection<CommentDTO> Comments { get; set; }
 
     }
 }

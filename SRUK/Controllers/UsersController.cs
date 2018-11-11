@@ -31,6 +31,7 @@ namespace SRUK.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
+        private readonly IPaperRepository _paperRepository;
         private readonly RoleManager<IdentityRole> _roleManager;
 
         public UsersController(
@@ -39,6 +40,7 @@ namespace SRUK.Controllers
             UserManager<ApplicationUser> userManager,
             IEmailSender emailSender,
             ILogger<AccountController> logger,
+            IPaperRepository paperRepository,
             RoleManager<IdentityRole> roleManager
             )
         {
@@ -47,6 +49,7 @@ namespace SRUK.Controllers
             _userManager = userManager;
             _emailSender = emailSender;
             _logger = logger;
+            _paperRepository = paperRepository;
             _roleManager = roleManager;
         }
 
@@ -109,6 +112,7 @@ namespace SRUK.Controllers
                 return RedirectToAction(nameof(Index));
             }
             var user = Mapper.Map<UserDetailsViewModel>(entityUser);
+            user.Papers = _paperRepository.GetUserPapers(user.Id);
             user.Role = _userManager.GetRolesAsync(entityUser).Result.FirstOrDefault();
             user.StatusMessage = StatusMessage;
             return View(user);

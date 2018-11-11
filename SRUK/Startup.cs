@@ -16,6 +16,8 @@ using SRUK.Services.Interfaces;
 using SRUK.Data.Entities;
 using SRUK.Models.ManageViewModels;
 using System.Globalization;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 namespace SRUK
 {
@@ -45,12 +47,17 @@ namespace SRUK
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddSingleton<IFileProvider>(
+                new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
+
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ISeasonRepository, SeasonRepository>();
             services.AddScoped<IPaperRepository, PaperRepository>();
+            services.AddScoped<IPaperVersionRepository, PaperVersionRepository>();
 
             services.AddMvc();
         }
@@ -111,14 +118,20 @@ namespace SRUK
                 cfg.CreateMap<PaperEditViewModel, PaperDTO>();
                 cfg.CreateMap<PaperDTO, PaperDetailsViewModel>();
                 cfg.CreateMap<PaperDTO, PaperDeleteViewModel>();
-                cfg.CreateMap<PaperDTO, PaperUserEditViewModel>();
-                cfg.CreateMap<PaperUserEditViewModel,PaperDTO>();
+                cfg.CreateMap<PaperDTO, MyPaperEditViewModel>();
+                cfg.CreateMap<MyPaperEditViewModel, PaperDTO>(); 
+                cfg.CreateMap<PaperDTO, MyPaperDetailsViewModel> ();
 
                 //<IEnumerable<PaperShortDTO>>
                 //PaperVersion
                 cfg.CreateMap<PaperVersion, PaperVersionDTO>();
+                cfg.CreateMap<PaperVersion, PaperVersionShortDTO>();
+                cfg.CreateMap<PaperVersionDTO, PaperVersion>();
 
+                cfg.CreateMap<PaperVersionDTO, PaperVersionDeleteViewModel>();
+                
             });
+
 
             app.UseMvc(routes =>
             {

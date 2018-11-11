@@ -11,9 +11,10 @@ using System;
 namespace SRUK.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181110194408_addOriginalFileNameMigration")]
+    partial class addOriginalFileNameMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -198,34 +199,6 @@ namespace SRUK.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("SRUK.Entities.Comment", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("AuthorId")
-                        .IsRequired();
-
-                    b.Property<string>("Content")
-                        .IsRequired();
-
-                    b.Property<DateTime>("CreationDate");
-
-                    b.Property<DateTime>("EditDate");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<long>("PaperVersionId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
-
-                    b.HasIndex("PaperVersionId");
-
-                    b.ToTable("Comment");
                 });
 
             modelBuilder.Entity("SRUK.Entities.Message", b =>
@@ -433,19 +406,6 @@ namespace SRUK.Data.Migrations
                     b.HasOne("SRUK.Entities.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("SRUK.Entities.Comment", b =>
-                {
-                    b.HasOne("SRUK.Entities.ApplicationUser", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("SRUK.Entities.PaperVersion", "PaperVersion")
-                        .WithMany("Comments")
-                        .HasForeignKey("PaperVersionId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
