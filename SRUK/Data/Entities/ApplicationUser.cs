@@ -35,6 +35,6 @@ namespace SRUK.Entities
 
         public ICollection<Paper> Papers { get; set; }
         public ICollection<Review> Reviews { get; set; }
-        
+
     }
 }

@@ -176,7 +176,7 @@ namespace SRUK.Controllers
             {
                 string newFileName = Guid.NewGuid().ToString() + model.File.FileName.Substring(model.File.FileName.Length - 4);
                 var path = Path.Combine(
-                        Directory.GetCurrentDirectory(), "Files/Papers",
+                        Directory.GetCurrentDirectory(), "Files\\Papers",
                         newFileName);
 
                 using (var stream = new FileStream(path, FileMode.Create))
@@ -194,7 +194,7 @@ namespace SRUK.Controllers
                 if(result == 1)
                 {
                     StatusMessage = "Version has beed added.";
-                    return RedirectToAction("MyPapers", "Papers");
+                    return RedirectToAction("MyPaper", "Papers", new { id = model.PaperId });
                 }
             }
             StatusMessage = "Error. Entered data is not valid.";
@@ -213,7 +213,7 @@ namespace SRUK.Controllers
                 return RedirectToAction("MyPapers", "Papers");
             }
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            if (paperVersion.Paper.AuthorId != user.Id || User.IsInRole("Admin"))
+            if (paperVersion.Paper.AuthorId != user.Id && !User.IsInRole("Admin") && paperVersion.Reviews.FirstOrDefault(r=>r.CriticId == user.Id) == null)
             {
                 StatusMessage = "Error. You don't have permission to do that.";
                 return RedirectToAction("MyPapers", "Papers");
@@ -267,7 +267,7 @@ namespace SRUK.Controllers
             PaperVersionDTO paperVersion = await _paperVersionRepository.GetPaperVersionAsync(id);
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
-            if (paperVersion.Paper.AuthorId != user.Id)
+            if (paperVersion.Paper.AuthorId != user.Id && !User.IsInRole("Admin"))
             {
                 StatusMessage = "Error. Access denied.";
                 return RedirectToAction("MyPaper", "Papers", new { id = paperVersion.PaperId });
@@ -285,6 +285,10 @@ namespace SRUK.Controllers
             if (result == 1)
             {
                 StatusMessage = "Succesfully deleted.";
+                if (User.IsInRole("Admin"))
+                {
+                    return RedirectToAction("Details", "Papers", new { id = paperVersion.PaperId });
+                }
                 return RedirectToAction("MyPaper", "Papers", new { id = paperVersion.PaperId });
             }
             StatusMessage = "Error. Something went wrong.";

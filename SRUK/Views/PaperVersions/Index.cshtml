@@ -31,28 +31,38 @@
         <tbody>
             @foreach (var item in Model.Versions)
             {
-                <tr>
-                    <td>
-                        @Html.ActionLink(item.Paper.Title, "Details", "Papers", new { Id = item.Paper.Id })
-                    </td>
-                    <td>
-                        @Html.ActionLink(item.Paper.Author.FirstName + " " + item.Paper.Author.LastName, "Details", "Users", new { Id = item.Paper.AuthorId })
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Status)
-                    </td>
+            <tr>
+                <td>
+                    @Html.ActionLink(item.Paper.Title, "Details", "Papers", new { Id = item.Paper.Id })
+                </td>
+                <td>
+                    @Html.ActionLink(item.Paper.Author.FirstName + " " + item.Paper.Author.LastName, "Details", "Users", new { Id = item.Paper.AuthorId })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
 
-                    <td style='color: black; text-align: center; '>
-                        @Html.DisplayFor(modelItem => item.CreationDate)
-                    </td>
+                <td style='color: black; text-align: center; '>
+                    @Html.DisplayFor(modelItem => item.CreationDate)
+                </td>
+                <td style='color: black; text-align: center; '>
+                    <a asp-action="Download" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class="glyphicon glyphicon-download-alt" aria-hidden="true" data-toggle="tooltip" title="Download"></span></a>
                     @if (item.Status == 0)
                     {
-                        <td style='color: black; text-align: center; '>
-                            <a asp-action="ChooseCritic" asp-controller="Review" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-text-color " aria-hidden="true" data-toggle="tooltip" title="Choose critic"></span></a> |
-                            <a asp-action="RejectVersion" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-remove" aria-hidden="true" data-toggle="tooltip" title="Reject version"></span></a>
-                        </td>
+                        <text>|</text>
+                        <a asp-action="Delete" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class="glyphicon glyphicon-trash" aria-hidden="true" data-toggle="tooltip" title="Delete"></span></a><text>|</text>
+                        <a asp-action="ChooseCritic" asp-controller="Reviews" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-user " aria-hidden="true" data-toggle="tooltip" title="Choose critic"></span></a> <text>|</text>
+                        <a asp-action="RejectVersion" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-remove" aria-hidden="true" data-toggle="tooltip" title="Reject version"></span></a>
                     }
-                </tr>
+                    @if (item.Status == 4)
+                    {
+                        <text>|</text>
+                        <a asp-action="ChooseCritic" asp-controller="Reviews" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-user " aria-hidden="true" data-toggle="tooltip" title="Choose another critic"></span></a> <text>|</text>
+                        <a asp-action="RejectVersion" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-remove" aria-hidden="true" data-toggle="tooltip" title="Reject version"></span></a>
+                    }
+                </td>
+                
+            </tr>
             }
         </tbody>
     </table>

@@ -58,6 +58,7 @@ namespace SRUK
             services.AddScoped<ISeasonRepository, SeasonRepository>();
             services.AddScoped<IPaperRepository, PaperRepository>();
             services.AddScoped<IPaperVersionRepository, PaperVersionRepository>();
+            services.AddScoped<IReviewRepository, ReviewRepository>();
 
             services.AddMvc();
         }
@@ -112,7 +113,9 @@ namespace SRUK
                 cfg.CreateMap<SeasonDTO, SeasonDeleteViewModel>();
 
                 //Papers
-                cfg.CreateMap<Paper, PaperDTO>();
+                cfg.CreateMap<Paper, PaperDTO>(); 
+                cfg.CreateMap<Paper, PaperShortDTO>()
+                .ForMember(dest => dest.VersionsNo, opt => opt.MapFrom(src => src.PaperVersions.Count)); 
                 cfg.CreateMap<PaperCreateViewModel, PaperDTO>();
                 cfg.CreateMap<PaperDTO, PaperEditViewModel>();
                 cfg.CreateMap<PaperEditViewModel, PaperDTO>();
@@ -129,7 +132,16 @@ namespace SRUK
                 cfg.CreateMap<PaperVersionDTO, PaperVersion>();
 
                 cfg.CreateMap<PaperVersionDTO, PaperVersionDeleteViewModel>();
-                
+
+                //Reviews
+                cfg.CreateMap<Review, ReviewShortDTO>();
+                cfg.CreateMap<Review, ReviewDTO>();
+                cfg.CreateMap<ReviewDTO, Review>();
+                cfg.CreateMap<ReviewDTO, AddReviewViewModel>();
+                cfg.CreateMap<AddReviewViewModel, ReviewDTO>();
+                cfg.CreateMap<ReviewDTO, ReviewDetailsViewModel>();
+                cfg.CreateMap<ReviewDTO, ReviewViewModel>(); 
+
             });
 
 

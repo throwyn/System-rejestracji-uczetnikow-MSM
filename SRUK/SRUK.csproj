@@ -62,6 +62,21 @@
     <Content Update="Views\PaperVersions\_StatusMessage.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Reviews\AddReview.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Reviews\ChooseCritic.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Reviews\MyReviews.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Reviews\Index.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Reviews\_StatusMessage.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Seasons\_StatusMessage.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
@@ -76,7 +91,6 @@
   <ItemGroup>
     <Folder Include="Files\Reviews\" />
     <Folder Include="Files\Papers\" />
-    <Folder Include="Models\ReviewViewModel\" />
   </ItemGroup>
 
 </Project>

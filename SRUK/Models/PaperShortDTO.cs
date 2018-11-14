@@ -16,6 +16,8 @@ namespace SRUK.Models
         
         public short Status { get; set; }
 
+        public byte VersionsNo { get; set; }
+
         [DisplayFormat(DataFormatString = "{0:g}")]
         public DateTime CreationDate { get; set; }
     }

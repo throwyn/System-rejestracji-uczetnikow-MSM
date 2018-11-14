@@ -1,0 +1,75 @@
+﻿@model ReviewIndexViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Reviews</h2>
+@Html.Partial("_StatusMessage", Model.StatusMessage)
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th style="width:150px;">
+                Ttile
+            </th>
+            <th style="width:150px;">
+                Author
+            </th>
+            <th style="width:150px;">
+                Critic
+            </th>
+            <th>
+                Status
+            </th>
+            <th>
+                Creation date
+            </th>
+            <th></th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Reviews)
+        {
+        <tr>
+            <td>
+                @Html.ActionLink(item.PaperVersion.Paper.Title, "Details", "Papers", new { Id = item.PaperVersion.Paper.Id })
+            </td>
+            <td>
+                @Html.ActionLink(item.PaperVersion.Paper.Author.FirstName + " " + item.PaperVersion.Paper.Author.LastName, "Details", "Users", new { Id = item.PaperVersion.Paper.AuthorId })
+            </td>
+            <td>
+                @Html.ActionLink(item.Critic.FirstName + " " + item.Critic.LastName, "Details", "Users", new { Id = item.Critic.Id })
+            </td>
+            <td style="text-align:center;">
+                @if (item.OriginalFileName != null)
+                {
+                    <text>Done</text>
+                }
+                else
+                {
+                    <text>Waiting</text>
+                }
+            </td>
+            <td style='color: black; text-align: center; '>
+                @Html.DisplayFor(modelItem => item.CreationDate)
+            </td>
+            <td style='color: black; text-align: center; '>
+                <a asp-action="Details" asp-route-id="@item.Id"><span class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="tooltip" title="Details"></span></a>
+                @if (item.OriginalFileName == null)
+                {
+                    <text>|</text>
+                    <a asp-action="ChangeCritic" asp-controller="Reviews" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-user " aria-hidden="true" data-toggle="tooltip" title="Change critic"></span></a> 
+                }
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+<style>
+    th {
+        text-align: center;
+    }
+</style>

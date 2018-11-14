@@ -146,7 +146,7 @@ namespace SRUK.Controllers
             }
             if (ModelState.IsValid)
             {
-                if (_paperRepository.PaperExists(model.Title).Result)
+                if (_paperRepository.TitleTaken(model.Title).Result)
                 {
                     StatusMessage = "Error. This title is already taken.";
                     return RedirectToAction(nameof(Create));
@@ -213,7 +213,7 @@ namespace SRUK.Controllers
             {
                 try
                 {
-                    if (_paperRepository.PaperExists(model.Title).Result)
+                    if (_paperRepository.TitleTakenExcept(model.Title,model.Id).Result)
                     {
                         StatusMessage = "Error. This title is already taken.";
                         return RedirectToAction(nameof(Edit), model.Id);
@@ -289,19 +289,17 @@ namespace SRUK.Controllers
             if (!User.IsInRole("Admin"))
                 return RedirectToAction("Index", "Home");
 
-            var result = await _paperRepository.ApproveTopic(id);
+            var result = await _paperRepository.SetStatusTopicApproved(id);
             if (result == 1)
             {
                 StatusMessage = "Succesfully approved.";
                 return RedirectToAction(nameof(Index));
             }
-            else if (result == 2)
+            else
             {
                 StatusMessage = "Error. You can approve only new topics!";
                 return RedirectToAction(nameof(Index));
             }
-            StatusMessage = "Error. Something went wrong.";
-            return RedirectToAction(nameof(Index));
         }
 
         // GET: Papers/Edit/5/RejectTopic
@@ -312,19 +310,17 @@ namespace SRUK.Controllers
             if (!User.IsInRole("Admin"))
                 return RedirectToAction("Index", "Home");
 
-            var result = await _paperRepository.RejectTopic(id);
+            var result = await _paperRepository.SetStatusTopicRejected(id);
             if (result == 1)
             {
                 StatusMessage = "Succesfully rejected.";
                 return RedirectToAction(nameof(Index));
             }
-            else if (result == 2)
+            else
             {
                 StatusMessage = "Error. You can approve only new topic!";
                 return RedirectToAction(nameof(Index));
             }
-            StatusMessage = "Error. Something went wrong.";
-            return RedirectToAction(nameof(Index));
         }
 
         /// <summary>
@@ -354,8 +350,6 @@ namespace SRUK.Controllers
         }
 
         // POST: Papers/Add
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [Route("Add")]
         [ValidateAntiForgeryToken]
@@ -368,7 +362,7 @@ namespace SRUK.Controllers
             }
             if (ModelState.IsValid)
             {
-                if (_paperRepository.PaperExists(model.Title).Result)
+                if (_paperRepository.TitleTaken(model.Title).Result)
                 {
                     StatusMessage = "Error. This title is already taken.";
                     return RedirectToAction(nameof(Add));
@@ -445,7 +439,7 @@ namespace SRUK.Controllers
             {
                 try
                 {
-                    if (_paperRepository.PaperExists(model.Title).Result)
+                    if (_paperRepository.TitleTaken(model.Title).Result)
                     {
                         StatusMessage = "Error. This title is already taken.";
                         return RedirectToAction(nameof(MyPaperEdit), model.Id);
@@ -479,10 +473,6 @@ namespace SRUK.Controllers
                 return RedirectToAction(nameof(MyPapers));
             }
 
-            if (User.IsInRole("Admin"))
-                return RedirectToAction(nameof(Details),id);
-
-
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var paper = _paperRepository.GetPaperAsync((long)id).Result;
 
@@ -503,6 +493,73 @@ namespace SRUK.Controllers
 
         }
 
+        // GET: Papers/MyPaperDelete/5
+        [HttpGet]
+        [Route("MyPaperDelete/{id}")]
+        public async Task<IActionResult> MyPaperDelete(long id)
+        {
+
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var paper = _paperRepository.GetPaperAsync((long)id).Result;
+
+            if (paper == null)
+            {
+                StatusMessage = "Error. Paper do not exists.";
+                return RedirectToAction(nameof(MyPapers));
+            }
+            if (paper.Author.Id != user.Id)
+            {
+                StatusMessage = "Error. You don't have permission to do that!";
+                return RedirectToAction(nameof(MyPapers));
+            }
+
+            var model = Mapper.Map<MyPaperDetailsViewModel>(paper);
+
+            model.StatusMessage = StatusMessage;
+            return View(model);
+        }
+
+        // POST: Papers/MyPaperDelete/5
+        [HttpPost]
+        [Route("MyPaperDelete/{id}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> MyPaperDelete(MyPaperDetailsViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+
+                    var user = await _userManager.GetUserAsync(HttpContext.User);
+                    var paper = _paperRepository.GetPaperAsync(model.Id).Result;
+
+                    if (paper == null)
+                    {
+                        StatusMessage = "Error. Paper do not exists.";
+                        return RedirectToAction(nameof(MyPapers));
+                    }
+                    if (paper.Author.Id != user.Id)
+                    {
+                        StatusMessage = "Error. You don't have permission to do that!";
+                        return RedirectToAction(nameof(MyPapers));
+                    }
+
+                    var result = _paperRepository.DeletePaperAsync(model.Id).Result;
+                    if (result == 1)
+                    {
+                        StatusMessage = "Succesfully deleted.";
+                        return RedirectToAction(nameof(MyPapers));
+                    }
+                }
+                catch
+                {
+                    StatusMessage = "Error. Something went wrong.";
+                    return RedirectToAction(nameof(MyPapers));
+                }
+            }
+            StatusMessage = "Error. Something went wrong.";
+            return RedirectToAction(nameof(MyPapers));
+        }
 
 
 

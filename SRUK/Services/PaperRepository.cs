@@ -31,21 +31,28 @@ namespace SRUK.Services
 
         public async Task<PaperDTO> GetPaperAsync(long id)
         {
-            var entityPaper = await _context.Paper.Include(p => p.Author).Include(p => p.Season).Include(p => p.PaperVersions).SingleOrDefaultAsync(u => u.Id == id);
+            var entityPaper = await _context.Paper.Include(p => p.Author).Include(p => p.Season).Include(p => p.PaperVersions).Include("PaperVersions.Reviews").SingleOrDefaultAsync(u => u.Id == id);
             var paper = Mapper.Map<PaperDTO>(entityPaper);
             return paper;
         }
 
-        public async Task<bool> PaperExists(string title)
+        public async Task<bool> TitleTaken(string title)
         {
             var paper = await _context.Paper.FirstOrDefaultAsync(u => u.Title == title);
             if(paper == null) 
                 return false;
             return true;
         }
+        public async Task<bool> TitleTakenExcept(string title, long id)
+        {
+            var paper = await _context.Paper.FirstOrDefaultAsync(p => p.Title == title && p.Id != id);
+            if (paper == null)
+                return false;
+            return true;
+        }
         public IEnumerable<PaperShortDTO> GetUserPapers(string userId)
         {
-            var entityPapers = _context.Paper.Where(p => p.IsDeleted == false && p.Author.Id == userId).ToAsyncEnumerable().ToEnumerable();
+            var entityPapers = _context.Paper.Include(p=>p.PaperVersions).Where(p => p.IsDeleted == false && p.Author.Id == userId).ToAsyncEnumerable().ToEnumerable();
             var papers = Mapper.Map<IEnumerable<PaperShortDTO>>(entityPapers);
             return papers;
         }
@@ -73,9 +80,17 @@ namespace SRUK.Services
 
         public async Task<int> DeletePaperAsync(long id)
         {
-            
+
             Paper paper = await _context.Paper.FirstOrDefaultAsync(s => s.Id == id);
-            paper.IsDeleted = true;
+            if (paper.PaperVersions.Count == 0)
+            {
+                _context.Paper.Remove(paper);
+            }
+            else
+            {
+                paper.Title = paper.Title + " (deleted)";
+                paper.IsDeleted = true;
+            }
 
             int result = await _context.SaveChangesAsync();
             return result;
@@ -94,39 +109,37 @@ namespace SRUK.Services
         }
 
         //Status changers
-        public async Task<int> ApproveTopic(long id)
+        public async Task<int> SetStatusTopicApproved(long id)
         {
-            int result;
-            var paper = await _context.Paper.FindAsync(id);
-            if (paper.Status == 0)
-            {
-                paper.Status = 1;
-                result = await _context.SaveChangesAsync();
-            }
-            else
-            {
-                result = 2;
-            }
-
-            return result;
-
+            return await SetStatus(id, 1);
         }
-        public async Task<int> RejectTopic(long id)
+
+        public async Task<int> SetStatusTopicRejected(long id)
         {
-            int result;
+            return await SetStatus(id, 2);
+        }
+
+        public async Task<int> SetStatuAccepted(long id)
+        {
+            return await SetStatus(id, 3);
+        }
+
+        public async Task<int> SetStatusDiscarded(long id)
+        {
+            return await SetStatus(id, 4);
+        }
+
+        public async Task<int> SetStatusSmallMistakesLeft(long id)
+        {
+            return await SetStatus(id, 5);
+        }
+
+        private async Task<int> SetStatus(long id,short status)
+        {
             var paper = await _context.Paper.FindAsync(id);
-            if (paper.Status == 0)
-            {
-                paper.Status = 2;
-                result = await _context.SaveChangesAsync();
-            }
-            else
-            {
-                result = 2;
-            }
-
+            paper.Status = status;
+            int result = await _context.SaveChangesAsync();
             return result;
-
         }
     }
 }

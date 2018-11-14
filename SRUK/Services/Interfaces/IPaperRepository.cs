@@ -16,11 +16,16 @@ namespace SRUK.Services.Interfaces
         Task<int> UpdatePaperAsync(PaperDTO paper);
         Task<int> DeletePaperAsync(long id);
 
-        Task<int> ApproveTopic(long id);
-        Task<int> RejectTopic(long id);
+        Task<int> SetStatusTopicApproved(long id);
+        Task<int> SetStatusTopicRejected(long id);
+        Task<int> SetStatuAccepted(long id);
+        Task<int> SetStatusDiscarded(long id);
+        Task<int> SetStatusSmallMistakesLeft(long id);
 
-        Task<bool> PaperExists(string title);
-        
+        Task<bool> TitleTaken(string title);
+        Task<bool> TitleTakenExcept(string title, long id);
+
+
         Task<int> UpdatePaperTitleAsync(PaperDTO paper);
     }
 }

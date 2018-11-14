@@ -9,6 +9,19 @@ namespace SRUK.Models
     {
         Created = 0,
         TopicAccepted = 1,
-        TopicRejected = 2
+        TopicRejected = 2,
+        Accepted = 3,
+        Discarded = 4,
+        SmallMistakes = 5
+    }
+
+    public enum PaperVersionStatus
+    {
+        DocumentRecieved = 0,
+        WaitingForReview = 1,
+        Accepted = 2,
+        Rejected = 3,
+        WaitingForVerdict = 4,
+        SmallMistakes = 5
     }
 }

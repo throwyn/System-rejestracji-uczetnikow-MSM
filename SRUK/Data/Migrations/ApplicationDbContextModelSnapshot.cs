@@ -337,22 +337,23 @@ namespace SRUK.Data.Migrations
 
                     b.Property<DateTime>("EditDate");
 
-                    b.Property<bool>("EditorialErrors");
+                    b.Property<bool?>("EditorialErrors");
 
-                    b.Property<string>("FileName")
-                        .IsRequired();
+                    b.Property<string>("FileName");
 
                     b.Property<bool>("IsDeleted");
 
-                    b.Property<bool>("IsPositive");
+                    b.Property<bool?>("IsPositive");
 
-                    b.Property<bool>("IsPulp");
+                    b.Property<bool?>("IsPulp");
+
+                    b.Property<string>("OriginalFileName");
 
                     b.Property<long>("PaperVersionId");
 
-                    b.Property<bool>("RepeatReview");
+                    b.Property<bool?>("RepeatReview");
 
-                    b.Property<bool>("TechnicalErrors");
+                    b.Property<bool?>("TechnicalErrors");
 
                     b.HasKey("Id");
 

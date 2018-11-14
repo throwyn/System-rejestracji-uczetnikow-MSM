@@ -62,8 +62,13 @@
                         {
                             <a asp-action="MyPaperEdit" asp-route-id="@item.Id"><span class="glyphicon glyphicon-pencil" aria-hidden="true" data-toggle="tooltip" title="Edit"></span></a> <text>|</text>
                         }
+                        @if (item.Status == 1 && item.VersionsNo == 0)
+                        {
+
+                            <a asp-action="Add" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class="glyphicon glyphicon-file" aria-hidden="true" data-toggle="tooltip" title="Upload paper"></span></a><text>|</text>
+                        }
                         <a asp-action="MyPaper" asp-route-id="@item.Id"><span class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Details"></span></a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id"><span class="glyphicon glyphicon-trash" aria-hidden="true" data-toggle="tooltip" title="Delete"></span></a>
+                        <a asp-action="MyPaperDelete" asp-route-id="@item.Id"><span class="glyphicon glyphicon-trash" aria-hidden="true" data-toggle="tooltip" title="Delete"></span></a>
                     </td>
                 </tr>
             }

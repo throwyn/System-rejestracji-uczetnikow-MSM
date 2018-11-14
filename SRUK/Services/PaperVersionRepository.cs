@@ -31,7 +31,7 @@ namespace SRUK.Services
 
         public async Task<PaperVersionDTO> GetPaperVersionAsync(long id)
         {
-            var entityPaperVersion = await _context.PaperVerison.Include(pv => pv.Paper).SingleOrDefaultAsync(u => u.Id == id && u.IsDeleted ==  false);
+            var entityPaperVersion = await _context.PaperVerison.Include(pv => pv.Paper).Include(pv => pv.Reviews).Include(pv => pv.Paper.Author).SingleOrDefaultAsync(u => u.Id == id && u.IsDeleted ==  false);
             var paperVersion = Mapper.Map<PaperVersionDTO>(entityPaperVersion);
             return paperVersion;
         }
@@ -93,51 +93,34 @@ namespace SRUK.Services
             return result;
         }
 
-        //public async Task<int> ApproveTopic(long id)
-        //{
-        //    int result;
-        //    var paper = await _context.Paper.FindAsync(id);
-        //    if (paper.Status == 0)
-        //    {
-        //        paper.Status = 1;
-        //        result = await _context.SaveChangesAsync();
-        //    }
-        //    else
-        //    {
-        //        result = 2;
-        //    }
+        public async Task<int> SetStatusWaitingForReview(long id)
+        {
+            return await SetStatus(id, 1);
+        }
 
-        //    return result;
+        public async Task<int> SetStatusVersionAccepted(long id)
+        {
+            return await SetStatus(id, 2);
+        }
+        public async Task<int> SetStatusVersionRejected(long id)
+        {
+            return await SetStatus(id, 3);
+        }
+        public async Task<int> SetStatusWaitingForVerdict(long id)
+        {
+            return await SetStatus(id, 4);
+        }
+        public async Task<int> SetStatusSmallMistakes(long id)
+        {
+            return await SetStatus(id, 5);
+        }
 
-        //}
-        //public async Task<int> RejectTopic(long id)
-        //{
-        //    int result;
-        //    var paper = await _context.Paper.FindAsync(id);
-        //    if (paper.Status == 0)
-        //    {
-        //        paper.Status = 2;
-        //        result = await _context.SaveChangesAsync();
-        //    }
-        //    else
-        //    {
-        //        result = 2;
-        //    }
-
-        //    return result;
-
-        //}
-
-        //public async Task<int> UpdatePaperTitleAsync(PaperDTO paper)
-        //{
-        //    var paperToUpdate = await _context.Paper.FindAsync(paper.Id);
-
-        //    paperToUpdate.Title = paper.Title;
-        //    paperToUpdate.Status = 0;
-
-        //    int result = await _context.SaveChangesAsync();
-
-        //    return result;
-        //}
+        private async Task<int> SetStatus(long id, short status)
+        {
+            var version = await _context.PaperVerison.FindAsync(id);
+            version.Status = status;
+            int result = await _context.SaveChangesAsync();
+            return result;
+        }
     }
 }

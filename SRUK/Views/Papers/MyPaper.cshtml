@@ -5,7 +5,13 @@
 }
 
 <h2>Details</h2>
-
+@if (Model.Status == 0)
+{
+<div class="alert alert-info alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    You will be able to upload any version of paper only when administrator accept this topic.
+</div>
+}
 <div>
     <h4>Paper "@Model.Title"</h4>
     @Html.Partial("_StatusMessage", Model.StatusMessage)
@@ -32,16 +38,27 @@
                 case 2:
                     <text>Topic rejected</text>
                     break;
+                case 3:
+                    <text>Accepted</text>
+                    break;
+                case 4:
+                    <text>Discarded</text>
+                    break;
+                case 5:
+                    <text>Small mistakes left</text>
+                    break;
             }
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Season)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.EndSeason)
+            NAPRAWIĆ GDY BEDZIE NAZWA SEZONU
         </dd>
     </dl>
 </div>
+@if (Model.Status != 0)
+{
     <h4>Versions</h4>
     <hr />
     <table class="table table-hover">
@@ -68,52 +85,59 @@
         <tbody>
             @foreach (var item in Model.PaperVersions)
             {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td>
-                    @if (item.Reviews.Count > 0)
-                    {
-                        @Html.ActionLink(item.Reviews.Count.ToString(), "Details", "Reviews", new { Id = item.Id })
-                    }
-                    else
-                    {
-                        <text>None</text>
-                    }
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreationDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.OriginalFileName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td style='color: black; text-align:center;'>
-                    <a asp-action="Download" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a>
-                    @if (item.Status == 0)
-                    {
-                        <text>|</text>
-                        <a asp-action="Delete" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class="glyphicon glyphicon-trash" ifia-hidden="true"></span></a>
-                    }
-                </td>
-            </tr>
-            }
                 <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @if (item.Reviews.Count > 0)
+                        {
+                            var i = 0;
+                            foreach(var review in item.Reviews)
+                            {
+                                if (i > 0) {<text>|</text> }i++;
+                                <a asp-action="Review" asp-controller="Reviews" asp-route-id="@review.Id" ><span class="glyphicon glyphicon-text-color" aria-hidden="true" data-toggle="tooltip" title="Review details [@i]"></span></a>
+                            }
+                        }
+                        else
+                        {
+                            <text>None</text>
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreationDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OriginalFileName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
                     <td style='color: black; text-align:center;'>
-                        <a asp-action="Add" asp-controller="PaperVersions" asp-route-id="@Model.Id"><span class="glyphicon glyphicon-file" aria-hidden="true" data-toggle="tooltip" title="Add new version"></span></a>
-
+                        <a asp-action="Download" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class="glyphicon glyphicon-download-alt" aria-hidden="true" data-toggle="tooltip" title="Download"></span></a>
+                        @if (item.Status == 0)
+                        {
+                            <text>|</text>
+                            <a asp-action="Delete" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class="glyphicon glyphicon-trash" aria-hidden="true" data-toggle="tooltip" title="Delete"></span></a>
+                        }
                     </td>
                 </tr>
+            }
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td style='color: black; text-align:center;'>
+                    <a asp-action="Add" asp-controller="PaperVersions" asp-route-id="@Model.Id"><span class="glyphicon glyphicon-file" aria-hidden="true" data-toggle="tooltip" title="Add new version"></span></a>
+
+                </td>
+            </tr>
         </tbody>
     </table>
+
+}
 <div>
     @*<a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |*@
     <a asp-action="MyPapers">Back to List</a>

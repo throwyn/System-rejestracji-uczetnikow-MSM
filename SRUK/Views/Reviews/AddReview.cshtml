@@ -1,0 +1,142 @@
+﻿@model AddReviewViewModel
+
+@{
+    ViewData["Title"] = "Adding review";
+}
+
+<h2>Review</h2>
+@Html.Partial("_StatusMessage", Model.StatusMessage)
+<h4>
+    Adding review for "@Model.PaperVersion.Paper.Title" <a asp-action="Download" asp-controller="PaperVersions" asp-route-id="@Model.PaperVersion.Id"> <span class="glyphicon glyphicon-download-alt" aria-hidden="true" data-toggle="tooltip" title="Download"></span></a>
+</h4>
+<hr />
+<a asp-action="Download" asp-controller="PaperVersions" asp-route-id="@Model.PaperVersion.Id">@Model.PaperVersion.Paper.Title <span class="glyphicon glyphicon-download-alt" aria-hidden="true" data-toggle="tooltip" title="Download"></span></a> 
+<hr />
+<form asp-action="AddReview" method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Id" />
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group row">
+                <label asp-for="IsPositive" class="control-label col-md-6"></label>
+                @*<input asp-for="IsPositive" class="form-control" />*@
+                @Html.CheckBoxFor(m => m.IsPositive, new { @class = "col-md-2" })
+                <span asp-validation-for="IsPositive" class="text-danger"></span>
+            </div>
+            <div class="form-group row">
+                <label asp-for="IsPulp" class="control-label col-md-6 "></label>
+                @*<input asp-for="IsPulp" class="form-control" />*@
+                @Html.CheckBoxFor(m => m.IsPulp, new { @class = "col-md-2" })
+                <span asp-validation-for="IsPulp" class="text-danger"></span>
+            </div>
+            <div class="form-group row">
+                <label asp-for="EditorialErrors" class="control-label col-md-6"></label>
+                @*<input asp-for="EditorialErrors" class="form-control" />*@
+                @Html.CheckBoxFor(m => m.EditorialErrors, new { @class = "col-md-2" })
+                <span asp-validation-for="EditorialErrors" class="text-danger"></span>
+            </div>
+            <div class="form-group row">
+                <label asp-for="TechnicalErrors" class="control-label col-md-6"></label>
+                @*<input asp-for="TechnicalErrors" class="form-control" />*@
+                @Html.CheckBoxFor(m => m.TechnicalErrors, new { @class = "col-md-2" })
+                <span asp-validation-for="TechnicalErrors" class="text-danger"></span>
+            </div>
+            <div class="form-group row">
+                <label asp-for="RepeatReview" class="control-label col-md-6"></label>
+                @*<input asp-for="RepeatReview" class="form-control" />*@
+                @Html.CheckBoxFor(m => m.RepeatReview, new { @class = "col-md-2" })
+                <span asp-validation-for="RepeatReview" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group row" style="margin-left:inherit;">
+                <label asp-for="File" class="control-label"></label>
+                <input type="file" asp-for="File" class="form-control" style="height:inherit;" />
+                <span asp-validation-for="File" class="text-danger"></span>
+            </div>
+            <div class="form-group row" style="margin-left:inherit;">
+                <label asp-for="Comment" class="control-label"></label>
+                @Html.TextAreaFor(m => m.Comment, new { @class = "form-control col-md-2", @rows = "5", @style = "max-width: 100%; min-width:100%;" })
+                <span asp-validation-for="Comment" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="submit" value="Add" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="MyReviews">Back to List</a>
+</div>
+
+<style>
+    th {
+        text-align: center;
+    }
+</style>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $('#IsPositive').change(function () {
+            if (this.checked) {
+                $('#IsPulp').prop('checked', false).prop('disabled', true);
+                $('#EditorialErrors').prop('checked', false).prop('disabled', true);
+                $('#TechnicalErrors').prop('checked', false).prop('disabled', true);
+                $('#RepeatReview').prop('checked', false).prop('disabled', true);
+            } else {
+                $('#IsPulp').removeAttr('disabled', true);
+                $('#EditorialErrors').removeAttr('disabled');
+                $('#TechnicalErrors').removeAttr('disabled');
+                $('#RepeatReview').removeAttr('disabled');
+            }
+
+        });
+        $('#IsPulp').change(function () {
+            if (this.checked) {
+                $('#IsPositive').prop('checked', false).prop('disabled', true);
+                $('#EditorialErrors').prop('checked', false).prop('disabled', true);
+                $('#TechnicalErrors').prop('checked', false).prop('disabled', true);
+                $('#RepeatReview').prop('checked', false).prop('disabled', true);
+            } else {
+                $('#IsPositive').removeAttr('disabled', true);
+                $('#EditorialErrors').removeAttr('disabled');
+                $('#TechnicalErrors').removeAttr('disabled');
+                $('#RepeatReview').removeAttr('disabled');
+            }
+        });
+        $('#EditorialErrors').change(function () {
+            if (this.checked) {
+                $('#IsPositive').prop('checked', false).prop('disabled', true);
+                $('#IsPulp').prop('checked', false).prop('disabled', true);
+            } else if (!$('#EditorialErrors').is(':checked') && !$('#TechnicalErrors').is(':checked') && !$('#RepeatReview').is(':checked')) {
+                $('#IsPositive').removeAttr('disabled', true);
+                $('#IsPulp').removeAttr('disabled');
+            }
+        });
+        $('#TechnicalErrors').change(function () {
+            if (this.checked) {
+                $('#IsPositive').prop('checked', false).prop('disabled', true);
+                $('#IsPulp').prop('checked', false).prop('disabled', true);
+            } else if (!$('#EditorialErrors').is(':checked') && !$('#TechnicalErrors').is(':checked') && !$('#RepeatReview').is(':checked')) {
+                $('#IsPositive').removeAttr('disabled', true);
+                $('#IsPulp').removeAttr('disabled');
+            }
+        });
+        $('#RepeatReview').change(function () {
+            if (this.checked) {
+                $('#IsPositive').prop('checked', false).prop('disabled', true);
+                $('#IsPulp').prop('checked', false).prop('disabled', true);
+            } else if (!$('#EditorialErrors').is(':checked') && !$('#TechnicalErrors').is(':checked') && !$('#RepeatReview').is(':checked')) {
+                $('#IsPositive').removeAttr('disabled', true);
+                $('#IsPulp').removeAttr('disabled');
+            }
+        }); 
+
+    </script>
+}

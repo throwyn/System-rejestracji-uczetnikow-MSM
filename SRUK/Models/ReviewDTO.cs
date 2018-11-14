@@ -10,17 +10,10 @@ namespace SRUK.Models
         public long Id { get; set; }
         
         public UserDTO Critic { get; set; }
-        //public string CriticId { get; set; }
-        
+        public string CriticId { get; set; }
+
         public PaperVersionDTO PaperVersion { get; set; }
-        //public long PaperVersionId { get; set; }
-
-
-        //public PaperDTO Paper { get; set; }
-
-        //public UserDTO Author { get; set; }
-
-        //public SeasonDTO Season { get; set; }
+        public long PaperVersionId { get; set; }
 
         public bool EditorialErrors { get; set; }
         public bool TechnicalErrors { get; set; }
@@ -29,6 +22,7 @@ namespace SRUK.Models
         public bool IsPulp { get; set; }
         
         public string FileName { get; set; }
+        public string OriginalFileName { get; set; }
 
         public string Comment { get; set; }
         

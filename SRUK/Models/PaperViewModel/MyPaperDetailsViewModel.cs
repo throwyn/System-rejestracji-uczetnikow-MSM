@@ -11,7 +11,6 @@ namespace SRUK.Models
         public long Id { get; set; }
 
         public SeasonDTO Season { get; set; }
-        public string EndSeason { get { return Season.EndDate.Year.ToString(); } }
         public string Title { get; set; }
         public short Status { get; set; }
         
