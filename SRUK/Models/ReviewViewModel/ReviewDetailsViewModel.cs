@@ -40,6 +40,7 @@ namespace SRUK.Models
 
         public string Comment { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:g}")]
         [Display(Name = "Date of choosing critic")]
         public DateTime CreationDate { get; set; }
 

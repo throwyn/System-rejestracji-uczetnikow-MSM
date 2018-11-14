@@ -22,12 +22,6 @@
                         <a asp-action="Download" asp-controller="Reviews" asp-route-id="@Model.Id">@Model.OriginalFileName <span class="glyphicon glyphicon-download-alt" aria-hidden="true" data-toggle="tooltip" title="Download review"></span></a>
                     </dd>
                     <dt>
-                        @Html.DisplayNameFor(model => model.FileName)
-                    </dt>
-                    <dd>
-                        @Html.DisplayFor(model => model.FileName)
-                    </dd>
-                    <dt>
                         @Html.DisplayNameFor(model => model.IsPositive)
                     </dt>
                     <dd>
@@ -64,12 +58,6 @@
                         @Html.DisplayFor(model => model.Comment)
                     </dd>
                 }
-                <dt>
-                    @Html.DisplayNameFor(model => model.CreationDate)
-                </dt>
-                <dd>
-                    @Html.DisplayFor(model => model.CreationDate)
-                </dd>
             </dl>
         </div>
         <div class="col-md-6">
@@ -82,13 +70,7 @@
                     @Html.DisplayFor(model => model.PaperVersion.Paper.Title)
                 </dd>
                 <dt>
-                    @Html.DisplayNameFor(model => model.PaperVersion.Paper.Author)
-                </dt>
-                <dd>
-                    <a asp-action="Details" asp-controller="Users" asp-route-id="@Model.PaperVersion.Paper.AuthorId">@Model.PaperVersion.Paper.Author.Degree @Model.PaperVersion.Paper.Author.FirstName @Model.PaperVersion.Paper.Author.LastName </a>
-                </dd>
-                <dt>
-                    @Html.DisplayNameFor(model => model.PaperVersion.OriginalFileName)
+                    @Html.Label("File")
                 </dt>
                 <dd>
                     <a asp-action="Download" asp-controller="PaperVersions" asp-route-id="@Model.PaperVersion.Id">@Model.PaperVersion.OriginalFileName <span class="glyphicon glyphicon-download-alt" aria-hidden="true" data-toggle="tooltip" title="Download paper"></span></a>
@@ -98,5 +80,5 @@
     </div>
 </div>
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="MyPapers" asp-controller="Papers">Back to My papers</a>
 </div>

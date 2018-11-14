@@ -94,7 +94,14 @@
                 <td>
                     @if (item.Reviews.Count > 0)
                     {
-                        @Html.ActionLink(item.Reviews.Count.ToString(), "Details", "Reviews", new { Id = item.Id })
+                        var i = 0;
+                        foreach (var review in item.Reviews)
+                        {
+                            if (i > 0)
+                            {<text>|</text> }
+                            i++;
+                            <a asp-action="Review" asp-controller="Reviews" asp-route-id="@review.Id"><span class="glyphicon glyphicon-text-color" aria-hidden="true" data-toggle="tooltip" title="Review details [@i]"></span></a>
+                        }
                     }
                     else
                     {

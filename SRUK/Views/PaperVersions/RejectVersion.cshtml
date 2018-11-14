@@ -1,0 +1,36 @@
+﻿@model SRUK.Models.PaperVersionsRejectViewModel
+
+@{
+    ViewData["Title"] = "Reject Version";
+}
+
+<h2>Reject Version</h2>
+<div class="row">
+
+    <h4>Version of "@Model.Paper.Title"</h4>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.OriginalFileName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.OriginalFileName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CreationDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CreationDate)
+        </dd>
+    </dl>
+    <form asp-action="RejectVersion">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <div class="form-group">
+            <input type="submit" value="Reject" class="btn btn-default" />
+        </div>
+    </form>
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

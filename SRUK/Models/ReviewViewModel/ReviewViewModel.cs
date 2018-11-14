@@ -29,18 +29,10 @@ namespace SRUK.Models
         [Display(Name = "Completely unsuitable")]
         public bool IsPulp { get; set; }
 
-        [Display(Name = "System filename")]
-        public string FileName { get; set; }
-
-        [Display(Name ="Original filename")]
+        [Display(Name ="File")]
         public string OriginalFileName { get; set; }
 
         public string Comment { get; set; }
-
-        [Display(Name = "Date of choosing critic")]
-        public DateTime CreationDate { get; set; }
-
-        public DateTime EditDate { get; set; }
 
         public string StatusMessage { get; set; }
     }

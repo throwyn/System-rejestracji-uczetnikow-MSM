@@ -41,6 +41,7 @@ namespace SRUK.Models
         
         public string Comment { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:g}")]
         public DateTime CreationDate { get; set; }
         public string StatusMessage { get; set; }
     }

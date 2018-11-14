@@ -71,30 +71,7 @@ namespace SRUK.Controllers
             return RedirectToAction("Index", "Home");
 
         }
-
-        //// GET: Papers/Details/5
-        //[Route("Details/{id}")]
-        //public IActionResult Details(long? id)
-        //{
-        //    if (!User.IsInRole("Admin"))
-        //        return RedirectToAction("Index", "Home");
-
-        //    if (id == null)
-        //    {
-        //        StatusMessage = "Error. Enter id of paper.";
-        //        return RedirectToAction(nameof(Index));
-        //    }
-
-        //    var paper = _paperRepository.GetPaperAsync((long)id).Result;
-        //    if (paper == null)
-        //    {
-        //        StatusMessage = "Error. Paper do not exists.";
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    var model = Mapper.Map<PaperDetailsViewModel>(paper);
-        //    model.StatusMessage = StatusMessage;
-        //    return View(model);
-        //}
+        
 
         // GET: PaperVersions/Add
         [Route("Add/{id}")]
@@ -264,7 +241,7 @@ namespace SRUK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
-            PaperVersionDTO paperVersion = await _paperVersionRepository.GetPaperVersionAsync(id);
+            PaperVersionDTO paperVersion = _paperVersionRepository.GetPaperVersionAsync(id).Result;
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
             if (paperVersion.Paper.AuthorId != user.Id && !User.IsInRole("Admin"))
@@ -295,228 +272,58 @@ namespace SRUK.Controllers
             return RedirectToAction("MyPapers", "Papers");
         }
 
-        //// GET: Papers/Edit/5/ApproveTopic
-        //[HttpGet]
-        //[Route("ApproveTopic/{id}")]
-        //public async Task<IActionResult> ApproveTopic(long id)
-        //{
-        //    if (!User.IsInRole("Admin"))
-        //        return RedirectToAction("Index", "Home");
+        // GET: PaperVersions/RejectVersion/5
+        [HttpGet]
+        [Route("RejectVersion/{id}")]
+        public async Task<IActionResult> RejectVersion(long id)
+        {
+            PaperVersionDTO paperVersion = _paperVersionRepository.GetPaperVersionAsync(id).Result;
+            var user = await _userManager.GetUserAsync(HttpContext.User);
 
-        //    var result = await _paperRepository.ApproveTopic(id);
-        //    if (result == 1)
-        //    {
-        //        StatusMessage = "Succesfully approved.";
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    else if (result == 2)
-        //    {
-        //        StatusMessage = "Error. You can approve only new topics!";
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    StatusMessage = "Error. Something went wrong.";
-        //    return RedirectToAction(nameof(Index));
-        //}
+            if (paperVersion == null)
+            {
+                StatusMessage = "Error. Version do not exists.";
+                return RedirectToAction("MyPapers", "Papers");
+            }
+            if (paperVersion.Status != 0 && paperVersion.Status !=4)
+            {
+                StatusMessage = "Error. You can't reject this version now.";
+                return RedirectToAction("Index", "PaperVersions");
+            }
 
-        //// GET: Papers/Edit/5/RejectTopic
-        //[HttpGet]
-        //[Route("RejectTopic/{id}")]
-        //public async Task<IActionResult> RejectTopic(long id)
-        //{
-        //    if (!User.IsInRole("Admin"))
-        //        return RedirectToAction("Index", "Home");
+            var model = Mapper.Map<PaperVersionsRejectViewModel>(paperVersion);
+            return View(model);
+        }
 
-        //    var result = await _paperRepository.RejectTopic(id);
-        //    if (result == 1)
-        //    {
-        //        StatusMessage = "Succesfully rejected.";
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    else if (result == 2)
-        //    {
-        //        StatusMessage = "Error. You can approve only new topic!";
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    StatusMessage = "Error. Something went wrong.";
-        //    return RedirectToAction(nameof(Index));
-        //}
+        // POST: PaperVersions/RejectVersion/5
+        [HttpPost]
+        [Route("RejectVersion/{id}")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RejectVersionConfirmed(long id)
+        {
+            PaperVersionDTO paperVersion = _paperVersionRepository.GetPaperVersionAsync(id).Result;
+            var user = await _userManager.GetUserAsync(HttpContext.User);
 
-        ///// <summary>
-        ///// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        ///// </summary>
-        ///// <returns></returns>
-        ////USERS ACTIONS
+            if (!User.IsInRole("Admin"))
+            {
+                StatusMessage = "Error. Access denied.";
+                return RedirectToAction("MyPaper", "Papers", new { id = paperVersion.PaperId });
+            }
 
-
-        //// GET: Papers/Add
-        //[Route("Add")]
-        //public async Task<IActionResult> Add()
-        //{
-        //    var user = await _userManager.GetUserAsync(HttpContext.User);
-        //    if (user == null)
-        //    {
-        //        return RedirectToAction("Index", "Home");
-        //    }
-
-        //    var model = new PaperCreateViewModel();
-        //    model.AuthorId = user.Id;
-        //    model.SeasonId = _seasonRepository.GetCurrentSeasonIdAsync().Result;
-        //    model.Status = 0;
-
-        //    model.StatusMessage = StatusMessage;
-        //    return View(model);
-        //}
-
-        //// POST: Papers/Add
-        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        //// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[Route("Add")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Add(PaperCreateViewModel model)
-        //{
-        //    if (model == null)
-        //    {
-        //        StatusMessage = "Error. Something went wrong.";
-        //        return View(model);
-        //    }
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (_paperRepository.PaperExists(model.Title).Result)
-        //        {
-        //            StatusMessage = "Error. This title is already taken.";
-        //            return RedirectToAction(nameof(Add));
-        //        }
-        //        var user = await _userManager.GetUserAsync(HttpContext.User);
-
-        //        PaperDTO paper = Mapper.Map<PaperDTO>(model);
-        //        paper.AuthorId = user.Id;
-        //        paper.SeasonId = _seasonRepository.GetCurrentSeasonIdAsync().Result;
-        //        paper.Status = 0;
-
-        //        var result = _paperRepository.AddPaperAsync(paper);
-        //        if (result.Result == 1)
-        //        {
-        //            StatusMessage = "Succesfully created.";
-        //            return RedirectToAction(nameof(MyPapers));
-        //        }
-        //        return RedirectToAction(nameof(MyPapers));
-        //    }
-        //    StatusMessage = "Error. Entered data is not valid.";
-        //    return View(model);
-        //}
-        //// GET: Papers
-        //[Route("MyPapers")]
-        //public async Task<ActionResult> MyPapers()
-        //{
-        //    var user = await _userManager.GetUserAsync(HttpContext.User);
-        //    var papers = _paperRepository.GetUserPapers(user.Id);
-        //    var model = new PaperIndexViewModel();
-        //    model.Papers = papers.ToList();
-        //    model.StatusMessage = StatusMessage;
-        //    ViewBag.IsRegistrationOpened = _seasonRepository.IsRegistrationOpenedAsync().Result;
-        //    return View(model);
-
-        //}
-
-        //// GET: Papers/MyPaperEdit/5
-        //[Route("MyPaperEdit/{id}")]
-        //public async Task<IActionResult> MyPaperEdit(long? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        StatusMessage = "Error. Enter id of paper.";
-        //        return RedirectToAction(nameof(MyPapers));
-        //    }
-
-        //    var user = await _userManager.GetUserAsync(HttpContext.User);
-        //    var paper = _paperRepository.GetPaperAsync((long)id).Result;
-
-        //    if (paper == null)
-        //    {
-        //        StatusMessage = "Error. Paper do not exists.";
-        //        return RedirectToAction(nameof(MyPapers));
-        //    }
-        //    if (paper.Author.Id != user.Id)
-        //    {
-        //        StatusMessage = "Error. You can edit only yours papers.";
-        //        return RedirectToAction(nameof(MyPapers));
-        //    }
-
-        //    var model = Mapper.Map<MyPaperEditViewModel>(paper);
-
-        //    model.StatusMessage = StatusMessage;
-        //    return View(model);
-        //}
-
-        //// POST: Papers/MyPaperEdit/5
-        //[HttpPost]
-        //[Route("MyPaperEdit/{id}")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> MyPaperEdit(MyPaperEditViewModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            if (_paperRepository.PaperExists(model.Title).Result)
-        //            {
-        //                StatusMessage = "Error. This title is already taken.";
-        //                return RedirectToAction(nameof(MyPaperEdit), model.Id);
-        //            }
-
-        //            var paper = Mapper.Map<PaperDTO>(model);
-        //            var result = await _paperRepository.UpdatePaperTitleAsync(paper);
-        //            if (result == 1)
-        //            {
-        //                StatusMessage = "Succesfully updated.";
-        //                return RedirectToAction(nameof(MyPapers));
-        //            }
-        //        }
-        //        catch
-        //        {
-        //            StatusMessage = "Error. Something went wrong.";
-        //            return RedirectToAction(nameof(MyPapers));
-        //        }
-        //    }
-        //    StatusMessage = "Error. Something went wrong.";
-        //    return RedirectToAction(nameof(MyPapers));
-        //}
-
-        //// GET: Papers
-        //[Route("MyPaper/{id}")]
-        //public async Task<ActionResult> MyPaper(long? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        StatusMessage = "Error. Enter id of paper.";
-        //        return RedirectToAction(nameof(MyPapers));
-        //    }
-
-        //    if (User.IsInRole("Admin"))
-        //        return RedirectToAction(nameof(Details),id);
-
-
-        //    var user = await _userManager.GetUserAsync(HttpContext.User);
-        //    var paper = _paperRepository.GetPaperAsync((long)id).Result;
-
-        //    if (paper == null)
-        //    {
-        //        StatusMessage = "Error. Paper do not exists.";
-        //        return RedirectToAction(nameof(MyPapers));
-        //    }
-        //    if (user.Id != paper.AuthorId)
-        //    {
-        //        StatusMessage = "Error. You can see only your own papers.";
-        //        return RedirectToAction(nameof(MyPapers));
-        //    }
-        //    var model = Mapper.Map<MyPaperDetailsViewModel>(paper);
-        //    model.StatusMessage = StatusMessage;
-        //    ViewBag.IsRegistrationOpened = _seasonRepository.IsRegistrationOpenedAsync().Result;
-        //    return View(model);
-
-        //}
-
+            if (paperVersion == null)
+            {
+                StatusMessage = "Error. Version do not exists.";
+                return RedirectToAction("MyPapers", "Papers");
+            }
+            var result = await _paperVersionRepository.SetStatusVersionRejected(id);
+            if (result == 1)
+            {
+                StatusMessage = "Succesfully rejected.";
+                return RedirectToAction("Index", "PaperVersions");
+            }
+            StatusMessage = "Error. Something went wrong.";
+            return RedirectToAction("MyPapers", "Papers");
+        }
 
         #region Helpers
 

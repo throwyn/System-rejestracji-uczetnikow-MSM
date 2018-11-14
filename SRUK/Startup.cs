@@ -141,6 +141,7 @@ namespace SRUK
                 cfg.CreateMap<AddReviewViewModel, ReviewDTO>();
                 cfg.CreateMap<ReviewDTO, ReviewDetailsViewModel>();
                 cfg.CreateMap<ReviewDTO, ReviewViewModel>(); 
+                cfg.CreateMap<ReviewDTO, PaperVersionsRejectViewModel>();
 
             });
 
