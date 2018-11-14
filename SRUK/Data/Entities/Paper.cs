@@ -26,7 +26,7 @@ namespace SRUK.Entities
         [MaxLength(200)]
         public string Title { get; set; }
         
-        public short Status { get; set; }
+        public byte Status { get; set; }
 
         [Required]
         public DateTime CreationDate { get; set; }

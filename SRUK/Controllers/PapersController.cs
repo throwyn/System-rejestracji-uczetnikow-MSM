@@ -106,7 +106,7 @@ namespace SRUK.Controllers
             ViewBag.Seasons = new List<SelectListItem>();
             foreach (var season in seasons)
             {
-                ViewBag.Seasons.Add(new SelectListItem { Text = season.EndDate.Year.ToString(), Value = season.Id.ToString() });
+                ViewBag.Seasons.Add(new SelectListItem { Text = season.Name, Value = season.Id.ToString() });
             };
 
 
@@ -318,10 +318,11 @@ namespace SRUK.Controllers
             }
             else
             {
-                StatusMessage = "Error. You can approve only new topic!";
+                StatusMessage = "Error. You can reject only new topic!";
                 return RedirectToAction(nameof(Index));
             }
         }
+
 
         /// <summary>
         /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

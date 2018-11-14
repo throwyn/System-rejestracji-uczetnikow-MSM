@@ -271,6 +271,23 @@ namespace SRUK.Controllers
             StatusMessage = "Error. Something went wrong.";
             return RedirectToAction("MyPapers", "Papers");
         }
+        // GET: PaperVersions/Discard/5/
+        [HttpGet]
+        [Route("Discard/{id}")]
+        public async Task<IActionResult> Discard(long id)
+        {
+            if (!User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Home");
+            PaperVersionDTO paperVersion = _paperVersionRepository.GetPaperVersionAsync(id).Result;
+
+            await _paperVersionRepository.SetStatusVersionRejected(id);
+            var result = await _paperRepository.SetStatusDiscarded(paperVersion.PaperId);
+            if (result == 1)
+            {
+                StatusMessage = "Succesfully discarded.";
+            }
+            return RedirectToAction(nameof(Index));
+        }
 
         // GET: PaperVersions/RejectVersion/5
         [HttpGet]

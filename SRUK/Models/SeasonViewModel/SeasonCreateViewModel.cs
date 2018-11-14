@@ -12,6 +12,9 @@ namespace SRUK.Models
         [StringLength(100,MinimumLength = 5)]
         public string MainImageFileName { get; set; }
 
+        [Required]
+        public string Name { get; set; }
+
         [Display(Name = "Logo image filename")]
         [StringLength(100, MinimumLength = 5)]
         public string LogoFileName { get; set; }

@@ -9,6 +9,8 @@ namespace SRUK.Models
     public class PaperShortDTO
     {
         public long Id { get; set; }
+
+        public SeasonDTO Season { get; set; }
         
         public UserDTO Author { get; set; }
 

@@ -39,7 +39,27 @@
                     @Html.ActionLink(item.Paper.Author.FirstName + " " + item.Paper.Author.LastName, "Details", "Users", new { Id = item.Paper.AuthorId })
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Status)
+                    @switch (item.Status)
+                    {
+                        case 0:
+                            <text>Document received</text>
+                            break;
+                        case 1:
+                            <text>Waiting for review</text>
+                            break;
+                        case 2:
+                            <text>Accepted</text>
+                            break;
+                        case 3:
+                            <text>Rejected</text>
+                            break;
+                        case 4:
+                            <text>Waiting for verdict</text>
+                            break;
+                        case 5:
+                            <text>Small mistakes</text>
+                            break;
+                    }
                 </td>
 
                 <td style='color: black; text-align: center; '>
@@ -58,7 +78,7 @@
                     {
                         <text>|</text>
                         <a asp-action="ChooseCritic" asp-controller="Reviews" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-user " aria-hidden="true" data-toggle="tooltip" title="Choose another critic"></span></a> <text>|</text>
-                        <a asp-action="RejectVersion" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-remove" aria-hidden="true" data-toggle="tooltip" title="Reject version"></span></a>
+                        <a asp-action="Discard" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-remove" aria-hidden="true" data-toggle="tooltip" title="Discard paper"></span></a>
                     }
                 </td>
                 

@@ -17,7 +17,7 @@ namespace SRUK.Models
 
     public enum PaperVersionStatus
     {
-        DocumentRecieved = 0,
+        DocumentReceived = 0,
         WaitingForReview = 1,
         Accepted = 2,
         Rejected = 3,

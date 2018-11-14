@@ -52,14 +52,14 @@ namespace SRUK.Services
         }
         public IEnumerable<PaperShortDTO> GetUserPapers(string userId)
         {
-            var entityPapers = _context.Paper.Include(p=>p.PaperVersions).Where(p => p.IsDeleted == false && p.Author.Id == userId).ToAsyncEnumerable().ToEnumerable();
+            var entityPapers = _context.Paper.Include(p => p.PaperVersions).Include(p => p.Season).Where(p => p.IsDeleted == false && p.Author.Id == userId).ToAsyncEnumerable().ToEnumerable();
             var papers = Mapper.Map<IEnumerable<PaperShortDTO>>(entityPapers);
             return papers;
         }
 
         public IEnumerable<PaperShortDTO> GetPapers()
         {
-            var entityPapers = _context.Paper.Where(p => p.IsDeleted == false).Include(p => p.Author).ToAsyncEnumerable().ToEnumerable();
+            var entityPapers = _context.Paper.Where(p => p.IsDeleted == false).Include(p => p.Season).Include(p => p.Author).ToAsyncEnumerable().ToEnumerable();
             var papers = Mapper.Map<IEnumerable<PaperShortDTO>>(entityPapers);
             return papers;
         }
@@ -81,7 +81,7 @@ namespace SRUK.Services
         public async Task<int> DeletePaperAsync(long id)
         {
 
-            Paper paper = await _context.Paper.FirstOrDefaultAsync(s => s.Id == id);
+            Paper paper = await _context.Paper.Include(p=>p.PaperVersions).FirstOrDefaultAsync(s => s.Id == id);
             if (paper.PaperVersions.Count == 0)
             {
                 _context.Paper.Remove(paper);
@@ -111,11 +111,15 @@ namespace SRUK.Services
         //Status changers
         public async Task<int> SetStatusTopicApproved(long id)
         {
+            if (!IsCreated(id))
+                return 0;
             return await SetStatus(id, 1);
         }
 
         public async Task<int> SetStatusTopicRejected(long id)
         {
+            if (!IsCreated(id))
+                return 0;
             return await SetStatus(id, 2);
         }
 
@@ -134,7 +138,17 @@ namespace SRUK.Services
             return await SetStatus(id, 5);
         }
 
-        private async Task<int> SetStatus(long id,short status)
+        private bool IsCreated(long id)
+        {
+            var paper =  _context.Paper.FirstOrDefault(p => p.Id == id);
+            if (paper.Status != 0)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private async Task<int> SetStatus(long id,byte status)
         {
             var paper = await _context.Paper.FindAsync(id);
             paper.Status = status;

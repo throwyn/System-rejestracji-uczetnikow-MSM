@@ -19,6 +19,9 @@
     <table class="table table-hover">
         <thead>
             <tr>
+                <th>
+                    Season
+                </th>
                 <th style="width:350px;">
                     Title
                 </th>
@@ -34,43 +37,55 @@
         <tbody>
             @foreach (var item in Model.Papers)
             {
-                <tr>
-                    <td>
-                        @Html.ActionLink(item.Title, "MyPaper", "Papers", new { Id = item.Id })
-                    </td>
-                    <td>
-                        @switch (item.Status)
-                        {
-                            case 0:
-                                <text>Created</text>
-                                break;
-                            case 1:
-                                <text>Topic approved</text>
-                                break;
-                            case 2:
-                                <text>Topic rejected</text>
-                                break;
-                        }
-                        @*@Html.DisplayFor(modelItem => item.Status)*@
-                    </td>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Season.Name)
+                </td>
+                <td>
+                    @Html.ActionLink(item.Title, "MyPaper", "Papers", new { Id = item.Id })
+                </td>
+                <td>
+                    @switch (item.Status)
+                    {
+                        case 0:
+                            <text>Created</text>
+                            break;
+                        case 1:
+                            <text>Topic approved</text>
+                            break;
+                        case 2:
+                            <text>Topic rejected</text>
+                            break;
+                        case 3:
+                            <text>Accepted</text>
+                            break;
+                        case 4:
+                            <text>Discarded</text>
+                            break;
+                        case 5:
+                            <text>Small mistakes left</text>
+                            break;
+                    }
+                    @*@Html.DisplayFor(modelItem => item.Status)*@
+                </td>
 
-                    <td style='color: black; text-align: center; '>
-                        @Html.DisplayFor(modelItem => item.CreationDate)
-                    </td>
-                    <td style='color: black; text-align: center; '>
-                        @if (item.Status == 0 || item.Status == 2)
-                        {
-                            <a asp-action="MyPaperEdit" asp-route-id="@item.Id"><span class="glyphicon glyphicon-pencil" aria-hidden="true" data-toggle="tooltip" title="Edit"></span></a> <text>|</text>
-                        }
-                        @if (item.Status == 1 && item.VersionsNo == 0)
-                        {
+                <td style='color: black; text-align: center; '>
+                    @Html.DisplayFor(modelItem => item.CreationDate)
+                </td>
+                <td style='color: black; text-align: center; '>
+                    @if (item.Status == 0 || item.Status == 2)
+                    {
+                        <a asp-action="MyPaperEdit" asp-route-id="@item.Id"><span class="glyphicon glyphicon-pencil" aria-hidden="true" data-toggle="tooltip" title="Edit"></span></a> <text>|</text>
+                    }
+                    @if (item.Status == 1 && item.VersionsNo == 0)
+                    {
 
-                            <a asp-action="Add" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class="glyphicon glyphicon-file" aria-hidden="true" data-toggle="tooltip" title="Upload paper"></span></a><text>|</text>
-                        }
-                        <a asp-action="MyPaper" asp-route-id="@item.Id"><span class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Details"></span></a> |
-                        <a asp-action="MyPaperDelete" asp-route-id="@item.Id"><span class="glyphicon glyphicon-trash" aria-hidden="true" data-toggle="tooltip" title="Delete"></span></a>
-                    </td>
-                </tr>
+                        <a asp-action="Add" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class="glyphicon glyphicon-file" aria-hidden="true" data-toggle="tooltip" title="Upload paper"></span></a><text>|</text>
+                    }
+                    <a asp-action="MyPaper" asp-route-id="@item.Id"><span class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Details"></span></a> |
+                    <a asp-action="MyPaperDelete" asp-route-id="@item.Id"><span class="glyphicon glyphicon-trash" aria-hidden="true" data-toggle="tooltip" title="Delete"></span></a>
+                </td>
+            </tr>
             }
         </tbody>
     </table>

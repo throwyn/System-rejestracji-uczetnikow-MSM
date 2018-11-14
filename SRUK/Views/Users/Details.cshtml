@@ -109,6 +109,9 @@
                     Status
                 </th>
                 <th>
+                    Season
+                </th>
+                <th>
                     Creation date
                 </th>
                 <th></th>
@@ -134,6 +137,9 @@
                                 <text>Topic rejected</text>
                                 break;
                         }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Season.Name)
                     </td>
 
                     <td style='color: black; text-align: center; '>

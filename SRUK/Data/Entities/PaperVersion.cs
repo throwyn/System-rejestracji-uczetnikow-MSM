@@ -24,7 +24,7 @@ namespace SRUK.Entities
         public string OriginalFileName { get; set; }
 
         [Required]
-        public short Status { get; set; }
+        public byte Status { get; set; }
 
 
         [Required]
@@ -35,6 +35,8 @@ namespace SRUK.Entities
 
         [Required]
         public bool IsDeleted { get; set; }
+
+        public string Comment { get; set; }
 
 
         public ICollection<Comment> Comments { get; set; }

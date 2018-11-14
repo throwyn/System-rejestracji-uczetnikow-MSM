@@ -33,7 +33,16 @@ namespace SRUK.Entities
         public string Comment { get; set; }
 
         [Required]
+        public byte Status { get; set; }
+
+        [Required]
         public DateTime CreationDate { get; set; }
+
+        [Required]
+        public DateTime Deadline { get; set; }
+
+        [Required]
+        public DateTime CompletionDate { get; set; }
 
         [Required]
         public DateTime EditDate { get; set; }

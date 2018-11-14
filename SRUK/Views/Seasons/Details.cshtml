@@ -5,12 +5,17 @@
 }
 
 <h2>Details</h2>
-@Html.Partial("_StatusMessage", Model.StatusMessage)
 
 <div>
     <h4>Season</h4>
     <hr />
     <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
         <dt>
             @Html.DisplayNameFor(model => model.MainImageFileName)
         </dt>

@@ -33,6 +33,12 @@
                     break;
             }
         </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Season)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Season.Name)
+        </dd>
     </dl>
     
     <form asp-action="MyPaperDelete">

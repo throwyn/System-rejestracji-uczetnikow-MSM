@@ -115,7 +115,7 @@ namespace SRUK.Services
             return await SetStatus(id, 5);
         }
 
-        private async Task<int> SetStatus(long id, short status)
+        private async Task<int> SetStatus(long id, byte status)
         {
             var version = await _context.PaperVerison.FindAsync(id);
             version.Status = status;
