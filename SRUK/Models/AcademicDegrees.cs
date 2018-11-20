@@ -12,19 +12,15 @@ namespace SRUK.Models
         public List<SelectListItem> SelectListItems {get { return new List <SelectListItem>
             {
                 new SelectListItem { Text = "", Value = "" },
-                new SelectListItem { Text = "Doctor of Engineering", Value = "D.Eng." },
-                new SelectListItem { Text = "Master of Engineering", Value = "M.Eng." },
-                new SelectListItem { Text = "Bachelor of Engineering", Value = "B.Eng." },
-                new SelectListItem { Text = "Professor", Value = "Prof." },
-                new SelectListItem { Text = "Master of Science", Value = "M.Sc." },
-                new SelectListItem { Text = "Bachelor of Sciene", Value = "B.Sc." },
-                new SelectListItem { Text = "Doctor of Philosophy", Value = "Ph.D." },
-                new SelectListItem { Text = "Master of Arts", Value = "M.A." },
-                new SelectListItem { Text = "Master of Business Administration", Value = "MBA" },
-                new SelectListItem { Text = "Master of Education", Value = "M.Ed." },
-                new SelectListItem { Text = "Bachelor of Arts ", Value = "B.A" },
-                new SelectListItem { Text = "Bachelor of Education", Value = "B.Ed." },
-                new SelectListItem { Text = "University student", Value = "" }
+                new SelectListItem { Text = "Prof. DSc. PhD. Eng.", Value = "Prof. DSc. PhD. Eng." },
+                new SelectListItem { Text = "Prof. DSc. PhD.", Value = "Prof. DSc. PhD." },
+                new SelectListItem { Text = "DSc. PhD. Eng.", Value = "DSc. PhD. Eng." },
+                new SelectListItem { Text = "DSc. PhD.", Value = "DSc. PhD." },
+                new SelectListItem { Text = "PhD. Eng.", Value = "PhD. Eng." },
+                new SelectListItem { Text = "PhD.", Value = "PhD." },
+                new SelectListItem { Text = "MSc. Eng.", Value = "MSc. Eng." },
+                new SelectListItem { Text = "MSc.", Value = "MSc." },
+                new SelectListItem { Text = "PE", Value = "PE" }
             };
             }
         }
