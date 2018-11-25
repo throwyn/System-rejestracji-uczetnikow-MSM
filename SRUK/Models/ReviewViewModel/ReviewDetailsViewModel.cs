@@ -30,7 +30,7 @@ namespace SRUK.Models
         public bool IsPositive { get; set; }
         
         [Display(Name = "Completely unsuitable")]
-        public bool IsPulp { get; set; }
+        public bool Unsuitable { get; set; }
 
         [Display(Name = "System filename")]
         public string FileName { get; set; }
@@ -44,7 +44,12 @@ namespace SRUK.Models
         [Display(Name = "Date of choosing critic")]
         public DateTime CreationDate { get; set; }
 
-        public DateTime EditDate { get; set; }
+        [DisplayFormat(DataFormatString = "{0:g}")]
+        public DateTime Deadline { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:g}")]
+        [Display(Name = "Competion date")]
+        public DateTime CompletionDate { get; set; }
 
         [Display(Name = "Is deleted")]
         public bool IsDeleted { get; set; }

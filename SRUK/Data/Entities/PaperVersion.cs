@@ -29,17 +29,14 @@ namespace SRUK.Entities
 
         [Required]
         public DateTime CreationDate { get; set; }
-
-        [Required]
+        
         public DateTime EditDate { get; set; }
 
         [Required]
         public bool IsDeleted { get; set; }
 
         public string Comment { get; set; }
-
-
-        public ICollection<Comment> Comments { get; set; }
-        public ICollection<Review> Reviews { get; set; }
+        
+        public virtual ICollection<Review> Reviews { get; set; }
     }
 }

@@ -1,0 +1,45 @@
+﻿@model SRUK.Models.ReviewDetailsViewModel
+
+@{
+    ViewData["Title"] = "Cancel Critic";
+}
+
+<h2>Cancel Critic</h2>
+
+<h3>Are you sure you want to cancel this review?</h3>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.Label("Title")
+        </dt>
+        <dd>
+            @Html.ActionLink(Model.PaperVersion.Paper.Title, "Details", "Papers", new { Id = Model.PaperVersion.Paper.Id })
+        </dd>
+        <dt>
+            @Html.Label("Author")
+        </dt>
+        <dd>
+            @Html.ActionLink(Model.PaperVersion.Paper.Participancy.User.FirstName + ' ' + Model.PaperVersion.Paper.Participancy.User.LastName, "Details", "Users", new { Id = Model.PaperVersion.Paper.Participancy.UserId })
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Critic)
+        </dt>
+        <dd>
+            @Html.ActionLink(Model.Critic.FirstName + ' ' + Model.Critic.LastName, "Details", "Users", new { Id = Model.Critic.Id })
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Deadline)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Deadline)
+        </dd>
+    </dl>
+    
+    <form asp-action="CancelCritic">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Cancel" class="btn btn-default" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

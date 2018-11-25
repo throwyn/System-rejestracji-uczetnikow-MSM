@@ -25,7 +25,7 @@ namespace SRUK.Entities
         public bool? TechnicalErrors { get; set; }
         public bool? RepeatReview { get; set; }
         public bool? IsPositive { get; set; }
-        public bool? IsPulp { get; set; }
+        public bool? Unsuitable { get; set; }
 
         public string FileName { get; set; }
         public string OriginalFileName { get; set; }
@@ -43,8 +43,7 @@ namespace SRUK.Entities
 
         [Required]
         public DateTime CompletionDate { get; set; }
-
-        [Required]
+        
         public DateTime EditDate { get; set; }
 
         [Required]

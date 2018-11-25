@@ -90,6 +90,12 @@ namespace SRUK.Controllers
                 user.PhoneNumber = model.PhoneNumber;
                 user.Degree = model.Degree;
                 user.VATID = model.VATID;
+                user.Country = model.Country;
+                user.City = model.City;
+                user.PostalCode = model.PostalCode;
+                user.Address = model.Address;
+                user.OrganisationAdderss = model.OrganisationAdderss;
+
                 user.SecurityStamp = Guid.NewGuid().ToString();
 
                 var result = await _userManager.UpdateAsync(user);

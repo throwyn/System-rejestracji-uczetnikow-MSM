@@ -10,10 +10,11 @@ namespace SRUK.Models
     {
         public long Id { get; set; }
 
-        public SeasonDTO Season { get; set; }
+        public ParticipancyDTO Participancy { get; set; }
         public string Title { get; set; }
         public short Status { get; set; }
-        
+        public DateTime SentToPrintDate { get; set; }
+
         public ICollection<PaperVersionDTO> PaperVersions { get; set; }
         public string StatusMessage { get; set; }
     }

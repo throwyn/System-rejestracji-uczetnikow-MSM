@@ -23,6 +23,12 @@ namespace SRUK.Entities
 
         public string VATID { get; set; }
 
+        public string OrganisationAdderss { get; set; }
+        public string Country { get; set; }
+        public string City { get; set; }
+        public string PostalCode { get; set; }
+        public string Address { get; set; }
+
         [Required]
         public DateTime CreationDate { get; set; }
 
@@ -33,8 +39,8 @@ namespace SRUK.Entities
         public bool IsDeleted { get; set; }
 
 
-        public ICollection<Paper> Papers { get; set; }
-        public ICollection<Review> Reviews { get; set; }
+        public virtual ICollection<Participancy> Participancies { get; set; }
+        public virtual ICollection<Review> Reviews { get; set; }
 
     }
 }

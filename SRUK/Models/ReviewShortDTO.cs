@@ -18,7 +18,10 @@ namespace SRUK.Models
         public bool TechnicalErrors { get; set; }
         public bool RepeatReview { get; set; }
         public bool IsPositive { get; set; }
-        public bool IsPulp { get; set; }
+        public bool Unsuitable { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:g}")]
+        public DateTime Deadline { get; set; }
         
         public string FileName { get; set; }
         public string OriginalFileName { get; set; }
@@ -27,9 +30,7 @@ namespace SRUK.Models
 
         [DisplayFormat(DataFormatString = "{0:g}")]
         public DateTime CreationDate { get; set; }
-        
-        //public DateTime EditDate { get; set; }
-        
-        //public bool IsDeleted { get; set; }
+
+        public byte Status { get; set; }
     }
 }

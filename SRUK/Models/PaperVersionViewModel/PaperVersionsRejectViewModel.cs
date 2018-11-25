@@ -20,6 +20,8 @@ namespace SRUK.Models
         [Display(Name = "Filename")]
         public string OriginalFileName { get; set; }
 
+        public string Comment { get; set; }
+
         [Display(Name = "Creation Date")]
         [DisplayFormat(DataFormatString = "{0:g}")]
         public DateTime CreationDate { get; set; }

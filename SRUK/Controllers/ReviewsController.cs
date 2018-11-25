@@ -88,7 +88,28 @@ namespace SRUK.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            if (!User.IsInRole("Admin") && review.CriticId != user.Id)
+            if (!User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Home");
+
+            var model = Mapper.Map<ReviewDetailsViewModel>(review);
+            model.StatusMessage = StatusMessage;
+            return View(model);
+        }
+
+        // GET: Reviews/MyReview/5
+        [Route("MyReview/{id}")]
+        public async Task<IActionResult> MyReview(long id)
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var review = _reviewRepository.GetReview(id);
+
+            if (review == null)
+            {
+                StatusMessage = "Error. Paper do not exists.";
+                return RedirectToAction("Index", "Home");
+            }
+
+            if (review.CriticId != user.Id)
                 return RedirectToAction("Index", "Home");
 
             var model = Mapper.Map<ReviewDetailsViewModel>(review);
@@ -112,7 +133,7 @@ namespace SRUK.Controllers
             if (User.IsInRole("Admin") || review.CriticId == user.Id)
                 return RedirectToAction("Details", "Reviews", new { id });
 
-            if (user.Id != review.PaperVersion.Paper.AuthorId)
+            if (user.Id != review.PaperVersion.Paper.Participancy.User.Id)
                 return RedirectToAction("Index", "Home");
 
             var model = Mapper.Map<ReviewViewModel>(review);
@@ -148,6 +169,7 @@ namespace SRUK.Controllers
                 PaperVersionId = version.Id,
                 StatusMessage = StatusMessage
             };
+            ViewBag.DateTimeNow = DateTime.Now.AddMonths(1);
             return View(model);
         }
 
@@ -179,13 +201,15 @@ namespace SRUK.Controllers
                 var review = new ReviewDTO
                 {
                     CriticId = model.CriticId,
-                    PaperVersionId = model.PaperVersionId
+                    PaperVersionId = model.PaperVersionId,
+                    Deadline = model.Deadline
                 };
 
                 var result = await _reviewRepository.CreateReviewAsync(review);
                 if (result == 1)
                 {
                     await _paperVersionRepository.SetStatusWaitingForReview(model.PaperVersionId);
+                    
                     StatusMessage = "Critic has been choosen.";
                     return RedirectToAction("Index", "PaperVersions");
                 }
@@ -207,7 +231,7 @@ namespace SRUK.Controllers
                 return RedirectToAction("MyPapers", "Papers");
             }
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            if (review.CriticId != user.Id && review.PaperVersion.Paper.AuthorId != user.Id && !User.IsInRole("Admin"))
+            if (review.CriticId != user.Id && review.PaperVersion.Paper.Participancy.User.Id != user.Id && !User.IsInRole("Admin"))
             {
                 StatusMessage = "Error. You don't have permission to do that.";
                 return RedirectToAction("MyPapers", "Papers");
@@ -293,34 +317,36 @@ namespace SRUK.Controllers
                 var review = Mapper.Map<ReviewDTO>(model);
                 review.OriginalFileName = model.File.FileName;
                 review.FileName = newFileName;
+                review.CompletionDate = DateTime.Now;
 
-
-                if (review.IsPositive)
-                {
-                    await _paperVersionRepository.SetStatusVersionAccepted(existingReview.PaperVersionId);
-                    await _paperRepository.SetStatuAccepted(existingReview.PaperVersion.PaperId);
-                }
-                
-                else if (review.IsPulp)
-                    await _paperVersionRepository.SetStatusWaitingForVerdict(existingReview.PaperVersionId);
-                else if ((review.TechnicalErrors || review.EditorialErrors) && review.RepeatReview)
-                {
-                    await _paperVersionRepository.SetStatusVersionRejected(existingReview.PaperVersionId);
-                }
-                else if ((review.TechnicalErrors || review.EditorialErrors) && !review.RepeatReview)
-                {
-                    await _paperRepository.SetStatusSmallMistakesLeft(existingReview.PaperVersion.PaperId);
-                    await _paperVersionRepository.SetStatusSmallMistakes(existingReview.PaperVersionId);
-                }
-                else
-                {
-                    await _paperVersionRepository.SetStatusWaitingForVerdict(existingReview.PaperVersionId);
-                }
-                
 
                 var result = _reviewRepository.AddReviewAsync(review);
+
                 if (result.Result == 1)
                 {
+                    var reviews = _reviewRepository.GetPaperVersionReviews(existingReview.PaperVersionId);
+                    if(reviews.Where(r=>r.IsPositive).Count() == reviews.Count())
+                    {
+                        await _paperVersionRepository.SetStatusVersionAccepted(existingReview.PaperVersionId);
+                        await _paperRepository.SetStatuAccepted(existingReview.PaperVersion.PaperId);
+                    }
+                
+                    else if (review.Unsuitable)
+                        await _paperVersionRepository.SetStatusWaitingForVerdict(existingReview.PaperVersionId);
+                    else if ((review.TechnicalErrors || review.EditorialErrors) && review.RepeatReview)
+                    {
+                        await _paperVersionRepository.SetStatusVersionRejected(existingReview.PaperVersionId);
+                    }
+                    else if ((review.TechnicalErrors || review.EditorialErrors) && !review.RepeatReview)
+                    {
+                        await _paperRepository.SetStatusSmallMistakesLeft(existingReview.PaperVersion.PaperId);
+                        await _paperVersionRepository.SetStatusSmallMistakes(existingReview.PaperVersionId);
+                    }
+                    else
+                    {
+                        await _paperVersionRepository.SetStatusWaitingForVerdict(existingReview.PaperVersionId);
+                    }
+
 
                     StatusMessage = "Succesfully added.";
                     return RedirectToAction(nameof(MyReviews));
@@ -352,6 +378,36 @@ namespace SRUK.Controllers
 
         }
 
+
+        // GET: Reviews/CancelCritic/5
+        [HttpGet]
+        [Route("CancelCritic/{id}")]
+        public IActionResult CancelCritic(long id)
+        {
+            if (!User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Home");
+            var review = _reviewRepository.GetReview(id);
+
+            var model = Mapper.Map<ReviewDetailsViewModel>(review);
+            model.StatusMessage = StatusMessage;
+            return View(model);
+        }
+        // POST: Reviews/CancelCritic/5
+        [HttpPost]
+        [Route("CancelCritic/{id}")]
+        public IActionResult CancelCritic(ReviewDetailsViewModel model)
+        {
+            if (!User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Home");
+            var result = _reviewRepository.RemoveReview(model.Id);
+            if (result > 0 )
+            {
+                StatusMessage = "Critic cancelled.";
+                return RedirectToAction(nameof(Index));
+            }
+            StatusMessage = "Something went wrong.";
+            return RedirectToAction(nameof(Index));
+        }
 
         #region Helpers
 

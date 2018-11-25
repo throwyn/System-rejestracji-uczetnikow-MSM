@@ -33,12 +33,13 @@ namespace SRUK.Models
 
         [Required]
         [Display(Name = "Completely unsuitable")]
-        public bool IsPulp { get; set; }
+        public bool Unsuitable { get; set; }
 
         [Required]
         [Display(Name = "Review file")]
         public IFormFile File { get; set; }
-        
+
+        [Display(Name = "Comment for administration")]
         public string Comment { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:g}")]

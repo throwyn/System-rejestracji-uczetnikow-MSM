@@ -24,29 +24,5 @@ namespace SRUK.Models.AccountViewModels
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
-        [Display(Name = "Phone number")]
-        [DataType(DataType.PhoneNumber)]
-        [MaxLength(15)]
-        public string PhoneNumber { get; set; }
-
-        [Required]
-        [Display(Name = "First name")]
-        [StringLength(50, ErrorMessage = "{0} must be at least {2} characters long.", MinimumLength = 2)]
-        public string FirstName { get; set; }
-
-        [Required]
-        [Display(Name = "Last name")]
-        [StringLength(50, ErrorMessage = "{0} must be at least {2} characters long.", MinimumLength = 2)]
-        public string LastName { get; set; }
-
-        [Required]
-        [Display(Name = "Organisation")]
-        public string Organisation { get; set; }
-
-        [Display(Name = "Academic title")]
-        public string Degree { get; set; }
-
-        [Display(Name = "VAT Identification Number(NIP)")]
-        public string VATID { get; set; }
     }
 }

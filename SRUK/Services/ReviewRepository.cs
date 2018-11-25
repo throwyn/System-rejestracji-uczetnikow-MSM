@@ -22,7 +22,7 @@ namespace SRUK.Services
 
         public IEnumerable<ReviewShortDTO> GetReviews()
         {
-            var entityReviews = _context.Review.Include(r => r.PaperVersion).Include(r => r.PaperVersion.Paper).Include(r => r.PaperVersion.Paper.Author).Include(r => r.Critic).Where(r => r.IsDeleted != true);
+            var entityReviews = _context.Review.Include(r => r.PaperVersion).Include(r => r.PaperVersion.Paper).Include(r => r.PaperVersion.Paper.Participancy).Include(r => r.PaperVersion.Paper.Participancy.User).Include(r => r.Critic).Where(r => r.IsDeleted != true);
             var reviews = Mapper.Map<IEnumerable<ReviewShortDTO>>(entityReviews);
             return reviews;
         }
@@ -36,16 +36,22 @@ namespace SRUK.Services
         }
         public IEnumerable<ReviewShortDTO> GetUserReviews(string userId)
         {
-            var entityReviews = _context.Review.Include(r => r.PaperVersion).Include(r => r.PaperVersion.Paper).Include(r => r.PaperVersion.Paper.Author).Where(r => r.CriticId == userId);
+            var entityReviews = _context.Review.Include(r => r.PaperVersion).Include(r => r.PaperVersion.Paper).Include(r => r.PaperVersion.Paper.Participancy).Include(r => r.PaperVersion.Paper.Participancy.User).Where(r => r.CriticId == userId);
             var reviews = Mapper.Map<IEnumerable<ReviewShortDTO>>(entityReviews);
 
             return reviews;
         }
         public ReviewDTO GetReview(long id)
         {
-            var entityReview = _context.Review.Include(r => r.Critic).Include(r => r.PaperVersion).Include(r => r.PaperVersion.Paper).Include(r => r.PaperVersion.Paper.Author).SingleOrDefaultAsync(r => r.Id == id).Result;
+            var entityReview = _context.Review.Include(r => r.Critic).Include(r => r.PaperVersion).Include(r => r.PaperVersion.Paper).Include(r => r.PaperVersion.Paper.Participancy).Include(r => r.PaperVersion.Paper.Participancy.User).SingleOrDefaultAsync(r => r.Id == id).Result;
             var review = Mapper.Map<ReviewDTO>(entityReview);
             return review;
+        }
+        public IEnumerable<ReviewDTO> GetPaperVersionReviews(long paperVersionId)
+        {
+            var entityReview = _context.Review.Where(r => r.PaperVersionId == paperVersionId);
+            var reviews = Mapper.Map<IEnumerable<ReviewDTO>>(entityReview);
+            return reviews;
         }
         public async Task<int> AddReviewAsync(ReviewDTO review)
         {
@@ -57,11 +63,20 @@ namespace SRUK.Services
             entityReview.EditorialErrors = review.EditorialErrors;
             entityReview.TechnicalErrors = review.TechnicalErrors;
             entityReview.RepeatReview = review.RepeatReview;
-            entityReview.IsPulp = review.IsPulp;
+            entityReview.Unsuitable = review.Unsuitable;
             entityReview.IsPositive = review.IsPositive;
+            entityReview.CompletionDate = review.CompletionDate;
 
             entityReview.Comment = review.Comment;
             var result =  await _context.SaveChangesAsync();
+            return result;
+        }
+        public int RemoveReview(long id)
+        {
+            Review review =  _context.Review.FirstOrDefault(s => s.Id == id);
+            _context.Review.Remove(review);
+
+            int result = _context.SaveChanges();
             return result;
         }
 

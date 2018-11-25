@@ -17,18 +17,18 @@
             @Html.DisplayFor(model => model.Title)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Season)
+            @Html.DisplayNameFor(model => model.Participancy.Season)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Season.Name)
+            @Html.DisplayFor(model => model.Participancy.Season.Name)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Author)
+            @Html.DisplayNameFor(model => model.Participancy.User)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Author.FirstName)
-            @Html.DisplayFor(model => model.Author.LastName)<br />
-            @Html.DisplayFor(model => model.Author.Email)
+            @Html.DisplayFor(model => model.Participancy.User.FirstName)
+            @Html.DisplayFor(model => model.Participancy.User.LastName)<br />
+            @Html.DisplayFor(model => model.Participancy.User.Email)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Status)

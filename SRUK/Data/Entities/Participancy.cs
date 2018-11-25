@@ -7,30 +7,34 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SRUK.Entities
 {
-    public class Comment
+    public class Participancy
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
-        
-        [Required]
-        public PaperVersion PaperVersion { get; set; }
-        public long PaperVersionId { get; set; }
 
         [Required]
-        public ApplicationUser Author { get; set; }
-        public string AuthorId { get; set; }
+        public ApplicationUser User { get; set; }
+        public string UserId { get; set; }
 
         [Required]
-        public string Content { get; set; }
+        public Season Season { get; set; }
+        public long SeasonId { get; set; }
+
+        [Required]
+        public bool ConferenceParticipation { get; set; }
+
+        [Required]
+        public bool Publication { get; set; }
 
         [Required]
         public DateTime CreationDate { get; set; }
-
-        [Required]
+        
         public DateTime EditDate { get; set; }
 
         [Required]
         public bool IsDeleted { get; set; }
+
+        public virtual ICollection<Paper> Papers { get; set; }
     }
 }

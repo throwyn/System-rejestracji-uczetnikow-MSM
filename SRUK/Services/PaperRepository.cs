@@ -31,7 +31,7 @@ namespace SRUK.Services
 
         public async Task<PaperDTO> GetPaperAsync(long id)
         {
-            var entityPaper = await _context.Paper.Include(p => p.Author).Include(p => p.Season).Include(p => p.PaperVersions).Include("PaperVersions.Reviews").SingleOrDefaultAsync(u => u.Id == id);
+            var entityPaper = await _context.Paper.Include(p => p.Participancy).Include(p => p.Participancy.User).Include(p => p.Participancy.Season).Include(p => p.PaperVersions).Include("PaperVersions.Reviews").SingleOrDefaultAsync(u => u.Id == id);
             var paper = Mapper.Map<PaperDTO>(entityPaper);
             return paper;
         }
@@ -52,14 +52,14 @@ namespace SRUK.Services
         }
         public IEnumerable<PaperShortDTO> GetUserPapers(string userId)
         {
-            var entityPapers = _context.Paper.Include(p => p.PaperVersions).Include(p => p.Season).Where(p => p.IsDeleted == false && p.Author.Id == userId).ToAsyncEnumerable().ToEnumerable();
+            var entityPapers = _context.Paper.Include(p => p.PaperVersions).Include(p => p.Participancy.Season).Where(p => p.IsDeleted == false && p.Participancy.User.Id == userId).ToAsyncEnumerable().ToEnumerable();
             var papers = Mapper.Map<IEnumerable<PaperShortDTO>>(entityPapers);
             return papers;
         }
 
         public IEnumerable<PaperShortDTO> GetPapers()
         {
-            var entityPapers = _context.Paper.Where(p => p.IsDeleted == false).Include(p => p.Season).Include(p => p.Author).ToAsyncEnumerable().ToEnumerable();
+            var entityPapers = _context.Paper.Where(p => p.IsDeleted == false).Include(p => p.Participancy.Season).Include(p => p.Participancy.User).ToAsyncEnumerable().ToEnumerable();
             var papers = Mapper.Map<IEnumerable<PaperShortDTO>>(entityPapers);
             return papers;
         }

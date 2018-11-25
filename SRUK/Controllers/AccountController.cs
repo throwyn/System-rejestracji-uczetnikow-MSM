@@ -119,16 +119,16 @@ namespace SRUK.Controllers
                 {
                     await _userManager.AddToRoleAsync(user, "Participant");
 
-                    user.Email = model.Email;
-                    user.FirstName = model.FirstName;
-                    user.LastName = model.LastName;
-                    user.Organisation = model.Organisation;
-                    user.PhoneNumber = model.PhoneNumber;
-                    user.Degree = model.Degree;
-                    user.VATID = model.VATID;
-                    user.SecurityStamp = Guid.NewGuid().ToString();
+                    //user.Email = model.Email;
+                    //user.FirstName = model.FirstName;
+                    //user.LastName = model.LastName;
+                    //user.Organisation = model.Organisation;
+                    //user.PhoneNumber = model.PhoneNumber;
+                    //user.Degree = model.Degree;
+                    //user.VATID = model.VATID;
+                    //user.SecurityStamp = Guid.NewGuid().ToString();
 
-                    await _userManager.UpdateAsync(user);
+                    //await _userManager.UpdateAsync(user);
 
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);

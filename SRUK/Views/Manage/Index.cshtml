@@ -4,12 +4,54 @@
     ViewData.AddActivePage(ManageNavPages.Index);
 }
 
-<h4>@ViewData["Title"]</h4>
 @Html.Partial("_StatusMessage", Model.StatusMessage)
-<div class="row">
-    <div class="col-md-6">
-        <form method="post">
-            <div asp-validation-summary="All" class="text-danger"></div>
+<form method="post" DefaultButton="submit">
+    <div class="row">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="col-md-6">
+
+            <h4>Personal address</h4>
+            <div class="form-group">
+                <label asp-for="Country"></label>
+                <input asp-for="Country" class="form-control" />
+                <span asp-validation-for="Country" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="City"></label>
+                <input asp-for="City" class="form-control" />
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PostalCode"></label>
+                <input asp-for="PostalCode" class="form-control" />
+                <span asp-validation-for="PostalCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <hr />
+            <h4>Organisation</h4>
+            <div class="form-group">
+                <label asp-for="Organisation"></label>
+                <input asp-for="Organisation" class="form-control" />
+                <span asp-validation-for="Organisation" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OrganisationAdderss"></label>
+                <input asp-for="OrganisationAdderss" class="form-control" />
+                <span asp-validation-for="OrganisationAdderss" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="VATID"></label>
+                <input asp-for="VATID" class="form-control" />
+                <span asp-validation-for="VATID" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <h4>Personal Information</h4>
             <div class="form-group">
                 <label asp-for="Degree"></label>
                 <select asp-for="Degree" class="form-control" asp-items="ViewBag.Degrees"></select>
@@ -24,16 +66,6 @@
                 <label asp-for="LastName"></label>
                 <input asp-for="LastName" class="form-control" />
                 <span asp-validation-for="LastName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Organisation"></label>
-                <input asp-for="Organisation" class="form-control" />
-                <span asp-validation-for="Organisation" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="VATID"></label>
-                <input asp-for="VATID" class="form-control" />
-                <span asp-validation-for="VATID" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Email"></label>
@@ -56,10 +88,12 @@
                 <input asp-for="PhoneNumber" class="form-control" />
                 <span asp-validation-for="PhoneNumber" class="text-danger"></span>
             </div>
-            <button type="submit" class="btn btn-default">Save</button>
-        </form>
+        </div>
     </div>
-</div>
+    <div class="row col-md-6">
+        <button type="submit" class="btn btn-default btn-default">Confirm</button>
+    </div>
+</form>
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")

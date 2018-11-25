@@ -1,0 +1,40 @@
+﻿@model ParticipancyEditViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Editing participation in @Model.SeasonName</h2>
+@Html.Partial("_StatusMessage", Model.StatusMessage)
+
+<h4>Participation</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="UserId" />
+            <div class="form-group row">
+                <label asp-for="ConferenceParticipation" class="control-label col-md-6"></label>
+                @Html.CheckBoxFor(m => m.ConferenceParticipation, new { @class = "col-md-2" })
+            </div>
+            <div class="form-group row">
+                <label asp-for="Publication" class="control-label col-md-6"></label>
+                @Html.CheckBoxFor(m => m.Publication, new { @class = "col-md-2" })
+            </div>
+            It is mandatory for the conference participants to complete the <a asp-controller="Manage" asp-action="Index">profile</a>.
+            <div class="form-group">
+                <input type="submit" value="Edit" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="MyParticipancies">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

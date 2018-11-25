@@ -7,20 +7,9 @@
 <h2>Papers</h2>
 @Html.Partial("_StatusMessage", Model.StatusMessage)
 
-
-@if (User.IsInRole("Participant") && ViewBag.IsRegistrationOpened )
-{
-    <p>
-        <a asp-action="Add">Add new</a>
-    </p>
-}
-else if (User.IsInRole("Admin"))
-{
-
-    <p>
-        <a asp-action="Create">Create new</a>
-    </p>
-}
+<p>
+    <a asp-action="Create"></a>Create new
+</p>
 @if (Model.Papers.Count > 0)
 {
     <table class="table table-hover">
@@ -53,13 +42,13 @@ else if (User.IsInRole("Admin"))
             {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Season.Name)
+                    @Html.DisplayFor(modelItem => item.Participancy.Season.Name)
                 </td>
                 <td>
                     @Html.ActionLink(item.Title, "Details", "Papers", new { Id = item.Id })
                 </td>
                 <td>
-                    @Html.ActionLink(item.Author.FirstName + " " + item.Author.LastName, "Details", "Users", new { Id = item.Author.Id })
+                    @Html.ActionLink(item.Participancy.User.FirstName + " " + item.Participancy.User.LastName, "Details", "Users", new { Id = item.Participancy.UserId })
                 </td>
                 <td>
                     @switch (item.Status)

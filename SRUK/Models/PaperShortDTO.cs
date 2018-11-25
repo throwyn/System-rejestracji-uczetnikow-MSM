@@ -10,9 +10,7 @@ namespace SRUK.Models
     {
         public long Id { get; set; }
 
-        public SeasonDTO Season { get; set; }
-        
-        public UserDTO Author { get; set; }
+        public ParticipancyDTO Participancy { get; set; }
 
         public string Title { get; set; }
         

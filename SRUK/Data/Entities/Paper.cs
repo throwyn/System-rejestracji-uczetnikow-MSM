@@ -14,14 +14,9 @@ namespace SRUK.Entities
         public long Id { get; set; }
 
         [Required]
-        public ApplicationUser Author { get; set; }
-        public string AuthorId { get; set; }
-
-        [Required]
-        public Season Season { get; set; }
-        public long SeasonId { get; set; }
-
-
+        public Participancy Participancy { get; set; }
+        public long ParticipancyId { get; set; }
+        
         [Required]
         [MaxLength(200)]
         public string Title { get; set; }
@@ -31,10 +26,10 @@ namespace SRUK.Entities
         [Required]
         public DateTime CreationDate { get; set; }
 
-        [Required]
         public DateTime EditDate { get; set; }
+        public DateTime SentToPrintDate { get; set; }
 
-        public ICollection<PaperVersion> PaperVersions { get; set; }
+        public virtual ICollection<PaperVersion> PaperVersions { get; set; }
 
         [Required]
         public bool IsDeleted { get; set; }

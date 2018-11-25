@@ -59,6 +59,7 @@ namespace SRUK
             services.AddScoped<IPaperRepository, PaperRepository>();
             services.AddScoped<IPaperVersionRepository, PaperVersionRepository>();
             services.AddScoped<IReviewRepository, ReviewRepository>();
+            services.AddScoped<IParticipanciesRepository, ParticipanciesRepository>();
 
             services.AddMvc();
         }
@@ -111,6 +112,14 @@ namespace SRUK
                 cfg.CreateMap<SeasonDTO, SeasonEditViewModel>();
                 cfg.CreateMap<SeasonEditViewModel, SeasonDTO>();
                 cfg.CreateMap<SeasonDTO, SeasonDeleteViewModel>();
+
+                //Participations
+                cfg.CreateMap<Participancy, ParticipancyDTO>();
+                cfg.CreateMap<ParticipancyDTO, Participancy>();
+                cfg.CreateMap<Participancy, ParticipancyShortDTO>(); 
+                cfg.CreateMap<ParticipancySignUpViewModel, ParticipancyDTO>();
+                cfg.CreateMap<ParticipancyDTO, ParticipancyEditViewModel>();
+                cfg.CreateMap<ParticipancyEditViewModel, ParticipancyDTO>();
 
                 //Papers
                 cfg.CreateMap<Paper, PaperDTO>(); 

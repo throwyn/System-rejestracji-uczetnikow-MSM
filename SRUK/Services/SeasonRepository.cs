@@ -61,7 +61,7 @@ namespace SRUK.Services
 
         public async Task<int> DeleteSeasonAsync(long id)
         {
-            if(_context.Paper.Where(p => p.Season.Id == id).Count() > 0)
+            if(_context.Paper.Where(p => p.Participancy.Season.Id == id).Count() > 0)
             {
                 return 0;
             }
@@ -71,16 +71,24 @@ namespace SRUK.Services
             int result = await _context.SaveChangesAsync();
             return result;
         }
-        public async Task<bool> IsRegistrationOpenedAsync()
+        public bool IsRegistrationOpened()
         {
-            Season season = await _context.Season.Where(s => s.StartDate < DateTime.UtcNow && s.EndDate > DateTime.UtcNow).SingleOrDefaultAsync();
+            Season season = _context.Season.Where(s => s.StartDate < DateTime.UtcNow && s.EndDate > DateTime.UtcNow).SingleOrDefault();
             return (season != null);
         }
 
-        public async Task<long> GetCurrentSeasonIdAsync()
+        public long GetCurrentSeasonId()
         {
-            var season = await _context.Season.Where(s => s.StartDate < DateTime.UtcNow && s.EndDate > DateTime.UtcNow).SingleOrDefaultAsync();
+            var season = _context.Season.Where(s => s.StartDate < DateTime.UtcNow && s.EndDate > DateTime.UtcNow).SingleOrDefault();
             return season.Id;
+        }
+
+        public SeasonDTO GetCurrentSeason()
+        {
+            var entitySeason = _context.Season.Where(s => s.StartDate < DateTime.UtcNow && s.EndDate > DateTime.UtcNow).SingleOrDefault();
+
+            var season = Mapper.Map<SeasonDTO>(entitySeason);
+            return season;
         }
     }
 }

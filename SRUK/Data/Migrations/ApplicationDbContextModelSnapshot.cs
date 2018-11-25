@@ -135,8 +135,14 @@ namespace SRUK.Data.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
+                    b.Property<string>("Address");
+
+                    b.Property<string>("City");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
+
+                    b.Property<string>("Country");
 
                     b.Property<DateTime>("CreationDate")
                         .ValueGeneratedOnAdd()
@@ -172,11 +178,15 @@ namespace SRUK.Data.Migrations
                     b.Property<string>("Organisation")
                         .HasMaxLength(100);
 
+                    b.Property<string>("OrganisationAdderss");
+
                     b.Property<string>("PasswordHash");
 
                     b.Property<string>("PhoneNumber");
 
                     b.Property<bool>("PhoneNumberConfirmed");
+
+                    b.Property<string>("PostalCode");
 
                     b.Property<string>("SecurityStamp");
 
@@ -200,72 +210,11 @@ namespace SRUK.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("SRUK.Entities.Comment", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("AuthorId")
-                        .IsRequired();
-
-                    b.Property<string>("Content")
-                        .IsRequired();
-
-                    b.Property<DateTime>("CreationDate");
-
-                    b.Property<DateTime>("EditDate");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<long>("PaperVersionId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
-
-                    b.HasIndex("PaperVersionId");
-
-                    b.ToTable("Comment");
-                });
-
-            modelBuilder.Entity("SRUK.Entities.Message", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasMaxLength(200);
-
-                    b.Property<DateTime>("CreationDate")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("getutcdate()");
-
-                    b.Property<DateTime>("EditDate");
-
-                    b.Property<string>("ReceiverId")
-                        .IsRequired();
-
-                    b.Property<string>("SenderId")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ReceiverId");
-
-                    b.HasIndex("SenderId");
-
-                    b.ToTable("Messages");
-                });
-
             modelBuilder.Entity("SRUK.Entities.Paper", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AuthorId")
-                        .IsRequired();
-
                     b.Property<DateTime>("CreationDate")
                         .ValueGeneratedOnAdd()
                         .HasDefaultValueSql("getutcdate()");
@@ -274,7 +223,9 @@ namespace SRUK.Data.Migrations
 
                     b.Property<bool>("IsDeleted");
 
-                    b.Property<long>("SeasonId");
+                    b.Property<long>("ParticipancyId");
+
+                    b.Property<DateTime>("SentToPrintDate");
 
                     b.Property<byte>("Status");
 
@@ -284,9 +235,7 @@ namespace SRUK.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId");
-
-                    b.HasIndex("SeasonId");
+                    b.HasIndex("ParticipancyId");
 
                     b.ToTable("Paper");
                 });
@@ -323,6 +272,37 @@ namespace SRUK.Data.Migrations
                     b.ToTable("PaperVerison");
                 });
 
+            modelBuilder.Entity("SRUK.Entities.Participancy", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("ConferenceParticipation");
+
+                    b.Property<DateTime>("CreationDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("getutcdate()");
+
+                    b.Property<DateTime>("EditDate");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<bool>("Publication");
+
+                    b.Property<long>("SeasonId");
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SeasonId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Participancy");
+                });
+
             modelBuilder.Entity("SRUK.Entities.Review", b =>
                 {
                     b.Property<long>("Id")
@@ -351,8 +331,6 @@ namespace SRUK.Data.Migrations
 
                     b.Property<bool?>("IsPositive");
 
-                    b.Property<bool?>("IsPulp");
-
                     b.Property<string>("OriginalFileName");
 
                     b.Property<long>("PaperVersionId");
@@ -362,6 +340,8 @@ namespace SRUK.Data.Migrations
                     b.Property<byte>("Status");
 
                     b.Property<bool?>("TechnicalErrors");
+
+                    b.Property<bool?>("Unsuitable");
 
                     b.HasKey("Id");
 
@@ -448,42 +428,11 @@ namespace SRUK.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("SRUK.Entities.Comment", b =>
-                {
-                    b.HasOne("SRUK.Entities.ApplicationUser", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("SRUK.Entities.PaperVersion", "PaperVersion")
-                        .WithMany("Comments")
-                        .HasForeignKey("PaperVersionId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("SRUK.Entities.Message", b =>
-                {
-                    b.HasOne("SRUK.Entities.ApplicationUser", "Receiver")
-                        .WithMany()
-                        .HasForeignKey("ReceiverId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("SRUK.Entities.ApplicationUser", "Sender")
-                        .WithMany()
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("SRUK.Entities.Paper", b =>
                 {
-                    b.HasOne("SRUK.Entities.ApplicationUser", "Author")
+                    b.HasOne("SRUK.Entities.Participancy", "Participancy")
                         .WithMany("Papers")
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("SRUK.Entities.Season", "Season")
-                        .WithMany()
-                        .HasForeignKey("SeasonId")
+                        .HasForeignKey("ParticipancyId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -492,6 +441,19 @@ namespace SRUK.Data.Migrations
                     b.HasOne("SRUK.Entities.Paper", "Paper")
                         .WithMany("PaperVersions")
                         .HasForeignKey("PaperId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SRUK.Entities.Participancy", b =>
+                {
+                    b.HasOne("SRUK.Entities.Season", "Season")
+                        .WithMany("Participancies")
+                        .HasForeignKey("SeasonId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("SRUK.Entities.ApplicationUser", "User")
+                        .WithMany("Participancies")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

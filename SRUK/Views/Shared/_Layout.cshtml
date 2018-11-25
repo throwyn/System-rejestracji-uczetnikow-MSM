@@ -42,10 +42,12 @@
                     </div>
                     <div class="navbar-collapse collapse">
                         <ul class="nav navbar-nav">
+                            <li><a asp-area="" asp-controller="Participancies" asp-action="MyParticipancies">Participancies</a></li>
                             <li><a asp-area="" asp-controller="Papers" asp-action="MyPapers">My Papers</a></li>
                             <li><a asp-area="" asp-controller="Reviews" asp-action="MyReviews">My Reviews</a></li>
                             <li></li>
                             <li><a asp-area="" asp-controller="Users" asp-action="Index">Users</a></li>
+                            <li><a asp-area="" asp-controller="Participancies" asp-action="Index">Participants</a></li>
                             <li><a asp-area="" asp-controller="Papers" asp-action="Index">Papers</a></li>
                             <li><a asp-area="" asp-controller="PaperVersions" asp-action="Index">Versions</a></li>
                             <li><a asp-area="" asp-controller="Reviews" asp-action="Index">Reviews</a></li>
@@ -71,6 +73,7 @@
                     </div>
                     <div class="navbar-collapse collapse">
                         <ul class="nav navbar-nav">
+                            <li><a asp-area="" asp-controller="Participancies" asp-action="MyParticipancies">Participancies</a></li>
                             <li><a asp-area="" asp-controller="Papers" asp-action="MyPapers">My Papers</a></li>
                             <li><a asp-area="" asp-controller="Reviews" asp-action="MyReviews">My Reviews</a></li>
                         </ul>
@@ -94,6 +97,7 @@
                     </div>
                     <div class="navbar-collapse collapse">
                         <ul class="nav navbar-nav">
+                            <li><a asp-area="" asp-controller="Participancies" asp-action="MyParticipancies">Participancies</a></li>
                             <li><a asp-area="" asp-controller="Papers" asp-action="MyPapers">My Papers</a></li>
                         </ul>
                         @await Html.PartialAsync("_LoginPartial")

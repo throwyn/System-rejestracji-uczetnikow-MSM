@@ -33,6 +33,7 @@ namespace SRUK.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IPaperRepository _paperRepository;
         private readonly IPaperVersionRepository _paperVersionRepository;
+        private readonly IParticipanciesRepository _participanciesRepository;
 
         public PaperVersionsController(
             IUserRepository userRepository,
@@ -41,7 +42,8 @@ namespace SRUK.Controllers
             ILogger<AccountController> logger,
             RoleManager<IdentityRole> roleManager,
             IPaperRepository paperRepository,
-            IPaperVersionRepository paperVersionRepository
+            IPaperVersionRepository paperVersionRepository,
+            IParticipanciesRepository participanciesRepository
             )
         {
             _userRepository = userRepository;
@@ -51,6 +53,7 @@ namespace SRUK.Controllers
             _roleManager = roleManager;
             _paperRepository = paperRepository;
             _paperVersionRepository = paperVersionRepository;
+            _participanciesRepository = participanciesRepository;
         }
 
         [TempData]
@@ -92,7 +95,8 @@ namespace SRUK.Controllers
                 StatusMessage = "Error. Paper do not exists.";
                 return RedirectToAction("MyPapers", "Papers");
             }
-            if (paper.Author.Id != user.Id)
+            var participancy = _participanciesRepository.GetParticipancy(paper.ParticipancyId);
+            if (participancy.User.Id != user.Id)
             {
                 StatusMessage = "Error. You cannot add version of this paper.";
                 return RedirectToAction("MyPapers", "Papers");
@@ -137,8 +141,8 @@ namespace SRUK.Controllers
                 StatusMessage = "Error. You cannot add new version.";
                 return RedirectToAction("MyPapers", "Papers");
             }
-
-            if (paper.Author.Id != user.Id)
+            var participancy = _participanciesRepository.GetParticipancy(paper.ParticipancyId);
+            if (paper.Participancy.User.Id != user.Id)
             {
                 StatusMessage = "Error. You cannot add version of this paper.";
                 return RedirectToAction("MyPapers", "Papers");
@@ -190,7 +194,8 @@ namespace SRUK.Controllers
                 return RedirectToAction("MyPapers", "Papers");
             }
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            if (paperVersion.Paper.AuthorId != user.Id && !User.IsInRole("Admin") && paperVersion.Reviews.FirstOrDefault(r=>r.CriticId == user.Id) == null)
+
+            if (paperVersion.Paper.Participancy.User.Id != user.Id && !User.IsInRole("Admin") && paperVersion.Reviews.FirstOrDefault(r=>r.CriticId == user.Id) == null)
             {
                 StatusMessage = "Error. You don't have permission to do that.";
                 return RedirectToAction("MyPapers", "Papers");
@@ -243,8 +248,8 @@ namespace SRUK.Controllers
         {
             PaperVersionDTO paperVersion = _paperVersionRepository.GetPaperVersionAsync(id).Result;
             var user = await _userManager.GetUserAsync(HttpContext.User);
-
-            if (paperVersion.Paper.AuthorId != user.Id && !User.IsInRole("Admin"))
+            
+            if (paperVersion.Paper.Participancy.User.Id != user.Id && !User.IsInRole("Admin"))
             {
                 StatusMessage = "Error. Access denied.";
                 return RedirectToAction("MyPaper", "Papers", new { id = paperVersion.PaperId });
@@ -316,9 +321,9 @@ namespace SRUK.Controllers
         [HttpPost]
         [Route("RejectVersion/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RejectVersionConfirmed(long id)
+        public async Task<IActionResult> RejectVersionConfirmed(PaperVersionsRejectViewModel model)
         {
-            PaperVersionDTO paperVersion = _paperVersionRepository.GetPaperVersionAsync(id).Result;
+            PaperVersionDTO paperVersion = _paperVersionRepository.GetPaperVersionAsync(model.Id).Result;
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
             if (!User.IsInRole("Admin"))
@@ -332,9 +337,11 @@ namespace SRUK.Controllers
                 StatusMessage = "Error. Version do not exists.";
                 return RedirectToAction("MyPapers", "Papers");
             }
-            var result = await _paperVersionRepository.SetStatusVersionRejected(id);
+            var result = await _paperVersionRepository.SetStatusVersionRejected(model.Id);
             if (result == 1)
             {
+                if (model.Comment != null)
+                    _paperVersionRepository.SetComment(model.Id,model.Comment);
                 StatusMessage = "Succesfully rejected.";
                 return RedirectToAction("Index", "PaperVersions");
             }

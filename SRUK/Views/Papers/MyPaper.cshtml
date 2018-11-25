@@ -50,10 +50,10 @@
             }
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Season)
+            @Html.DisplayNameFor(model => model.Participancy.Season)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Season.Name)
+            @Html.DisplayFor(model => model.Participancy.Season.Name)
         </dd>
     </dl>
 </div>
@@ -77,6 +77,9 @@
                     Filename
                 </th>
                 <th>
+                    Comment
+                </th>
+                <th>
                     Status
                 </th>
                 <th></th>
@@ -85,69 +88,73 @@
         <tbody>
             @foreach (var item in Model.PaperVersions)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Id)
-                    </td>
-                    <td>
-                        @if (item.Reviews.Count > 0)
-                        {
-                            var i = 0;
-                            foreach (var review in item.Reviews)
-                            {
-                                if (i > 0)
-                                {<text>|</text> }
-                            i++;
-                            <a asp-action="Review" asp-controller="Reviews" asp-route-id="@review.Id"><span class="glyphicon glyphicon-text-color" aria-hidden="true" data-toggle="tooltip" title="Review details [@i]"></span></a>
-                        }
-                    }
-                    else
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @if (item.Reviews.Count > 0)
                     {
-                        <text>None</text>
+                        var i = 0;
+                        foreach (var review in item.Reviews)
+                        {
+                            if (i > 0)
+                            {<text>|</text> }
+                        i++;
+                        <a asp-action="Review" asp-controller="Reviews" asp-route-id="@review.Id"><span class="glyphicon glyphicon-text-color" aria-hidden="true" data-toggle="tooltip" title="Review details [@i]"></span></a>
                     }
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CreationDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.OriginalFileName)
-                    </td>
-                    <td>
-                        @switch (item.Status)
-                        {
-                            case 0:
-                                <text>Document received</text>
-                                break;
-                            case 1:
-                                <text>Waiting for review</text>
-                                break;
-                            case 2:
-                                <text>Accepted</text>
-                                break;
-                            case 3:
-                                <text>Rejected</text>
-                                break;
-                            case 4:
-                                <text>Waiting for verdict</text>
-                                break;
-                            case 5:
-                                <text>Small mistakes</text>
-                                break;
-                        }
-                    </td>
-                    <td style='color: black; text-align:center;'>
-                        <a asp-action="Download" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class="glyphicon glyphicon-download-alt" aria-hidden="true" data-toggle="tooltip" title="Download"></span></a>
-                        @if (item.Status == 0)
-                        {
-                            <text>|</text>
-                            <a asp-action="Delete" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class="glyphicon glyphicon-trash" aria-hidden="true" data-toggle="tooltip" title="Delete"></span></a>
-                        }
-                    </td>
-                </tr>
+                }
+                else
+                {
+                    <text>None</text>
+                }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreationDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OriginalFileName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Comment)
+                </td>
+                <td>
+                    @switch (item.Status)
+                    {
+                        case 0:
+                            <text>Document received</text>
+                            break;
+                        case 1:
+                            <text>Waiting for review</text>
+                            break;
+                        case 2:
+                            <text>Accepted</text>
+                            break;
+                        case 3:
+                            <text>Rejected</text>
+                            break;
+                        case 4:
+                            <text>Waiting for verdict</text>
+                            break;
+                        case 5:
+                            <text>Small mistakes</text>
+                            break;
+                    }
+                </td>
+                <td style='color: black; text-align:center;'>
+                    <a asp-action="Download" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class="glyphicon glyphicon-download-alt" aria-hidden="true" data-toggle="tooltip" title="Download"></span></a>
+                    @if (item.Status == 0)
+                    {
+                        <text>|</text>
+                        <a asp-action="Delete" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class="glyphicon glyphicon-trash" aria-hidden="true" data-toggle="tooltip" title="Delete"></span></a>
+                    }
+                </td>
+            </tr>
             }
             @if (!(Model.Status == 3) && !(Model.Status == 4))
             {
                 <tr>
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>

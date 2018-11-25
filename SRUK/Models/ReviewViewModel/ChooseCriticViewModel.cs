@@ -16,6 +16,8 @@ namespace SRUK.Models
         public PaperVersionDTO PaperVersion { get; set; }
         public long PaperVersionId { get; set; }
 
+        public DateTime Deadline { get; set; }
+
         public string StatusMessage { get; set; }
     }
 }

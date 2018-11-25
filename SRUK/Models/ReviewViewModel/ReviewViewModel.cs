@@ -27,10 +27,14 @@ namespace SRUK.Models
         public bool IsPositive { get; set; }
         
         [Display(Name = "Completely unsuitable")]
-        public bool IsPulp { get; set; }
+        public bool Unsuitable { get; set; }
 
         [Display(Name ="File")]
         public string OriginalFileName { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:g}")]
+        [Display(Name = "Competion date")]
+        public DateTime CompletionDate { get; set; }
 
         public string Comment { get; set; }
 

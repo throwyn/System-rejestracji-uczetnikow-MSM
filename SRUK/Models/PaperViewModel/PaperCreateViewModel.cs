@@ -23,6 +23,9 @@ namespace SRUK.Models
         [Required]
         public short Status { get; set; }
 
+        [Required]
+        public long ParticipancyId { get; set; }
+
         public string StatusMessage { get; set; }
     }
 }

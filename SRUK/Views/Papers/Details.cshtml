@@ -17,10 +17,10 @@
             @Html.DisplayFor(model => model.Title)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Author)
+            @Html.DisplayNameFor(model => model.Participancy.User)
         </dt>
         <dd>
-            @Html.ActionLink(Model.Author.FirstName + " " + Model.Author.LastName, "Details", "Users", new { Id = Model.Author.Id })
+            @Html.ActionLink(Model.Participancy.User.FirstName + " " + Model.Participancy.User.LastName, "Details", "Users", new { Id = Model.Participancy.UserId })
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Status)
@@ -49,10 +49,10 @@
             }
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Season)
+            @Html.DisplayNameFor(model => model.Participancy.Season)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Season.Name)
+            @Html.DisplayFor(model => model.Participancy.Season.Name)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.IsDeleted)
@@ -83,6 +83,9 @@
                 </th>
                 <th>
                     Original filename
+                </th>
+                <th>
+                    Comment
                 </th>
                 <th>
                     Added
@@ -128,14 +131,14 @@
                         {
                             if (i > 0)
                             {<text>|</text> }
-                            i++;
-                            <a asp-action="Review" asp-controller="Reviews" asp-route-id="@review.Id"><span class="glyphicon glyphicon-text-color" aria-hidden="true" data-toggle="tooltip" title="Review details [@i]"></span></a>
-                        }
+                        i++;
+                        <a asp-action="Review" asp-controller="Reviews" asp-route-id="@review.Id"><span class="glyphicon glyphicon-text-color" aria-hidden="true" data-toggle="tooltip" title="Review details [@i]"></span></a>
                     }
-                    else
-                    {
-                        <text>None</text>
-                    }
+                }
+                else
+                {
+                    <text>None</text>
+                }
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.FileName)
@@ -144,16 +147,19 @@
                     @Html.DisplayFor(modelItem => item.OriginalFileName)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.Comment)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.CreationDate)
                 </td>
                 <td style='color: black; text-align:center;'>
-                    <a asp-action="Download" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a>
+                    <a asp-action="Download" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a><text> | </text>
+                    <a asp-action="ChooseCritic" asp-controller="Reviews" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-user " aria-hidden="true" data-toggle="tooltip" title="Choose critic"></span></a>
                     @if (item.Status == 0)
                     {
                         <text>|</text>
                         <a asp-action="Delete" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class="glyphicon glyphicon-trash" ifia-hidden="true"></span></a><text>|</text>
-                        <a asp-action="ChooseCritic" asp-controller="Reviews" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-user " aria-hidden="true" data-toggle="tooltip" title="Choose critic"></span></a> <text>|</text>
-                        <a asp-action="RejectVersion" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-remove" aria-hidden="true" data-toggle="tooltip" title="Reject version"></span></a>
+                        <a asp-action="RejectVersion" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-remove" aria-hidden="true" data-toggle="tooltip" title="Reject version"></span></a>
 
                     }
                 </td>

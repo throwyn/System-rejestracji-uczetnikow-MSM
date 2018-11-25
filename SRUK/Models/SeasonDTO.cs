@@ -25,5 +25,7 @@ namespace SRUK.Models
         public DateTime EditDate { get; set; }
         
         public bool IsDeleted { get; set; }
+
+        public ICollection<ParticipancyDTO> Participancies { get; set; }
     }
 }

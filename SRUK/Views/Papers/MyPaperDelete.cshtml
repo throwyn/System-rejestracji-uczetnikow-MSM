@@ -34,16 +34,16 @@
             }
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Season)
+            @Html.DisplayNameFor(model => model.Participancy.Season)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Season.Name)
+            @Html.DisplayFor(model => model.Participancy.Season.Name)
         </dd>
     </dl>
     
     <form asp-action="MyPaperDelete">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-default" /> |
-        <a asp-action="Index">Back to List</a>
+        <a asp-action="MyPapers">Back to List</a>
     </form>
 </div>

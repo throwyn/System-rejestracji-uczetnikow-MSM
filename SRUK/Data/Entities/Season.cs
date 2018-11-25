@@ -30,11 +30,12 @@ namespace SRUK.Entities
 
         [Required]
         public DateTime CreationDate { get; set; }
-
-        [Required]
+        
         public DateTime EditDate { get; set; }
 
         [Required]
         public bool IsDeleted { get; set; }
+
+        public virtual ICollection<Participancy> Participancies { get; set; }
     }
 }

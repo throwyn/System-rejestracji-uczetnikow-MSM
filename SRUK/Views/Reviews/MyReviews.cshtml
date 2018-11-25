@@ -13,11 +13,14 @@
             <th>
                 Title
             </th>
-            <th >
+            <th>
                 Author
             </th>
             <th>
                 Status
+            </th>
+            <th>
+                Deadline
             </th>
             <th>
                 Creation date
@@ -31,22 +34,25 @@
         {
         <tr>
             <td>
-                
-                <a asp-action="Download" asp-controller="PaperVersions" asp-route-id="@item.PaperVersion.Id">@item.PaperVersion.Paper.Title</a> 
+
+                <a asp-action="Download" asp-controller="PaperVersions" asp-route-id="@item.PaperVersion.Id">@item.PaperVersion.Paper.Title</a>
 
             </td>
             <td>
-                @item.PaperVersion.Paper.Author.Degree @item.PaperVersion.Paper.Author.FirstName  @item.PaperVersion.Paper.Author.LastName
+                @item.PaperVersion.Paper.Participancy.User.Degree @item.PaperVersion.Paper.Participancy.User.FirstName  @item.PaperVersion.Paper.Participancy.User.LastName
             </td>
             <td style="text-align:center;">
                 @if (item.FileName != null)
                 {
-                <text>Done</text>
+                    <text>Done</text>
                 }
                 else
                 {
-                <text>Waiting</text>
+                    <text>Waiting</text>
                 }
+            </td>
+            <td style='color: black; text-align: center; '>
+                @Html.DisplayFor(modelItem => item.Deadline)
             </td>
             <td style='color: black; text-align: center; '>
                 @Html.DisplayFor(modelItem => item.CreationDate)
@@ -56,7 +62,7 @@
                 {
                     <a asp-action="AddReview" asp-controller="Reviews" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-text-color " aria-hidden="true" data-toggle="tooltip" title="Add Review"></span></a> <text>|</text>
                 }
-                <a asp-action="Details" asp-route-id="@item.Id"><span class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="tooltip" title="Details"></span></a>
+                <a asp-action="MyReview" asp-route-id="@item.Id"><span class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="tooltip" title="Details"></span></a>
             </td>
         </tr>
         }

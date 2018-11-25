@@ -22,10 +22,13 @@
                     Status
                 </th>
                 <th>
+                    Reviews
+                </th>
+                <th>
                     Creation date
                 </th>
                 <th></th>
-                
+
             </tr>
         </thead>
         <tbody>
@@ -36,7 +39,7 @@
                     @Html.ActionLink(item.Paper.Title, "Details", "Papers", new { Id = item.Paper.Id })
                 </td>
                 <td>
-                    @Html.ActionLink(item.Paper.Author.FirstName + " " + item.Paper.Author.LastName, "Details", "Users", new { Id = item.Paper.AuthorId })
+                    @Html.ActionLink(item.Paper.Participancy.User.FirstName + " " + item.Paper.Participancy.User.LastName, "Details", "Users", new { Id = item.Paper.Participancy.User.Id })
                 </td>
                 <td>
                     @switch (item.Status)
@@ -61,27 +64,41 @@
                             break;
                     }
                 </td>
+                <td style='color: black; text-align: center; '>
+                    @foreach (var review in item.Reviews)
+                    {
+                        if (review.FileName == null)
+                        {
+                            <a asp-action="Details" asp-controller="Reviews" asp-route-id="@review.Id"><span class="glyphicon glyphicon-text-color" aria-hidden="true" data-toggle="tooltip" title="Not finished"></span></a>
+
+                        }
+                        else
+                        {
+                            <a asp-action="Details" asp-controller="Reviews" asp-route-id="@review.Id"><span class="glyphicon glyphicon-text-color" aria-hidden="true" data-toggle="tooltip" title="Finished"></span></a>
+
+                        }
+                    }
+                </td>
 
                 <td style='color: black; text-align: center; '>
                     @Html.DisplayFor(modelItem => item.CreationDate)
                 </td>
                 <td style='color: black; text-align: center; '>
-                    <a asp-action="Download" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class="glyphicon glyphicon-download-alt" aria-hidden="true" data-toggle="tooltip" title="Download"></span></a>
+                    <a asp-action="Download" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class="glyphicon glyphicon-download-alt" aria-hidden="true" data-toggle="tooltip" title="Download"></span></a><text> |</text>
+                    <a asp-action="ChooseCritic" asp-controller="Reviews" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-user " aria-hidden="true" data-toggle="tooltip" title="Choose critic"></span></a>
                     @if (item.Status == 0)
                     {
-                        <text>|</text>
-                        <a asp-action="Delete" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class="glyphicon glyphicon-trash" aria-hidden="true" data-toggle="tooltip" title="Delete"></span></a><text>|</text>
-                        <a asp-action="ChooseCritic" asp-controller="Reviews" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-user " aria-hidden="true" data-toggle="tooltip" title="Choose critic"></span></a> <text>|</text>
+                        <text> | </text>
+                        <a asp-action="Delete" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class="glyphicon glyphicon-trash" aria-hidden="true" data-toggle="tooltip" title="Delete"></span></a><text> | </text>
                         <a asp-action="RejectVersion" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-remove" aria-hidden="true" data-toggle="tooltip" title="Reject version"></span></a>
                     }
                     @if (item.Status == 4)
                     {
-                        <text>|</text>
-                        <a asp-action="ChooseCritic" asp-controller="Reviews" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-user " aria-hidden="true" data-toggle="tooltip" title="Choose another critic"></span></a> <text>|</text>
+                        <text> | </text>
                         <a asp-action="Discard" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-remove" aria-hidden="true" data-toggle="tooltip" title="Discard paper"></span></a>
                     }
                 </td>
-                
+
             </tr>
             }
         </tbody>

@@ -32,6 +32,7 @@ namespace SRUK.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IPaperRepository _paperRepository;
         private readonly ISeasonRepository _seasonRepository;
+        private readonly IParticipanciesRepository _participanciesRepository;
 
         public PapersController(
             IUserRepository userRepository,
@@ -40,7 +41,8 @@ namespace SRUK.Controllers
             ILogger<AccountController> logger,
             RoleManager<IdentityRole> roleManager,
             IPaperRepository paperRepository,
-            ISeasonRepository seasonRepository
+            ISeasonRepository seasonRepository,
+            IParticipanciesRepository participanciesRepository
             )
         {
             _userRepository = userRepository;
@@ -50,6 +52,7 @@ namespace SRUK.Controllers
             _roleManager = roleManager;
             _paperRepository = paperRepository;
             _seasonRepository = seasonRepository;
+            _participanciesRepository = participanciesRepository;
         }
 
         [TempData]
@@ -96,74 +99,74 @@ namespace SRUK.Controllers
         }
 
         // GET: Papers/Create
-        [Route("Create")]
-        public IActionResult Create()
-        {
-            if (!User.IsInRole("Admin"))
-                return RedirectToAction("Index", "Home");
+        //[Route("Create")]
+        //public IActionResult Create()
+        //{
+        //    if (!User.IsInRole("Admin"))
+        //        return RedirectToAction("Index", "Home");
 
-            var seasons = _seasonRepository.GetSeasons();
-            ViewBag.Seasons = new List<SelectListItem>();
-            foreach (var season in seasons)
-            {
-                ViewBag.Seasons.Add(new SelectListItem { Text = season.Name, Value = season.Id.ToString() });
-            };
+        //    var seasons = _seasonRepository.GetSeasons();
+        //    ViewBag.Seasons = new List<SelectListItem>();
+        //    foreach (var season in seasons)
+        //    {
+        //        ViewBag.Seasons.Add(new SelectListItem { Text = season.Name, Value = season.Id.ToString() });
+        //    };
 
 
-            var users = _userRepository.GetUsers();
-            ViewBag.Users = new List<SelectListItem>();
-            foreach (var user in users) {
-                ViewBag.Users.Add(new SelectListItem { Text = user.Email, Value = user.Id });
-            };
+        //    var users = _userRepository.GetUsers();
+        //    ViewBag.Users = new List<SelectListItem>();
+        //    foreach (var user in users) {
+        //        ViewBag.Users.Add(new SelectListItem { Text = user.Email, Value = user.Id });
+        //    };
 
-            ViewBag.Statuses = new List<SelectListItem>
-            {
-                new SelectListItem { Text = "Created", Value = "0" },
-                new SelectListItem { Text = "Topic accepted", Value = "1"  },
-                new SelectListItem { Text = "Topic rejected", Value = "2"  }
-            };
+        //    ViewBag.Statuses = new List<SelectListItem>
+        //    {
+        //        new SelectListItem { Text = "Created", Value = "0" },
+        //        new SelectListItem { Text = "Topic accepted", Value = "1"  },
+        //        new SelectListItem { Text = "Topic rejected", Value = "2"  }
+        //    };
 
-            var model = new PaperCreateViewModel();
-            model.StatusMessage = StatusMessage;
-            return View(model);
-        }
+        //    var model = new PaperCreateViewModel();
+        //    model.StatusMessage = StatusMessage;
+        //    return View(model);
+        //}
 
         // POST: Papers/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [Route("Create")]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(PaperCreateViewModel model)
-        {
-            if (!User.IsInRole("Admin"))
-                return RedirectToAction("Index", "Home");
+        //[HttpPost]
+        //[Route("Create")]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult Create(PaperCreateViewModel model)
+        //{
+        //    if (!User.IsInRole("Admin"))
+        //        return RedirectToAction("Index", "Home");
 
-            if (model == null)
-            {
-                StatusMessage = "Error. Something went wrong.";
-                return View(model);
-            }
-            if (ModelState.IsValid)
-            {
-                if (_paperRepository.TitleTaken(model.Title).Result)
-                {
-                    StatusMessage = "Error. This title is already taken.";
-                    return RedirectToAction(nameof(Create));
-                }
+        //    if (model == null)
+        //    {
+        //        StatusMessage = "Error. Something went wrong.";
+        //        return View(model);
+        //    }
+        //    if (ModelState.IsValid)
+        //    {
+        //        if (_paperRepository.TitleTaken(model.Title).Result)
+        //        {
+        //            StatusMessage = "Error. This title is already taken.";
+        //            return RedirectToAction(nameof(Create));
+        //        }
 
-                PaperDTO paper = Mapper.Map<PaperDTO>(model);
-                var result = _paperRepository.AddPaperAsync(paper);
-                if (result.Result == 1)
-                {
-                    StatusMessage = "Succesfully created.";
-                    return RedirectToAction(nameof(Index));
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            StatusMessage = "Error. Entered data is not valid.";
-            return View(model);
-        }
+        //        PaperDTO paper = Mapper.Map<PaperDTO>(model);
+        //        var result = _paperRepository.AddPaperAsync(paper);
+        //        if (result.Result == 1)
+        //        {
+        //            StatusMessage = "Succesfully created.";
+        //            return RedirectToAction(nameof(Index));
+        //        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    StatusMessage = "Error. Entered data is not valid.";
+        //    return View(model);
+        //}
 
         // GET: Papers/Edit/5
         [Route("Edit/{id}")]
@@ -341,11 +344,23 @@ namespace SRUK.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var model = new PaperCreateViewModel();
-            model.AuthorId = user.Id;
-            model.SeasonId = _seasonRepository.GetCurrentSeasonIdAsync().Result;
-            model.Status = 0;
+            var participancy = _participanciesRepository.GetUserCurrentParticipancy(user.Id);
+            if (participancy == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            if (participancy.User.Id != user.Id)
+            {
+                StatusMessage = "You cannot add topic for this person!";
+                return RedirectToAction("Index", "Home");
+            }
 
+            var model = new PaperCreateViewModel();
+            model.ParticipancyId = participancy.Id;
+            model.AuthorId = user.Id;
+            model.SeasonId = participancy.SeasonId;
+            model.Status = 0;
+            
             model.StatusMessage = StatusMessage;
             return View(model);
         }
@@ -369,10 +384,10 @@ namespace SRUK.Controllers
                     return RedirectToAction(nameof(Add));
                 }
                 var user = await _userManager.GetUserAsync(HttpContext.User);
+                var participancy = _participanciesRepository.GetUserCurrentParticipancy(user.Id);
 
                 PaperDTO paper = Mapper.Map<PaperDTO>(model);
-                paper.AuthorId = user.Id;
-                paper.SeasonId = _seasonRepository.GetCurrentSeasonIdAsync().Result;
+                paper.ParticipancyId = model.ParticipancyId;
                 paper.Status = 0;
 
                 var result = _paperRepository.AddPaperAsync(paper);
@@ -395,7 +410,7 @@ namespace SRUK.Controllers
             var model = new PaperIndexViewModel();
             model.Papers = papers.ToList();
             model.StatusMessage = StatusMessage;
-            ViewBag.IsRegistrationOpened = _seasonRepository.IsRegistrationOpenedAsync().Result;
+            ViewBag.IsRegistrationOpened = _seasonRepository.IsRegistrationOpened() && _participanciesRepository.UserWantsPublicationInThisSeason(user.Id);
             return View(model);
 
         }
@@ -412,15 +427,16 @@ namespace SRUK.Controllers
 
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var paper = _paperRepository.GetPaperAsync((long)id).Result;
+            var participancy = _participanciesRepository.GetParticipancy(paper.ParticipancyId);
+            if (participancy.User.Id != user.Id)
+            {
+                StatusMessage = "You cannot edit this topic!";
+                return RedirectToAction("Index", "Home");
+            }
 
             if (paper == null)
             {
                 StatusMessage = "Error. Paper do not exists.";
-                return RedirectToAction(nameof(MyPapers));
-            }
-            if (paper.Author.Id != user.Id)
-            {
-                StatusMessage = "Error. You can edit only yours papers.";
                 return RedirectToAction(nameof(MyPapers));
             }
 
@@ -446,8 +462,17 @@ namespace SRUK.Controllers
                         return RedirectToAction(nameof(MyPaperEdit), model.Id);
                     }
 
-                    var paper = Mapper.Map<PaperDTO>(model);
-                    var result = await _paperRepository.UpdatePaperTitleAsync(paper);
+                    var user = await _userManager.GetUserAsync(HttpContext.User);
+                    var paper = _paperRepository.GetPaperAsync(model.Id).Result;
+                    var participancy = _participanciesRepository.GetParticipancy(paper.ParticipancyId);
+                    if (participancy.User.Id != user.Id)
+                    {
+                        StatusMessage = "You cannot edit this topic!";
+                        return RedirectToAction("Index", "Home");
+                    }
+
+                    var newPaper = Mapper.Map<PaperDTO>(model);
+                    var result = await _paperRepository.UpdatePaperTitleAsync(newPaper);
                     if (result == 1)
                     {
                         StatusMessage = "Succesfully updated.";
@@ -482,14 +507,15 @@ namespace SRUK.Controllers
                 StatusMessage = "Error. Paper do not exists.";
                 return RedirectToAction(nameof(MyPapers));
             }
-            if (user.Id != paper.AuthorId)
+            var participancy = _participanciesRepository.GetParticipancy(paper.ParticipancyId);
+            if (participancy.User.Id != user.Id)
             {
-                StatusMessage = "Error. You can see only your own papers.";
+                StatusMessage = "Error. Access denied!";
                 return RedirectToAction(nameof(MyPapers));
             }
             var model = Mapper.Map<MyPaperDetailsViewModel>(paper);
             model.StatusMessage = StatusMessage;
-            ViewBag.IsRegistrationOpened = _seasonRepository.IsRegistrationOpenedAsync().Result;
+            ViewBag.IsRegistrationOpened = _seasonRepository.IsRegistrationOpened();
             return View(model);
 
         }
@@ -508,9 +534,10 @@ namespace SRUK.Controllers
                 StatusMessage = "Error. Paper do not exists.";
                 return RedirectToAction(nameof(MyPapers));
             }
-            if (paper.Author.Id != user.Id)
+            var participancy = _participanciesRepository.GetParticipancy(paper.ParticipancyId);
+            if (participancy.User.Id != user.Id)
             {
-                StatusMessage = "Error. You don't have permission to do that!";
+                StatusMessage = "Error. Access denied!";
                 return RedirectToAction(nameof(MyPapers));
             }
 
@@ -539,9 +566,10 @@ namespace SRUK.Controllers
                         StatusMessage = "Error. Paper do not exists.";
                         return RedirectToAction(nameof(MyPapers));
                     }
-                    if (paper.Author.Id != user.Id)
+                    var participancy = _participanciesRepository.GetParticipancy(paper.ParticipancyId);
+                    if (participancy.User.Id != user.Id)
                     {
-                        StatusMessage = "Error. You don't have permission to do that!";
+                        StatusMessage = "Error. Access denied!";
                         return RedirectToAction(nameof(MyPapers));
                     }
 

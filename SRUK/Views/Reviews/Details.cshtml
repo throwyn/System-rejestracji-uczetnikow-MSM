@@ -17,7 +17,7 @@
                     @Html.DisplayNameFor(model => model.Critic)
                 </dt>
                 <dd>
-                    <a asp-action="Details" asp-controller="Users" asp-route-id="@Model.PaperVersion.Paper.AuthorId">@Model.Critic.Degree @Model.Critic.FirstName @Model.Critic.LastName </a>
+                    <a asp-action="Details" asp-controller="Users" asp-route-id="@Model.PaperVersion.Paper.Participancy.UserId">@Model.Critic.Degree @Model.Critic.FirstName @Model.Critic.LastName </a>
                 </dd>
                 @if (Model.OriginalFileName != null)
                 {
@@ -41,10 +41,10 @@
                         @Html.DisplayFor(model => model.IsPositive)
                     </dd>
                     <dt>
-                        @Html.DisplayNameFor(model => model.IsPulp)
+                        @Html.DisplayNameFor(model => model.Unsuitable)
                     </dt>
                     <dd>
-                        @Html.DisplayFor(model => model.IsPulp)
+                        @Html.DisplayFor(model => model.Unsuitable)
                     </dd>
                     <dt>
                         @Html.DisplayNameFor(model => model.EditorialErrors)
@@ -78,6 +78,18 @@
                     @Html.DisplayFor(model => model.CreationDate)
                 </dd>
                 <dt>
+                    @Html.DisplayNameFor(model => model.Deadline)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Deadline)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.CompletionDate)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.CompletionDate)
+                </dd>
+                <dt>
                     @Html.DisplayNameFor(model => model.IsDeleted)
                 </dt>
                 <dd>
@@ -92,13 +104,13 @@
                         @Html.DisplayNameFor(model => model.PaperVersion.Paper.Title)
                     </dt>
                     <dd>
-                        @Html.DisplayFor(model => model.PaperVersion.Paper.Title)
+                        <a asp-action="Details" asp-controller="Papers" asp-route-id="@Model.PaperVersion.Paper.Id">@Model.PaperVersion.Paper.Title </a>
                     </dd>
                     <dt>
-                        @Html.DisplayNameFor(model => model.PaperVersion.Paper.Author)
+                        @Html.DisplayNameFor(model => model.PaperVersion.Paper.Participancy.User)
                     </dt>
                     <dd>
-                        <a asp-action="Details" asp-controller="Users" asp-route-id="@Model.PaperVersion.Paper.AuthorId">@Model.PaperVersion.Paper.Author.Degree @Model.PaperVersion.Paper.Author.FirstName @Model.PaperVersion.Paper.Author.LastName </a>
+                        <a asp-action="Details" asp-controller="Users" asp-route-id="@Model.PaperVersion.Paper.Participancy.UserId">@Model.PaperVersion.Paper.Participancy.User.Degree @Model.PaperVersion.Paper.Participancy.User.FirstName @Model.PaperVersion.Paper.Participancy.User.LastName </a>
                     </dd>
                     <dt>
                         @Html.DisplayNameFor(model => model.PaperVersion.OriginalFileName)

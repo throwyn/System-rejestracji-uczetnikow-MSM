@@ -17,15 +17,25 @@
             <input type="hidden" asp-for="PaperVersionId" />
             <div class="form-group">
                 @Html.Label("Author")
-                @Html.ActionLink(Model.PaperVersion.Paper.Author.FirstName + ' ' + Model.PaperVersion.Paper.Author.LastName, "Details", "Users", new { Id = Model.PaperVersion.Paper.AuthorId })
+                @Html.ActionLink(Model.PaperVersion.Paper.Participancy.User.FirstName + ' ' + Model.PaperVersion.Paper.Participancy.User.LastName, "Details", "Users", new { Id = Model.PaperVersion.Paper.Participancy.UserId })
             </div>
             <div class="form-group">
                 @Html.Label("Title")
-                @Html.ActionLink(Model.PaperVersion.Paper.Title + ' ' + Model.PaperVersion.Paper.Title, "Details", "Papers", new { Id = Model.PaperVersion.Paper.Id })
+                @Html.ActionLink(Model.PaperVersion.Paper.Title, "Details", "Papers", new { Id = Model.PaperVersion.Paper.Id })
             </div>
             <div class="form-group">
                 <label asp-for="CriticId" class="control-label"></label>
                 <select asp-for="CriticId" class="form-control" asp-items="ViewBag.Critics"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Deadline" class="control-label"></label>
+
+                <div class='input-group date' id='datetimepickerdeadline'>
+                    <input asp-for="Deadline" class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />
@@ -43,3 +53,14 @@
         text-align: center;
     }
 </style>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+        $(function () {
+            $('#datetimepickerdeadline').datetimepicker();
+            $('#datetimepickerdeadline').data("DateTimePicker").defaultDate(moment("@ViewBag.DateTimeNow", 'DD.MM.YYYY HH:mm:ss')).format("DD.MM.YYYY HH:mm");
+        });
+    </script>
+}

@@ -16,17 +16,19 @@ namespace SRUK.Models
         
         public string FileName { get; set; }
 
+        [Display(Name = "Filename")]
         public string OriginalFileName { get; set; }
 
         public short Status { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:g}")]
         public DateTime CreationDate { get; set; }
-        
+
+        public string Comment { get; set; }
+
         public bool IsDeleted { get; set; }
 
         public ICollection<ReviewDTO> Reviews { get; set; }
-        public ICollection<CommentDTO> Comments { get; set; }
 
     }
 }

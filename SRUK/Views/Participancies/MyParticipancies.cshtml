@@ -1,0 +1,88 @@
+﻿@model MyParticipanciesViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>My participancies</h2>
+@Html.Partial("_StatusMessage", Model.StatusMessage)
+
+
+@if (ViewBag.CurrentSeason != null)
+{
+    <p>
+        <a asp-action="SignUp">Sign up for @ViewBag.CurrentSeason</a>
+    </p>
+}
+
+@if (Model.Participancies.Count > 0)
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>
+                    Season
+                </th>
+                <th>
+                    Conference Participation
+                </th>
+                <th>
+                    Publication
+                </th>
+                <th>
+                    Papers
+                </th>
+                <th>
+                    Creation date
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Participancies)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Season.Name)
+                </td>
+                <td style='color: black; text-align: center; '>
+                    @Html.DisplayFor(modelItem => item.ConferenceParticipation)
+                </td>
+                <td style='color: black; text-align: center; '>
+                    @Html.DisplayFor(modelItem => item.Publication)
+                </td>
+                <td style='color: black; text-align: center; '>
+                    @if (item.Papers.Count() > 0)
+                    {
+                        @foreach (var paper in item.Papers)
+                        {
+                            <a asp-action="MyPaper" asp-controller="Papers" asp-route-id="@paper.Id">@paper.Title</a>
+                        }
+                    }
+                    else
+                    {
+                        <text>-</text>
+                    }
+                </td>
+                <td style='color: black; text-align: center; '>
+                    @Html.DisplayFor(modelItem => item.CreationDate)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id"><span class="glyphicon glyphicon-pencil" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Edit"></span></a> 
+
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+
+}
+
+<style>
+    th {
+        text-align: center;
+    }
+</style>

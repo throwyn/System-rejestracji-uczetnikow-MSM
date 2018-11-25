@@ -28,10 +28,10 @@
                         @Html.DisplayFor(model => model.IsPositive)
                     </dd>
                     <dt>
-                        @Html.DisplayNameFor(model => model.IsPulp)
+                        @Html.DisplayNameFor(model => model.Unsuitable)
                     </dt>
                     <dd>
-                        @Html.DisplayFor(model => model.IsPulp)
+                        @Html.DisplayFor(model => model.Unsuitable)
                     </dd>
                     <dt>
                         @Html.DisplayNameFor(model => model.EditorialErrors)
@@ -52,11 +52,15 @@
                         @Html.DisplayFor(model => model.RepeatReview)
                     </dd>
                     <dt>
-                        @Html.DisplayNameFor(model => model.Comment)
+                        @Html.DisplayNameFor(model => model.CompletionDate)
                     </dt>
                     <dd>
-                        @Html.DisplayFor(model => model.Comment)
+                        @Html.DisplayFor(model => model.CompletionDate)
                     </dd>
+                }
+                else
+                {
+                    <text>Review is not ready yet.</text>
                 }
             </dl>
         </div>
@@ -80,5 +84,5 @@
     </div>
 </div>
 <div>
-    <a asp-action="MyPapers" asp-controller="Papers">Back to My papers</a>
+    <a asp-action="MyPaper" asp-controller="Papers" asp-route-id="@Model.PaperVersion.PaperId">Back to details</a>
 </div>

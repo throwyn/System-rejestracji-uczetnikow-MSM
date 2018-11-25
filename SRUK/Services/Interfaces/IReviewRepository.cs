@@ -13,5 +13,7 @@ namespace SRUK.Services.Interfaces
         Task<int> CreateReviewAsync(ReviewDTO review);
         IEnumerable<ReviewShortDTO> GetUserReviews(string userId);
         Task<int> AddReviewAsync(ReviewDTO review);
+        IEnumerable<ReviewDTO> GetPaperVersionReviews(long paperVersionId);
+        int RemoveReview(long id);
     }
 }

@@ -23,6 +23,9 @@
                 Status
             </th>
             <th>
+                Deadline
+            </th>
+            <th>
                 Creation date
             </th>
             <th></th>
@@ -37,7 +40,7 @@
                 @Html.ActionLink(item.PaperVersion.Paper.Title, "Details", "Papers", new { Id = item.PaperVersion.Paper.Id })
             </td>
             <td>
-                @Html.ActionLink(item.PaperVersion.Paper.Author.FirstName + " " + item.PaperVersion.Paper.Author.LastName, "Details", "Users", new { Id = item.PaperVersion.Paper.AuthorId })
+                @Html.ActionLink(item.PaperVersion.Paper.Participancy.User.FirstName + " " + item.PaperVersion.Paper.Participancy.User.LastName, "Details", "Users", new { Id = item.PaperVersion.Paper.Participancy.User.Id })
             </td>
             <td>
                 @Html.ActionLink(item.Critic.FirstName + " " + item.Critic.LastName, "Details", "Users", new { Id = item.Critic.Id })
@@ -53,6 +56,9 @@
                 }
             </td>
             <td style='color: black; text-align: center; '>
+                @Html.DisplayFor(modelItem => item.Deadline)
+            </td>
+            <td style='color: black; text-align: center; '>
                 @Html.DisplayFor(modelItem => item.CreationDate)
             </td>
             <td style='color: black; text-align: center; '>
@@ -60,7 +66,7 @@
                 @if (item.OriginalFileName == null)
                 {
                     <text>|</text>
-                    <a asp-action="ChangeCritic" asp-controller="Reviews" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-user " aria-hidden="true" data-toggle="tooltip" title="Change critic"></span></a> 
+                    <a asp-action="CancelCritic" asp-controller="Reviews" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-remove" aria-hidden="true" data-toggle="tooltip" title="Cancel critic"></span></a>
                 }
             </td>
         </tr>

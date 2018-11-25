@@ -17,5 +17,6 @@ namespace SRUK.Services.Interfaces
         Task<int> SetStatusVersionRejected(long id);
         Task<int> SetStatusWaitingForVerdict(long id);
         Task<int> SetStatusSmallMistakes(long id);
+        int SetComment(long id, string comment);
     }
 }

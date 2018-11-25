@@ -1,0 +1,66 @@
+﻿@model ParticipancyIndexViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Participations</h2>
+@Html.Partial("_StatusMessage", Model.StatusMessage)
+
+@if (Model.Participancies.Count > 0)
+{
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>
+                    Season
+                </th>
+                <th>
+                    User
+                </th>
+                <th>
+                    Conference Participation
+                </th>
+                <th>
+                    Publication
+                </th>
+                <th>
+                    Creation date
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Participancies)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Season.Name)
+                </td>
+                <td>
+                    @Html.ActionLink(item.User.FirstName + " " + item.User.LastName, "Details", "Users", new { Id = item.User.Id })
+                </td>
+                <td style='color: black; text-align: center; '>
+                    @Html.DisplayFor(modelItem => item.ConferenceParticipation)
+                </td>
+                <td style='color: black; text-align: center; '>
+                    @Html.DisplayFor(modelItem => item.Publication)
+                </td>
+
+                <td style='color: black; text-align: center; '>
+                    @Html.DisplayFor(modelItem => item.CreationDate)
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+
+}
+
+<style>
+    th {
+        text-align: center;
+    }
+</style>

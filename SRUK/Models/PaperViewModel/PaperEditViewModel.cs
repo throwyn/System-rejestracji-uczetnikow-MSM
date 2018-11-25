@@ -11,14 +11,8 @@ namespace SRUK.Models
         [Required]
         [Display(Name = "ID")]
         public long Id { get; set; }
-        
-        [Display(Name = "Author")]
-        public string AuthorId { get; set; }
-        public UserDTO Author { get; set; }
-        
-        [Display(Name = "Season")]
-        public long SeasonId { get; set; }
-        public SeasonDTO Season { get; set; }
+
+        public ParticipancyDTO Participancy { get; set; }
 
         [Required]
         [MaxLength(200)]

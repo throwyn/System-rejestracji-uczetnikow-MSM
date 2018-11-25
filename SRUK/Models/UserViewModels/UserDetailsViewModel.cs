@@ -56,6 +56,19 @@ namespace SRUK.Models
         [Display(Name = "VAT ID")]
         public string VATID { get; set; }
 
+        [Display(Name = "Organisation address")]
+        public string OrganisationAdderss { get; set; }
+
+        public string Country { get; set; }
+
+        public string City { get; set; }
+
+        [Display(Name = "Postal code")]
+        public string PostalCode { get; set; }
+
+        public string Address { get; set; }
+
+
         public IEnumerable<PaperShortDTO> Papers { get; set; }
 
         public string StatusMessage { get; set; }

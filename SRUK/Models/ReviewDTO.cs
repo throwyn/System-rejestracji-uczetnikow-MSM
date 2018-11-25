@@ -19,13 +19,19 @@ namespace SRUK.Models
         public bool TechnicalErrors { get; set; }
         public bool RepeatReview { get; set; }
         public bool IsPositive { get; set; }
-        public bool IsPulp { get; set; }
+        public bool Unsuitable { get; set; }
         
         public string FileName { get; set; }
         public string OriginalFileName { get; set; }
 
+        public byte Status { get; set; }
+
         public string Comment { get; set; }
-        
+
+        public DateTime Deadline { get; set; }
+
+        public DateTime CompletionDate { get; set; }
+
         public DateTime CreationDate { get; set; }
         
         public DateTime EditDate { get; set; }

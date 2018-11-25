@@ -9,49 +9,12 @@
 <h4>User</h4>
 @Html.Partial("_StatusMessage", Model.StatusMessage)
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
+<form asp-action="Edit">
+    <div class="row">
+        <div class="col-md-4">
             <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label class="control-label">ID</label>
-                <input asp-for="Id" class="form-control" readonly="@(true)" />
-            </div>
-            <div class="form-group">
-                <label asp-for="Degree"></label>
-                <select asp-for="Degree" class="form-control" asp-items="ViewBag.Degrees"></select>
-                <span asp-validation-for="Degree" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label">First name</label>
-                <input asp-for="FirstName" class="form-control" />
-                <span asp-validation-for="FirstName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label">Last name</label>
-                <input asp-for="LastName" class="form-control" />
-                <span asp-validation-for="LastName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Organisation" class="control-label"></label>
-                <input asp-for="Organisation" class="form-control" />
-                <span asp-validation-for="Organisation" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="VATID"></label>
-                <input asp-for="VATID" class="form-control" />
-                <span asp-validation-for="VATID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label">Confirm password</label>
-                <input asp-for="ConfirmPassword" class="form-control" />
-                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-            </div>
+
+            <h4>Account informations</h4>
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
                 <input asp-for="Email" class="form-control" />
@@ -63,6 +26,16 @@
                         <input asp-for="EmailConfirmed" /> Email confirmed
                     </label>
                 </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Confirm password</label>
+                <input asp-for="ConfirmPassword" class="form-control" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label class="control-label">Phone number</label>
@@ -87,12 +60,73 @@
                     }
                 </div>
             </div>
+        </div>
+        <div class="col-md-4">
+
+            <h4>Personal informations</h4>
             <div class="form-group">
+                <label asp-for="Degree"></label>
+                <select asp-for="Degree" class="form-control" asp-items="ViewBag.Degrees"></select>
+                <span asp-validation-for="Degree" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">First name</label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Last name</label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Country"></label>
+                <input asp-for="Country" class="form-control" />
+                <span asp-validation-for="Country" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="City"></label>
+                <input asp-for="City" class="form-control" />
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PostalCode"></label>
+                <input asp-for="PostalCode" class="form-control" />
+                <span asp-validation-for="PostalCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <h4>Organisation</h4>
+            <div class="form-group">
+                <label asp-for="Organisation"></label>
+                <input asp-for="Organisation" class="form-control" />
+                <span asp-validation-for="Organisation" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OrganisationAdderss"></label>
+                <input asp-for="OrganisationAdderss" class="form-control" />
+                <span asp-validation-for="OrganisationAdderss" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="VATID"></label>
+                <input asp-for="VATID" class="form-control" />
+                <span asp-validation-for="VATID" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class=" form-group">
                 <input type="submit" value="Edit" class="btn btn-default" />
             </div>
-        </form>
+        </div>
     </div>
-</div>
+</form>
 
 <div>
     <a asp-action="Index">Back to List</a>
