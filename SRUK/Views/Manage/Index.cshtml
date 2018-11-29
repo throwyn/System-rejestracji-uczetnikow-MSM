@@ -5,7 +5,7 @@
 }
 
 @Html.Partial("_StatusMessage", Model.StatusMessage)
-<form method="post" DefaultButton="submit">
+<form method="post" DefaultButton="submit" onsubmit="return false">
     <div class="row">
         <div asp-validation-summary="All" class="text-danger"></div>
         <div class="col-md-6">
@@ -79,7 +79,7 @@
                 else
                 {
                     <input asp-for="Email" class="form-control" />
-                    <button asp-action="SendVerificationEmail" class="btn btn-link">Send verification email</button>
+                    <button asp-action="SendVerificationEmail" class="btn btn-link" >Send verification email</button>
                 }
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
@@ -91,7 +91,7 @@
         </div>
     </div>
     <div class="row col-md-6">
-        <button type="submit" class="btn btn-default btn-default">Confirm</button>
+        <input type="submit" class="btn btn-default btn-default" onclick="this.form.submit()" value="Confirm" />
     </div>
 </form>
 

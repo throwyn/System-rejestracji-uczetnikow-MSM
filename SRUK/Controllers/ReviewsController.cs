@@ -66,9 +66,11 @@ namespace SRUK.Controllers
             if (User.IsInRole("Admin"))
             {
                 var reviews = _reviewRepository.GetReviews();
-                var model = new ReviewIndexViewModel();
-                model.Reviews = reviews.ToList();
-                model.StatusMessage = StatusMessage;
+                var model = new ReviewIndexViewModel
+                {
+                    Reviews = reviews.ToList(),
+                    StatusMessage = StatusMessage
+                };
                 return View(model);
             }
             return RedirectToAction("Index", "Home");
@@ -130,8 +132,8 @@ namespace SRUK.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            if (User.IsInRole("Admin") || review.CriticId == user.Id)
-                return RedirectToAction("Details", "Reviews", new { id });
+            //if (User.IsInRole("Admin") || review.CriticId == user.Id)
+            //    return RedirectToAction("Details", "Reviews", new { id });
 
             if (user.Id != review.PaperVersion.Paper.Participancy.User.Id)
                 return RedirectToAction("Index", "Home");
@@ -149,7 +151,7 @@ namespace SRUK.Controllers
             if (!User.IsInRole("Admin"))
                 return RedirectToAction("Index", "Home");
 
-            var version = _paperVersionRepository.GetPaperVersionAsync(id).Result;
+            var version = _paperVersionRepository.GetPaperVersion(id);
 
             if (version == null)
             {
@@ -169,7 +171,7 @@ namespace SRUK.Controllers
                 PaperVersionId = version.Id,
                 StatusMessage = StatusMessage
             };
-            ViewBag.DateTimeNow = DateTime.Now.AddMonths(1);
+            ViewBag.DateTimeNow = DateTime.UtcNow.AddMonths(1);
             return View(model);
         }
 
@@ -177,7 +179,7 @@ namespace SRUK.Controllers
         [HttpPost]
         [Route("ChooseCritic/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ChooseCritic(ChooseCriticViewModel model)
+        public IActionResult ChooseCritic(ChooseCriticViewModel model)
         {
             if (!User.IsInRole("Admin"))
                 return RedirectToAction("Index", "Home");
@@ -185,7 +187,7 @@ namespace SRUK.Controllers
             if (ModelState.IsValid)
             {
 
-                var version = _paperVersionRepository.GetPaperVersionAsync(model.PaperVersionId).Result;
+                var version = _paperVersionRepository.GetPaperVersion(model.PaperVersionId);
                 if (version == null)
                 {
                     StatusMessage = "Error. Paper do not exists.";
@@ -197,18 +199,19 @@ namespace SRUK.Controllers
                     StatusMessage = "Error. This user cannot become a  critic!";
                     return RedirectToAction("Index", "PaperVersions");
                 }
+                var offsetTimeZone = TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow);
 
                 var review = new ReviewDTO
                 {
                     CriticId = model.CriticId,
                     PaperVersionId = model.PaperVersionId,
-                    Deadline = model.Deadline
+                    Deadline = model.Deadline-offsetTimeZone
                 };
 
-                var result = await _reviewRepository.CreateReviewAsync(review);
+                var result = _reviewRepository.CreateReview(review);
                 if (result == 1)
                 {
-                    await _paperVersionRepository.SetStatusWaitingForReview(model.PaperVersionId);
+                     _paperVersionRepository.SetStatusWaitingForReview(model.PaperVersionId);
                     
                     StatusMessage = "Critic has been choosen.";
                     return RedirectToAction("Index", "PaperVersions");
@@ -317,34 +320,34 @@ namespace SRUK.Controllers
                 var review = Mapper.Map<ReviewDTO>(model);
                 review.OriginalFileName = model.File.FileName;
                 review.FileName = newFileName;
-                review.CompletionDate = DateTime.Now;
+                review.CompletionDate = DateTime.UtcNow;
 
 
-                var result = _reviewRepository.AddReviewAsync(review);
+                var result = _reviewRepository.AddReview(review);
 
-                if (result.Result == 1)
+                if (result == 1)
                 {
                     var reviews = _reviewRepository.GetPaperVersionReviews(existingReview.PaperVersionId);
                     if(reviews.Where(r=>r.IsPositive).Count() == reviews.Count())
                     {
-                        await _paperVersionRepository.SetStatusVersionAccepted(existingReview.PaperVersionId);
-                        await _paperRepository.SetStatuAccepted(existingReview.PaperVersion.PaperId);
+                         _paperVersionRepository.SetStatusVersionAccepted(existingReview.PaperVersionId);
+                         _paperRepository.SetStatuAccepted(existingReview.PaperVersion.PaperId);
                     }
                 
                     else if (review.Unsuitable)
-                        await _paperVersionRepository.SetStatusWaitingForVerdict(existingReview.PaperVersionId);
+                         _paperVersionRepository.SetStatusWaitingForVerdict(existingReview.PaperVersionId);
                     else if ((review.TechnicalErrors || review.EditorialErrors) && review.RepeatReview)
                     {
-                        await _paperVersionRepository.SetStatusVersionRejected(existingReview.PaperVersionId);
+                         _paperVersionRepository.SetStatusVersionRejected(existingReview.PaperVersionId);
                     }
                     else if ((review.TechnicalErrors || review.EditorialErrors) && !review.RepeatReview)
                     {
-                        await _paperRepository.SetStatusSmallMistakesLeft(existingReview.PaperVersion.PaperId);
-                        await _paperVersionRepository.SetStatusSmallMistakes(existingReview.PaperVersionId);
+                         _paperRepository.SetStatusSmallMistakesLeft(existingReview.PaperVersion.PaperId);
+                         _paperVersionRepository.SetStatusSmallMistakes(existingReview.PaperVersionId);
                     }
                     else
                     {
-                        await _paperVersionRepository.SetStatusWaitingForVerdict(existingReview.PaperVersionId);
+                         _paperVersionRepository.SetStatusWaitingForVerdict(existingReview.PaperVersionId);
                     }
 
 

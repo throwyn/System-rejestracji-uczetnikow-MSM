@@ -20,32 +20,32 @@ namespace SRUK.Services
             _context = context;
         }
 
-        public async Task<int> AddPaperAsync(PaperDTO paper)
+        public int AddPaper(PaperDTO paper)
         {
             Paper newPaper = Mapper.Map<Paper>(paper);
-            await _context.Paper.AddAsync(newPaper);
+             _context.Paper.Add(newPaper);
 
-            int result = await _context.SaveChangesAsync();
+            int result =  _context.SaveChanges();
             return result;
         }
 
-        public async Task<PaperDTO> GetPaperAsync(long id)
+        public  PaperDTO GetPaper(long id)
         {
-            var entityPaper = await _context.Paper.Include(p => p.Participancy).Include(p => p.Participancy.User).Include(p => p.Participancy.Season).Include(p => p.PaperVersions).Include("PaperVersions.Reviews").SingleOrDefaultAsync(u => u.Id == id);
+            var entityPaper =  _context.Paper.Include(p => p.Participancy).Include(p => p.Participancy.User).Include(p => p.Participancy.Season).Include(p => p.PaperVersions).Include("PaperVersions.Reviews").SingleOrDefault(p => p.Id == id && p.IsDeleted != true);
             var paper = Mapper.Map<PaperDTO>(entityPaper);
             return paper;
         }
 
-        public async Task<bool> TitleTaken(string title)
+        public bool TitleTaken(string title)
         {
-            var paper = await _context.Paper.FirstOrDefaultAsync(u => u.Title == title);
+            var paper =  _context.Paper.FirstOrDefault(u => u.Title == title);
             if(paper == null) 
                 return false;
             return true;
         }
-        public async Task<bool> TitleTakenExcept(string title, long id)
+        public bool TitleTakenExcept(string title, long id)
         {
-            var paper = await _context.Paper.FirstOrDefaultAsync(p => p.Title == title && p.Id != id);
+            var paper =  _context.Paper.FirstOrDefault(p => p.Title == title && p.Id != id);
             if (paper == null)
                 return false;
             return true;
@@ -59,29 +59,29 @@ namespace SRUK.Services
 
         public IEnumerable<PaperShortDTO> GetPapers()
         {
-            var entityPapers = _context.Paper.Where(p => p.IsDeleted == false).Include(p => p.Participancy.Season).Include(p => p.Participancy.User).ToAsyncEnumerable().ToEnumerable();
+            var entityPapers = _context.Paper.Include(p => p.Participancy.Season).Include(p => p.Participancy.User).Where(p => p.IsDeleted == false).ToAsyncEnumerable().ToEnumerable();
             var papers = Mapper.Map<IEnumerable<PaperShortDTO>>(entityPapers);
             return papers;
         }
 
-        public async Task<int> UpdatePaperAsync(PaperDTO paper)
+        public int UpdatePaper(PaperDTO paper)
         {
             Paper paperNew = Mapper.Map<Paper>(paper);
-            var paperToUpdate = await _context.Paper.FindAsync(paper.Id);
+            var paperToUpdate =  _context.Paper.Find(paper.Id);
             
             paperToUpdate.Title = paperNew.Title;
             paperToUpdate.Status = paperNew.Status;
 
-            int result = await _context.SaveChangesAsync();
+            int result =  _context.SaveChanges();
 
             return result;
 
         }
 
-        public async Task<int> DeletePaperAsync(long id)
+        public int DeletePaper(long id)
         {
 
-            Paper paper = await _context.Paper.Include(p=>p.PaperVersions).FirstOrDefaultAsync(s => s.Id == id);
+            Paper paper =  _context.Paper.Include(p=>p.PaperVersions).FirstOrDefault(s => s.Id == id);
             if (paper.PaperVersions.Count == 0)
             {
                 _context.Paper.Remove(paper);
@@ -92,50 +92,50 @@ namespace SRUK.Services
                 paper.IsDeleted = true;
             }
 
-            int result = await _context.SaveChangesAsync();
+            int result =  _context.SaveChanges();
             return result;
         }
 
-        public async Task<int> UpdatePaperTitleAsync(PaperDTO paper)
+        public int UpdatePaperTitle(PaperDTO paper)
         {
-            var paperToUpdate = await _context.Paper.FindAsync(paper.Id);
+            var paperToUpdate =  _context.Paper.Find(paper.Id);
 
             paperToUpdate.Title = paper.Title;
             paperToUpdate.Status = 0;
 
-            int result = await _context.SaveChangesAsync();
+            int result =  _context.SaveChanges();
 
             return result;
         }
 
         //Status changers
-        public async Task<int> SetStatusTopicApproved(long id)
+        public int SetStatusTopicApproved(long id)
         {
             if (!IsCreated(id))
                 return 0;
-            return await SetStatus(id, 1);
+            return  SetStatus(id, 1);
         }
 
-        public async Task<int> SetStatusTopicRejected(long id)
+        public int SetStatusTopicRejected(long id)
         {
             if (!IsCreated(id))
                 return 0;
-            return await SetStatus(id, 2);
+            return  SetStatus(id, 2);
         }
 
-        public async Task<int> SetStatuAccepted(long id)
+        public int SetStatuAccepted(long id)
         {
-            return await SetStatus(id, 3);
+            return  SetStatus(id, 3);
         }
 
-        public async Task<int> SetStatusDiscarded(long id)
+        public int SetStatusDiscarded(long id)
         {
-            return await SetStatus(id, 4);
+            return  SetStatus(id, 4);
         }
 
-        public async Task<int> SetStatusSmallMistakesLeft(long id)
+        public int SetStatusSmallMistakesLeft(long id)
         {
-            return await SetStatus(id, 5);
+            return  SetStatus(id, 5);
         }
 
         private bool IsCreated(long id)
@@ -148,11 +148,11 @@ namespace SRUK.Services
             return true;
         }
 
-        private async Task<int> SetStatus(long id,byte status)
+        private int SetStatus(long id,byte status)
         {
-            var paper = await _context.Paper.FindAsync(id);
+            var paper =  _context.Paper.Find(id);
             paper.Status = status;
-            int result = await _context.SaveChangesAsync();
+            int result =  _context.SaveChanges();
             return result;
         }
     }

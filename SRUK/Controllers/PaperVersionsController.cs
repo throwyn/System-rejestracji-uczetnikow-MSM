@@ -66,9 +66,11 @@ namespace SRUK.Controllers
             if (User.IsInRole("Admin"))
             {
                 var versions = _paperVersionRepository.GetVersions();
-                var model = new PaperVersionIndexViewModel();
-                model.Versions = versions.ToList();
-                model.StatusMessage = StatusMessage;
+                var model = new PaperVersionIndexViewModel
+                {
+                    Versions = versions.ToList(),
+                    StatusMessage = StatusMessage
+                };
                 return View(model);
             }
             return RedirectToAction("Index", "Home");
@@ -78,17 +80,10 @@ namespace SRUK.Controllers
 
         // GET: PaperVersions/Add
         [Route("Add/{id}")]
-        public async Task<IActionResult> Add(long? id)
+        public async Task<IActionResult> Add(long id)
         {
-
-            if (id == null)
-            {
-                StatusMessage = "Error. Enter id of paper.";
-                return RedirectToAction("MyPapers","Papers");
-            }
-
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            var paper = _paperRepository.GetPaperAsync((long)id).Result;
+            var paper = _paperRepository.GetPaper(id);
 
             if (paper == null)
             {
@@ -128,7 +123,7 @@ namespace SRUK.Controllers
             }
 
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            var paper = _paperRepository.GetPaperAsync((long)model.PaperId).Result;
+            var paper = _paperRepository.GetPaper(model.PaperId);
 
             if (paper == null)
             {
@@ -171,7 +166,7 @@ namespace SRUK.Controllers
                     FileName = newFileName,
                     Status = 0
                 };
-                var result = await _paperVersionRepository.AddPaperVersionAsync(paperVersion);
+                var result = _paperVersionRepository.AddPaperVersion(paperVersion);
                 if(result == 1)
                 {
                     StatusMessage = "Version has beed added.";
@@ -186,7 +181,7 @@ namespace SRUK.Controllers
         [Route("Download/{id}")]
         public async Task<IActionResult> Download(long id)
         {
-            PaperVersionDTO paperVersion = await _paperVersionRepository.GetPaperVersionAsync(id);
+            PaperVersionDTO paperVersion =  _paperVersionRepository.GetPaperVersion(id);
 
             if (paperVersion == null)
             {
@@ -222,7 +217,7 @@ namespace SRUK.Controllers
         [Route("Delete/{id}")]
         public IActionResult Delete(long id)
         {
-            var paper = _paperVersionRepository.GetPaperVersionAsync(id).Result;
+            var paper = _paperVersionRepository.GetPaperVersion(id);
 
             if (paper == null)
             {
@@ -246,7 +241,7 @@ namespace SRUK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
-            PaperVersionDTO paperVersion = _paperVersionRepository.GetPaperVersionAsync(id).Result;
+            PaperVersionDTO paperVersion = _paperVersionRepository.GetPaperVersion(id);
             var user = await _userManager.GetUserAsync(HttpContext.User);
             
             if (paperVersion.Paper.Participancy.User.Id != user.Id && !User.IsInRole("Admin"))
@@ -263,7 +258,7 @@ namespace SRUK.Controllers
                 System.IO.File.Delete(path);
             }
 
-            var result = await _paperVersionRepository.DeleteVersionAsync(id);
+            var result =  _paperVersionRepository.DeleteVersion(id);
             if (result == 1)
             {
                 StatusMessage = "Succesfully deleted.";
@@ -279,14 +274,14 @@ namespace SRUK.Controllers
         // GET: PaperVersions/Discard/5/
         [HttpGet]
         [Route("Discard/{id}")]
-        public async Task<IActionResult> Discard(long id)
+        public IActionResult Discard(long id)
         {
             if (!User.IsInRole("Admin"))
                 return RedirectToAction("Index", "Home");
-            PaperVersionDTO paperVersion = _paperVersionRepository.GetPaperVersionAsync(id).Result;
+            PaperVersionDTO paperVersion = _paperVersionRepository.GetPaperVersion(id);
 
-            await _paperVersionRepository.SetStatusVersionRejected(id);
-            var result = await _paperRepository.SetStatusDiscarded(paperVersion.PaperId);
+             _paperVersionRepository.SetStatusVersionRejected(id);
+            var result =  _paperRepository.SetStatusDiscarded(paperVersion.PaperId);
             if (result == 1)
             {
                 StatusMessage = "Succesfully discarded.";
@@ -299,7 +294,7 @@ namespace SRUK.Controllers
         [Route("RejectVersion/{id}")]
         public async Task<IActionResult> RejectVersion(long id)
         {
-            PaperVersionDTO paperVersion = _paperVersionRepository.GetPaperVersionAsync(id).Result;
+            PaperVersionDTO paperVersion = _paperVersionRepository.GetPaperVersion(id);
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
             if (paperVersion == null)
@@ -323,7 +318,7 @@ namespace SRUK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RejectVersionConfirmed(PaperVersionsRejectViewModel model)
         {
-            PaperVersionDTO paperVersion = _paperVersionRepository.GetPaperVersionAsync(model.Id).Result;
+            PaperVersionDTO paperVersion = _paperVersionRepository.GetPaperVersion(model.Id);
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
             if (!User.IsInRole("Admin"))
@@ -337,7 +332,7 @@ namespace SRUK.Controllers
                 StatusMessage = "Error. Version do not exists.";
                 return RedirectToAction("MyPapers", "Papers");
             }
-            var result = await _paperVersionRepository.SetStatusVersionRejected(model.Id);
+            var result =  _paperVersionRepository.SetStatusVersionRejected(model.Id);
             if (result == 1)
             {
                 if (model.Comment != null)

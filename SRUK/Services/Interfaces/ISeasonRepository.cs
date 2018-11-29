@@ -10,9 +10,9 @@ namespace SRUK.Services.Interfaces
     {
         IEnumerable<SeasonShortDTO> GetSeasons();
         SeasonDTO GetSeason(long id);
-        Task<int> AddSeasonAsync(SeasonDTO season);
-        Task<int> UpdateSeasonAsync(SeasonDTO season);
-        Task<int> DeleteSeasonAsync(long id);
+        int AddSeason(SeasonDTO season);
+        int UpdateSeason(SeasonDTO season);
+        int DeleteSeason(long id);
         long GetCurrentSeasonId();
         bool IsRegistrationOpened();
         SeasonDTO GetCurrentSeason();

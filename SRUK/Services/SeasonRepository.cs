@@ -34,41 +34,41 @@ namespace SRUK.Services
             return seasons;
         }
 
-        public async Task<int> AddSeasonAsync(SeasonDTO season)
+        public int AddSeason(SeasonDTO season)
         {
             Season newSeason = Mapper.Map<Season>(season);
-            var status = await _context.Season.AddAsync(newSeason);
+            var status =  _context.Season.Add(newSeason);
 
-            int result = await _context.SaveChangesAsync();
+            int result =  _context.SaveChanges();
             return result;
         }
 
-        public async Task<int> UpdateSeasonAsync(SeasonDTO season)
+        public int UpdateSeason(SeasonDTO season)
         {
             Season seasonNew = Mapper.Map<Season>(season);
-            var seasonToUpdate = await _context.Season.FindAsync(season.Id);
+            var seasonToUpdate =  _context.Season.Find(season.Id);
 
             seasonToUpdate.LogoFileName = seasonNew.LogoFileName;
             seasonToUpdate.MainImageFileName = seasonNew.MainImageFileName;
             seasonToUpdate.StartDate = seasonNew.StartDate;
             seasonToUpdate.EndDate = seasonNew.EndDate;
 
-            int result =  await _context.SaveChangesAsync();
+            int result =   _context.SaveChanges();
 
             return result;
             
         }
 
-        public async Task<int> DeleteSeasonAsync(long id)
+        public int DeleteSeason(long id)
         {
             if(_context.Paper.Where(p => p.Participancy.Season.Id == id).Count() > 0)
             {
                 return 0;
             }
-            Season season = await _context.Season.FirstOrDefaultAsync(s => s.Id == id);
+            Season season =  _context.Season.FirstOrDefault(s => s.Id == id);
             _context.Season.Remove(season);
 
-            int result = await _context.SaveChangesAsync();
+            int result =  _context.SaveChanges();
             return result;
         }
         public bool IsRegistrationOpened()

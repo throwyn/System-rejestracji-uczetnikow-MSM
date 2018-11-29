@@ -35,9 +35,11 @@ namespace SRUK.Controllers
                 return RedirectToAction("Index", "Home");
 
             var seasons = _seasonRepository.GetSeasons();
-            var model = new SeasonIndexViewModel();
-            model.Seasons = seasons.ToList();
-            model.StatusMessage = StatusMessage;
+            var model = new SeasonIndexViewModel
+            {
+                Seasons = seasons.ToList(),
+                StatusMessage = StatusMessage
+            };
             return View(model);
         }
 
@@ -71,8 +73,10 @@ namespace SRUK.Controllers
             if (!User.IsInRole("Admin"))
                 return RedirectToAction("Index", "Home");
 
-            var model = new SeasonCreateViewModel();
-            model.StatusMessage = StatusMessage;
+            var model = new SeasonCreateViewModel
+            {
+                StatusMessage = StatusMessage
+            };
             return View(model);
         }
 
@@ -94,9 +98,13 @@ namespace SRUK.Controllers
             }
             if (ModelState.IsValid)
             {
+                var offsetTimeZone = TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow);
                 SeasonDTO season = Mapper.Map<SeasonDTO>(model);
-                var result = _seasonRepository.AddSeasonAsync(season);
-                if (result.Result == 1)
+                season.StartDate = season.StartDate - offsetTimeZone;
+                season.EndDate = season.EndDate - offsetTimeZone;
+
+                var result = _seasonRepository.AddSeason(season);
+                if (result == 1)
                 {
                     StatusMessage = "Succesfully created.";
                     return RedirectToAction(nameof(Index));
@@ -137,7 +145,7 @@ namespace SRUK.Controllers
         [HttpPost]
         [Route("Edit/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditAsync(SeasonEditViewModel model)
+        public IActionResult EditAsync(SeasonEditViewModel model)
         {
             if (!User.IsInRole("Admin"))
                 return RedirectToAction("Index", "Home");
@@ -146,8 +154,12 @@ namespace SRUK.Controllers
             {
                 try
                 {
+                    var offsetTimeZone = TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow);
                     var season = Mapper.Map<SeasonDTO>(model);
-                    var result = await _seasonRepository.UpdateSeasonAsync(season);
+
+                    season.StartDate = season.StartDate - offsetTimeZone;
+                    season.EndDate = season.EndDate - offsetTimeZone;
+                    var result =  _seasonRepository.UpdateSeason(season);
                     if(result == 1)
                     {
                         StatusMessage = "Succesfully updated.";
@@ -193,12 +205,12 @@ namespace SRUK.Controllers
         [HttpPost]
         [Route("Delete/{id}")]                                                                                                                                                                                                                                                                                                                               
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
+        public IActionResult DeleteConfirmed(long id)
         {
             if (!User.IsInRole("Admin"))
                 return RedirectToAction("Index", "Home");
 
-            var result = await _seasonRepository.DeleteSeasonAsync(id);
+            var result =  _seasonRepository.DeleteSeason(id);
             if (result == 1)
             {
                 StatusMessage = "Succesfully deleted.";

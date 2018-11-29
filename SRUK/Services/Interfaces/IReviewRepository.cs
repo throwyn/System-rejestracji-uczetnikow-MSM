@@ -10,9 +10,9 @@ namespace SRUK.Services.Interfaces
     {
         IEnumerable<ReviewShortDTO> GetReviews();
         ReviewDTO GetReview(long id);
-        Task<int> CreateReviewAsync(ReviewDTO review);
+        int CreateReview(ReviewDTO review);
         IEnumerable<ReviewShortDTO> GetUserReviews(string userId);
-        Task<int> AddReviewAsync(ReviewDTO review);
+        int AddReview(ReviewDTO review);
         IEnumerable<ReviewDTO> GetPaperVersionReviews(long paperVersionId);
         int RemoveReview(long id);
     }

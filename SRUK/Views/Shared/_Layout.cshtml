@@ -38,7 +38,7 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">MSM '19</a>
+                        <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">MSM</a>
                     </div>
                     <div class="navbar-collapse collapse">
                         <ul class="nav navbar-nav">
@@ -69,7 +69,7 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">MSM '19</a>
+                        <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">MSM</a>
                     </div>
                     <div class="navbar-collapse collapse">
                         <ul class="nav navbar-nav">
@@ -93,7 +93,7 @@
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">MSM '19</a>
+                        <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">MSM</a>
                     </div>
                     <div class="navbar-collapse collapse">
                         <ul class="nav navbar-nav">
@@ -144,7 +144,9 @@
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
-
+    <script>
+        var offsetHours = new Date().getTimezoneOffset() / 60;
+    </script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

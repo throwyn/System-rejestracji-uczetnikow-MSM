@@ -26,10 +26,10 @@ namespace SRUK.Services
             var reviews = Mapper.Map<IEnumerable<ReviewShortDTO>>(entityReviews);
             return reviews;
         }
-        public async Task<int> CreateReviewAsync(ReviewDTO review)
+        public int CreateReview(ReviewDTO review)
         {
             var entityReview = Mapper.Map<Review>(review);
-            await _context.Review.AddAsync(entityReview);
+            _context.Review.Add(entityReview);
             var result = _context.SaveChangesAsync().Result;
             return result;
 
@@ -53,9 +53,9 @@ namespace SRUK.Services
             var reviews = Mapper.Map<IEnumerable<ReviewDTO>>(entityReview);
             return reviews;
         }
-        public async Task<int> AddReviewAsync(ReviewDTO review)
+        public int AddReview(ReviewDTO review)
         {
-            var entityReview = await _context.Review.FindAsync(review.Id);
+            var entityReview =  _context.Review.Find(review.Id);
 
             entityReview.FileName = review.FileName;
             entityReview.OriginalFileName = review.OriginalFileName;
@@ -68,7 +68,7 @@ namespace SRUK.Services
             entityReview.CompletionDate = review.CompletionDate;
 
             entityReview.Comment = review.Comment;
-            var result =  await _context.SaveChangesAsync();
+            var result = _context.SaveChanges();
             return result;
         }
         public int RemoveReview(long id)

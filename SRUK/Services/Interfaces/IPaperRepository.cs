@@ -9,23 +9,23 @@ namespace SRUK.Services.Interfaces
     public interface IPaperRepository
     {
         IEnumerable<PaperShortDTO> GetPapers();
-        Task<PaperDTO> GetPaperAsync(long id);
+        PaperDTO GetPaper(long id);
         IEnumerable<PaperShortDTO> GetUserPapers(string userId);
 
-        Task<int> AddPaperAsync(PaperDTO paper);
-        Task<int> UpdatePaperAsync(PaperDTO paper);
-        Task<int> DeletePaperAsync(long id);
+        int AddPaper(PaperDTO paper);
+        int UpdatePaper(PaperDTO paper);
+        int DeletePaper(long id);
 
-        Task<int> SetStatusTopicApproved(long id);
-        Task<int> SetStatusTopicRejected(long id);
-        Task<int> SetStatuAccepted(long id);
-        Task<int> SetStatusDiscarded(long id);
-        Task<int> SetStatusSmallMistakesLeft(long id);
+        int SetStatusTopicApproved(long id);
+        int SetStatusTopicRejected(long id);
+        int SetStatuAccepted(long id);
+        int SetStatusDiscarded(long id);
+        int SetStatusSmallMistakesLeft(long id);
 
-        Task<bool> TitleTaken(string title);
-        Task<bool> TitleTakenExcept(string title, long id);
+        bool TitleTaken(string title);
+        bool TitleTakenExcept(string title, long id);
 
 
-        Task<int> UpdatePaperTitleAsync(PaperDTO paper);
+        int UpdatePaperTitle(PaperDTO paper);
     }
 }

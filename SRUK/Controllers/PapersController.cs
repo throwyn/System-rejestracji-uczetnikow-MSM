@@ -65,9 +65,11 @@ namespace SRUK.Controllers
             if (User.IsInRole("Admin"))
             {
                 var papers = _paperRepository.GetPapers();
-                var model = new PaperIndexViewModel();
-                model.Papers = papers.ToList();
-                model.StatusMessage = StatusMessage;
+                var model = new PaperIndexViewModel
+                {
+                    Papers = papers.ToList(),
+                    StatusMessage = StatusMessage
+                };
                 return View(model);
             }
             return RedirectToAction("Index", "Home");
@@ -76,18 +78,12 @@ namespace SRUK.Controllers
 
         // GET: Papers/Details/5
         [Route("Details/{id}")]
-        public IActionResult Details(long? id)
+        public IActionResult Details(long id)
         {
             if (!User.IsInRole("Admin"))
                 return RedirectToAction("Index", "Home");
 
-            if (id == null)
-            {
-                StatusMessage = "Error. Enter id of paper.";
-                return RedirectToAction(nameof(Index));
-            }
-
-            var paper = _paperRepository.GetPaperAsync((long)id).Result;
+            var paper = _paperRepository.GetPaper(id);
             if (paper == null)
             {
                 StatusMessage = "Error. Paper do not exists.";
@@ -170,18 +166,12 @@ namespace SRUK.Controllers
 
         // GET: Papers/Edit/5
         [Route("Edit/{id}")]
-        public IActionResult Edit(long? id)
+        public IActionResult Edit(long id)
         {
             if (!User.IsInRole("Admin"))
                 return RedirectToAction("Index", "Home");
-
-            if (id == null)
-            {
-                StatusMessage = "Error. Enter id of paper.";
-                return RedirectToAction(nameof(Index));
-            }
-
-            var paper = _paperRepository.GetPaperAsync((long)id).Result;
+            
+            var paper = _paperRepository.GetPaper(id);
 
             if (paper == null)
             {
@@ -207,7 +197,7 @@ namespace SRUK.Controllers
         [HttpPost]
         [Route("Edit/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditAsync(PaperEditViewModel model)
+        public IActionResult EditAsync(PaperEditViewModel model)
         {
             if (!User.IsInRole("Admin"))
                 return RedirectToAction("Index", "Home");
@@ -216,13 +206,13 @@ namespace SRUK.Controllers
             {
                 try
                 {
-                    if (_paperRepository.TitleTakenExcept(model.Title,model.Id).Result)
+                    if (_paperRepository.TitleTakenExcept(model.Title,model.Id))
                     {
                         StatusMessage = "Error. This title is already taken.";
                         return RedirectToAction(nameof(Edit), model.Id);
                     }
                     var paper = Mapper.Map<PaperDTO>(model);
-                    var result = await _paperRepository.UpdatePaperAsync(paper);
+                    var result =  _paperRepository.UpdatePaper(paper);
                     if (result == 1)
                     {
                         StatusMessage = "Succesfully updated.";
@@ -241,18 +231,12 @@ namespace SRUK.Controllers
 
         //// GET: Papers/Delete/5
         [Route("Delete/{id}")]
-        public IActionResult Delete(long? id)
+        public IActionResult Delete(long id)
         {
             if (!User.IsInRole("Admin"))
                 return RedirectToAction("Index", "Home");
 
-            if (id == null)
-            {
-                StatusMessage = "Error. Enter id of paper.";
-                return RedirectToAction(nameof(Index));
-            }
-
-            var paper = _paperRepository.GetPaperAsync((long)id).Result;
+            var paper = _paperRepository.GetPaper(id);
 
             if (paper == null)
             {
@@ -269,12 +253,12 @@ namespace SRUK.Controllers
         [HttpPost]
         [Route("Delete/{id}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(long id)
+        public IActionResult DeleteConfirmed(long id)
         {
             if (!User.IsInRole("Admin"))
                 return RedirectToAction("Index", "Home");
 
-            var result = await _paperRepository.DeletePaperAsync(id);
+            var result = _paperRepository.DeletePaper(id);
             if (result == 1)
             {
                 StatusMessage = "Succesfully deleted.";
@@ -287,12 +271,12 @@ namespace SRUK.Controllers
         // GET: Papers/Edit/5/ApproveTopic
         [HttpGet]
         [Route("ApproveTopic/{id}")]
-        public async Task<IActionResult> ApproveTopic(long id)
+        public IActionResult ApproveTopic(long id)
         {
             if (!User.IsInRole("Admin"))
                 return RedirectToAction("Index", "Home");
 
-            var result = await _paperRepository.SetStatusTopicApproved(id);
+            var result = _paperRepository.SetStatusTopicApproved(id);
             if (result == 1)
             {
                 StatusMessage = "Succesfully approved.";
@@ -308,12 +292,12 @@ namespace SRUK.Controllers
         // GET: Papers/Edit/5/RejectTopic
         [HttpGet]
         [Route("RejectTopic/{id}")]
-        public async Task<IActionResult> RejectTopic(long id)
+        public IActionResult RejectTopic(long id)
         {
             if (!User.IsInRole("Admin"))
                 return RedirectToAction("Index", "Home");
 
-            var result = await _paperRepository.SetStatusTopicRejected(id);
+            var result = _paperRepository.SetStatusTopicRejected(id);
             if (result == 1)
             {
                 StatusMessage = "Succesfully rejected.";
@@ -355,13 +339,15 @@ namespace SRUK.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var model = new PaperCreateViewModel();
-            model.ParticipancyId = participancy.Id;
-            model.AuthorId = user.Id;
-            model.SeasonId = participancy.SeasonId;
-            model.Status = 0;
-            
-            model.StatusMessage = StatusMessage;
+            var model = new PaperCreateViewModel
+            {
+                ParticipancyId = participancy.Id,
+                AuthorId = user.Id,
+                SeasonId = participancy.SeasonId,
+                Status = 0,
+
+                StatusMessage = StatusMessage
+            };
             return View(model);
         }
 
@@ -378,7 +364,7 @@ namespace SRUK.Controllers
             }
             if (ModelState.IsValid)
             {
-                if (_paperRepository.TitleTaken(model.Title).Result)
+                if (_paperRepository.TitleTaken(model.Title))
                 {
                     StatusMessage = "Error. This title is already taken.";
                     return RedirectToAction(nameof(Add));
@@ -390,8 +376,8 @@ namespace SRUK.Controllers
                 paper.ParticipancyId = model.ParticipancyId;
                 paper.Status = 0;
 
-                var result = _paperRepository.AddPaperAsync(paper);
-                if (result.Result == 1)
+                var result = _paperRepository.AddPaper(paper);
+                if (result == 1)
                 {
                     StatusMessage = "Succesfully created.";
                     return RedirectToAction(nameof(MyPapers));
@@ -407,9 +393,11 @@ namespace SRUK.Controllers
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var papers = _paperRepository.GetUserPapers(user.Id);
-            var model = new PaperIndexViewModel();
-            model.Papers = papers.ToList();
-            model.StatusMessage = StatusMessage;
+            var model = new PaperIndexViewModel
+            {
+                Papers = papers.ToList(),
+                StatusMessage = StatusMessage
+            };
             ViewBag.IsRegistrationOpened = _seasonRepository.IsRegistrationOpened() && _participanciesRepository.UserWantsPublicationInThisSeason(user.Id);
             return View(model);
 
@@ -417,16 +405,11 @@ namespace SRUK.Controllers
 
         // GET: Papers/MyPaperEdit/5
         [Route("MyPaperEdit/{id}")]
-        public async Task<IActionResult> MyPaperEdit(long? id)
+        public async Task<IActionResult> MyPaperEdit(long id)
         {
-            if (id == null)
-            {
-                StatusMessage = "Error. Enter id of paper.";
-                return RedirectToAction(nameof(MyPapers));
-            }
 
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            var paper = _paperRepository.GetPaperAsync((long)id).Result;
+            var paper = _paperRepository.GetPaper(id);
             var participancy = _participanciesRepository.GetParticipancy(paper.ParticipancyId);
             if (participancy.User.Id != user.Id)
             {
@@ -456,14 +439,14 @@ namespace SRUK.Controllers
             {
                 try
                 {
-                    if (_paperRepository.TitleTaken(model.Title).Result)
+                    if (_paperRepository.TitleTaken(model.Title))
                     {
                         StatusMessage = "Error. This title is already taken.";
                         return RedirectToAction(nameof(MyPaperEdit), model.Id);
                     }
 
                     var user = await _userManager.GetUserAsync(HttpContext.User);
-                    var paper = _paperRepository.GetPaperAsync(model.Id).Result;
+                    var paper = _paperRepository.GetPaper(model.Id);
                     var participancy = _participanciesRepository.GetParticipancy(paper.ParticipancyId);
                     if (participancy.User.Id != user.Id)
                     {
@@ -472,7 +455,7 @@ namespace SRUK.Controllers
                     }
 
                     var newPaper = Mapper.Map<PaperDTO>(model);
-                    var result = await _paperRepository.UpdatePaperTitleAsync(newPaper);
+                    var result =  _paperRepository.UpdatePaperTitle(newPaper);
                     if (result == 1)
                     {
                         StatusMessage = "Succesfully updated.";
@@ -491,16 +474,11 @@ namespace SRUK.Controllers
 
         // GET: Papers
         [Route("MyPaper/{id}")]
-        public async Task<ActionResult> MyPaper(long? id)
+        public async Task<ActionResult> MyPaper(long id)
         {
-            if (id == null)
-            {
-                StatusMessage = "Error. Enter id of paper.";
-                return RedirectToAction(nameof(MyPapers));
-            }
 
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            var paper = _paperRepository.GetPaperAsync((long)id).Result;
+            var paper = _paperRepository.GetPaper(id);
 
             if (paper == null)
             {
@@ -527,7 +505,7 @@ namespace SRUK.Controllers
         {
 
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            var paper = _paperRepository.GetPaperAsync((long)id).Result;
+            var paper = _paperRepository.GetPaper(id);
 
             if (paper == null)
             {
@@ -559,7 +537,7 @@ namespace SRUK.Controllers
                 {
 
                     var user = await _userManager.GetUserAsync(HttpContext.User);
-                    var paper = _paperRepository.GetPaperAsync(model.Id).Result;
+                    var paper = _paperRepository.GetPaper(model.Id);
 
                     if (paper == null)
                     {
@@ -573,7 +551,7 @@ namespace SRUK.Controllers
                         return RedirectToAction(nameof(MyPapers));
                     }
 
-                    var result = _paperRepository.DeletePaperAsync(model.Id).Result;
+                    var result = _paperRepository.DeletePaper(model.Id);
                     if (result == 1)
                     {
                         StatusMessage = "Succesfully deleted.";

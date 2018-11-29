@@ -314,15 +314,7 @@ namespace SRUK.Controllers
 
             return result.ToString().ToLowerInvariant();
         }
-
-        private string GenerateQrCodeUri(string email, string unformattedKey)
-        {
-            return string.Format(
-                AuthenticatorUriFormat,
-                _urlEncoder.Encode("SRUK"),
-                _urlEncoder.Encode(email),
-                unformattedKey);
-        }
+        
         
         #endregion
     }

@@ -20,18 +20,18 @@ namespace SRUK.Services
             _context = context;
         }
 
-        public async Task<int> AddPaperVersionAsync(PaperVersionDTO paperVersion)
+        public int AddPaperVersion(PaperVersionDTO paperVersion)
         {
             PaperVersion newPaper = Mapper.Map<PaperVersion>(paperVersion);
-            await _context.PaperVerison.AddAsync(newPaper);
+             _context.PaperVerison.Add(newPaper);
 
-            int result = await _context.SaveChangesAsync();
+            int result =  _context.SaveChanges();
             return result;
         }
 
-        public async Task<PaperVersionDTO> GetPaperVersionAsync(long id)
+        public PaperVersionDTO GetPaperVersion(long id)
         {
-            var entityPaperVersion = await _context.PaperVerison.Include(pv => pv.Paper).Include(pv => pv.Reviews).Include(pv => pv.Paper.Participancy).Include(pv => pv.Paper.Participancy.User).SingleOrDefaultAsync(u => u.Id == id && u.IsDeleted ==  false);
+            var entityPaperVersion =  _context.PaperVerison.Include(pv => pv.Paper).Include(pv => pv.Reviews).Include(pv => pv.Paper.Participancy).Include(pv => pv.Paper.Participancy.User).SingleOrDefault(u => u.Id == id && u.IsDeleted ==  false);
             var paperVersion = Mapper.Map<PaperVersionDTO>(entityPaperVersion);
             return paperVersion;
         }
@@ -47,44 +47,44 @@ namespace SRUK.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<int> DeleteVersionAsync(long id)
+        public int DeleteVersion(long id)
         {
 
-            PaperVersion paperVersion = await _context.PaperVerison.FirstOrDefaultAsync(s => s.Id == id);
+            PaperVersion paperVersion =  _context.PaperVerison.FirstOrDefault(s => s.Id == id);
             //paperVersion.IsDeleted = true;
             _context.PaperVerison.Remove(paperVersion);
 
-            int result = await _context.SaveChangesAsync();
+            int result =  _context.SaveChanges();
             return result;
         }
 
-        public async Task<int> SetStatusWaitingForReview(long id)
+        public int SetStatusWaitingForReview(long id)
         {
-            return await SetStatus(id, 1);
+            return  SetStatus(id, 1);
         }
 
-        public async Task<int> SetStatusVersionAccepted(long id)
+        public int SetStatusVersionAccepted(long id)
         {
-            return await SetStatus(id, 2);
+            return  SetStatus(id, 2);
         }
-        public async Task<int> SetStatusVersionRejected(long id)
+        public int SetStatusVersionRejected(long id)
         {
-            return await SetStatus(id, 3);
+            return  SetStatus(id, 3);
         }
-        public async Task<int> SetStatusWaitingForVerdict(long id)
+        public int SetStatusWaitingForVerdict(long id)
         {
-            return await SetStatus(id, 4);
+            return  SetStatus(id, 4);
         }
-        public async Task<int> SetStatusSmallMistakes(long id)
+        public int SetStatusSmallMistakes(long id)
         {
-            return await SetStatus(id, 5);
+            return  SetStatus(id, 5);
         }
 
-        private async Task<int> SetStatus(long id, byte status)
+        private int SetStatus(long id, byte status)
         {
-            var version = await _context.PaperVerison.FindAsync(id);
+            var version =  _context.PaperVerison.Find(id);
             version.Status = status;
-            int result = await _context.SaveChangesAsync();
+            int result =  _context.SaveChanges();
             return result;
         }
         public int SetComment(long id,string comment)
