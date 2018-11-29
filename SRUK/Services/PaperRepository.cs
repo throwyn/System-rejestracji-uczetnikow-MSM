@@ -90,6 +90,20 @@ namespace SRUK.Services
             {
                 paper.Title = paper.Title + " (deleted)";
                 paper.IsDeleted = true;
+                foreach(var version in paper.PaperVersions)
+                {
+                    PaperVersion entityVersion = _context.PaperVerison.Include(v=>v.Reviews).FirstOrDefault(v => v.Id == version.Id);
+                    entityVersion.IsDeleted = true;
+                    if(version.Reviews.Count > 0)
+                    {
+                        foreach(var review in version.Reviews)
+                        {
+                            Review entityReview = _context.Review.FirstOrDefault(r => r.Id == review.Id);
+                            review.IsDeleted = true;
+
+                        }
+                    }
+                }
             }
 
             int result =  _context.SaveChanges();

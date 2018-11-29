@@ -259,7 +259,7 @@ namespace SRUK.Controllers
                 return RedirectToAction("Index", "Home");
 
             var result = _paperRepository.DeletePaper(id);
-            if (result == 1)
+            if (result > 0 )
             {
                 StatusMessage = "Succesfully deleted.";
                 return RedirectToAction(nameof(Index));
@@ -552,7 +552,7 @@ namespace SRUK.Controllers
                     }
 
                     var result = _paperRepository.DeletePaper(model.Id);
-                    if (result == 1)
+                    if (result > 0)
                     {
                         StatusMessage = "Succesfully deleted.";
                         return RedirectToAction(nameof(MyPapers));
