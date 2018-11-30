@@ -14,6 +14,8 @@
     <Compile Remove="Data\Migrations\20181108132434_RemovedIsPaidAddedNIPAndDegreeMigration.Designer.cs" />
     <Compile Remove="Data\Migrations\20181110212026_deletedAuthorAndSeasonFromPaperVersionMigration.cs" />
     <Compile Remove="Data\Migrations\20181110212026_deletedAuthorAndSeasonFromPaperVersionMigration.Designer.cs" />
+    <Compile Remove="Data\Migrations\20181130121302_ChangeUtcTimeToServerTimeMigration.cs" />
+    <Compile Remove="Data\Migrations\20181130121302_ChangeUtcTimeToServerTimeMigration.Designer.cs" />
   </ItemGroup>
 
 

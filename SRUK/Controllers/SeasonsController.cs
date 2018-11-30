@@ -98,7 +98,7 @@ namespace SRUK.Controllers
             }
             if (ModelState.IsValid)
             {
-                var offsetTimeZone = TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow);
+                var offsetTimeZone = TimeZoneInfo.Local.GetUtcOffset(DateTime.Now);
                 SeasonDTO season = Mapper.Map<SeasonDTO>(model);
                 season.StartDate = season.StartDate - offsetTimeZone;
                 season.EndDate = season.EndDate - offsetTimeZone;
@@ -154,7 +154,7 @@ namespace SRUK.Controllers
             {
                 try
                 {
-                    var offsetTimeZone = TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow);
+                    var offsetTimeZone = TimeZoneInfo.Local.GetUtcOffset(DateTime.Now);
                     var season = Mapper.Map<SeasonDTO>(model);
 
                     season.StartDate = season.StartDate - offsetTimeZone;

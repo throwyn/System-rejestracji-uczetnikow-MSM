@@ -73,19 +73,19 @@ namespace SRUK.Services
         }
         public bool IsRegistrationOpened()
         {
-            Season season = _context.Season.Where(s => s.StartDate < DateTime.UtcNow && s.EndDate > DateTime.UtcNow).SingleOrDefault();
+            Season season = _context.Season.Where(s => s.StartDate < DateTime.Now && s.EndDate > DateTime.Now).SingleOrDefault();
             return (season != null);
         }
 
         public long GetCurrentSeasonId()
         {
-            var season = _context.Season.Where(s => s.StartDate < DateTime.UtcNow && s.EndDate > DateTime.UtcNow).SingleOrDefault();
+            var season = _context.Season.Where(s => s.StartDate < DateTime.Now && s.EndDate > DateTime.Now).SingleOrDefault();
             return season.Id;
         }
 
         public SeasonDTO GetCurrentSeason()
         {
-            var entitySeason = _context.Season.Where(s => s.StartDate < DateTime.UtcNow && s.EndDate > DateTime.UtcNow).SingleOrDefault();
+            var entitySeason = _context.Season.Where(s => s.StartDate < DateTime.Now && s.EndDate > DateTime.Now).SingleOrDefault();
 
             var season = Mapper.Map<SeasonDTO>(entitySeason);
             return season;

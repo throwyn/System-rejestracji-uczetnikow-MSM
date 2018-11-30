@@ -171,7 +171,7 @@ namespace SRUK.Controllers
                 PaperVersionId = version.Id,
                 StatusMessage = StatusMessage
             };
-            ViewBag.DateTimeNow = DateTime.UtcNow.AddMonths(1);
+            ViewBag.DateTimeNow = DateTime.Now.AddMonths(1);
             return View(model);
         }
 
@@ -199,7 +199,7 @@ namespace SRUK.Controllers
                     StatusMessage = "Error. This user cannot become a  critic!";
                     return RedirectToAction("Index", "PaperVersions");
                 }
-                var offsetTimeZone = TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow);
+                var offsetTimeZone = TimeZoneInfo.Local.GetUtcOffset(DateTime.Now);
 
                 var review = new ReviewDTO
                 {
@@ -320,7 +320,7 @@ namespace SRUK.Controllers
                 var review = Mapper.Map<ReviewDTO>(model);
                 review.OriginalFileName = model.File.FileName;
                 review.FileName = newFileName;
-                review.CompletionDate = DateTime.UtcNow;
+                review.CompletionDate = DateTime.Now;
 
 
                 var result = _reviewRepository.AddReview(review);

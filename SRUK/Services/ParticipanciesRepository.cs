@@ -72,7 +72,7 @@ namespace SRUK.Services
         public ParticipancyDTO GetUserCurrentParticipancy(string userId)
         {
 
-            var currentSeason = _context.Season.Where(s => s.StartDate < DateTime.UtcNow && s.EndDate > DateTime.UtcNow).SingleOrDefault();
+            var currentSeason = _context.Season.Where(s => s.StartDate < DateTime.Now && s.EndDate > DateTime.Now).SingleOrDefault();
             if (currentSeason != null) { 
                 var entityParticipancy = _context.Participancy.SingleOrDefault(p => p.UserId == userId && p.SeasonId == currentSeason.Id);
                 var participancy = Mapper.Map<ParticipancyDTO>(entityParticipancy);
@@ -85,7 +85,7 @@ namespace SRUK.Services
         public bool UserCanSignToCurrentSeason(string userId)
         {
             bool result;
-            var currentSeason = _context.Season.Where(s => s.StartDate < DateTime.UtcNow && s.EndDate > DateTime.UtcNow).SingleOrDefault();
+            var currentSeason = _context.Season.Where(s => s.StartDate < DateTime.Now && s.EndDate > DateTime.Now).SingleOrDefault();
             if (currentSeason != null)
                 result = _context.Participancy.Where(p => p.UserId == userId && p.SeasonId == currentSeason.Id).Count() == 0;
             else
@@ -94,7 +94,7 @@ namespace SRUK.Services
         }
         public bool UserWantsPublicationInThisSeason(string userId)
         {
-            var currentSeason = _context.Season.Where(s => s.StartDate < DateTime.UtcNow && s.EndDate > DateTime.UtcNow).SingleOrDefault();
+            var currentSeason = _context.Season.Where(s => s.StartDate < DateTime.Now && s.EndDate > DateTime.Now).SingleOrDefault();
             if (currentSeason != null) { 
                 Participancy participancy = _context.Participancy.Where(p => p.UserId == userId && p.SeasonId == currentSeason.Id).SingleOrDefault();
                 if(participancy != null)

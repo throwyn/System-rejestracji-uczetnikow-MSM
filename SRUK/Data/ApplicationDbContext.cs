@@ -25,27 +25,27 @@ namespace SRUK.Data
 
             builder.Entity<ApplicationUser>()
                 .Property(b => b.CreationDate)
-                .HasDefaultValueSql("getutcdate()");
+                .HasDefaultValueSql("getdate()");
 
             builder.Entity<Paper>()
                 .Property(b => b.CreationDate)
-                .HasDefaultValueSql("getutcdate()");
+                .HasDefaultValueSql("getdate()");
 
             builder.Entity<PaperVersion>()
                 .Property(b => b.CreationDate)
-                .HasDefaultValueSql("getutcdate()");
+                .HasDefaultValueSql("getdate()");
 
             builder.Entity<Review>()
                 .Property(b => b.CreationDate)
-                .HasDefaultValueSql("getutcdate()");
+                .HasDefaultValueSql("getdate()");
 
             builder.Entity<Season>()
                 .Property(b => b.CreationDate)
-                .HasDefaultValueSql("getutcdate()");
+                .HasDefaultValueSql("getdate()");
 
             builder.Entity<Participancy>()
                 .Property(b => b.CreationDate)
-                .HasDefaultValueSql("getutcdate()");
+                .HasDefaultValueSql("getdate()");
         }
         
         public DbSet<SRUK.Entities.Season> Season { get; set; }
@@ -53,6 +53,5 @@ namespace SRUK.Data
         public DbSet<SRUK.Entities.PaperVersion> PaperVerison { get; set; }
         public DbSet<SRUK.Entities.Review> Review { get; set; }
         public DbSet<SRUK.Entities.Participancy> Participancy { get; set; }
-        public DbSet<SRUK.Models.ReviewDetailsViewModel> ReviewDetailsViewModel { get; set; }
     }
 }
