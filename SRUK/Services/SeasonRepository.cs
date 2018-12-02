@@ -37,6 +37,15 @@ namespace SRUK.Services
         public int AddSeason(SeasonDTO season)
         {
             Season newSeason = Mapper.Map<Season>(season);
+            var seasons = _context.Season.Where(s=>s.IsDeleted != true);
+            foreach(var existingSeason in seasons)
+            {
+                if(!(newSeason.EndDate  <= existingSeason.StartDate || newSeason.StartDate >= existingSeason.EndDate))
+                {
+                    return -1;
+                }
+            }
+
             var status =  _context.Season.Add(newSeason);
 
             int result =  _context.SaveChanges();

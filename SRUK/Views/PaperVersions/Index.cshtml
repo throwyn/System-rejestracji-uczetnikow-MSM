@@ -39,7 +39,7 @@
                     @Html.ActionLink(item.Paper.Title, "Details", "Papers", new { Id = item.Paper.Id })
                 </td>
                 <td>
-                    @Html.ActionLink(item.Paper.Participancy.User.FirstName + " " + item.Paper.Participancy.User.LastName, "Details", "Users", new { Id = item.Paper.Participancy.User.Id })
+                    @Html.ActionLink(item.Paper.Participancy.User.Degree + " " + item.Paper.Participancy.User.FirstName + " " + item.Paper.Participancy.User.LastName, "Details", "Users", new { Id = item.Paper.Participancy.User.Id })
                 </td>
                 <td>
                     @switch (item.Status)
@@ -54,8 +54,12 @@
                             <text>Accepted</text>
                             break;
                         case 3:
-                            <text>Rejected</text>
-                            break;
+                            <text>Rejected </text>
+                            @if(item.Comment != null)
+                            {
+                                <text><span class="glyphicon glyphicon-comment" aria-hidden="true" data-toggle="tooltip" title="@item.Comment"></span></text>
+                            }
+                                break;
                         case 4:
                             <text>Waiting for verdict</text>
                             break;

@@ -39,8 +39,8 @@ namespace SRUK
             var lockoutOptions = new LockoutOptions()
             {
                 AllowedForNewUsers = true,
-                DefaultLockoutTimeSpan = TimeSpan.FromHours(1),
-                MaxFailedAccessAttempts = 10
+                DefaultLockoutTimeSpan = TimeSpan.FromHours(2),
+                MaxFailedAccessAttempts = 2
             };
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>{options.Lockout = lockoutOptions;})

@@ -57,43 +57,83 @@ namespace SRUK.Controllers
         public string StatusMessage { get; set; }
 
         // GET: Users
-        public ActionResult Index()
+        public ActionResult Index(int pageNumber = 1, int pageSize = 5, string sortOrder = "")
         {
-            //initializing custom roles 
-            //var RoleManager = _serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            //string[] roleNames = { "Admin", "Critic", "Participant" };
-            //IdentityResult roleResult;
-
-            //foreach (var roleName in roleNames)
-            //{
-            //    var roleExist = await RoleManager.RoleExistsAsync(roleName);
-            //    if (!roleExist)
-            //    {
-            //        //create the roles and seed them to the database: Question 1
-            //        roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
-            //    }
-            //}
-            //var UserManager = _serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            //var user = await UserManager.FindByEmailAsync("participant@prz.pl");
-            //await UserManager.AddToRoleAsync(user, "Participant");
-
             if (!User.IsInRole("Admin"))
                 return RedirectToAction("Index","Home");
 
+            var users = _userRepository.GetUsers();
 
-            var entityUsers = _userManager.Users.Where(u => u.IsDeleted == false).ToList();
-            if (entityUsers == null) { return NotFound(); }
+            ViewData["DegreeSortParm"] = sortOrder == "Degree" ? "degree_desc" : "Degree";
+            ViewData["FirstNameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "firstname_desc" : "";
+            ViewData["LastNameSortParm"] = sortOrder == "LastName" ? "lastname_desc" : "LastName";
+            ViewData["OrganisationSortParm"] = sortOrder == "Organisation" ? "organisation_desc" : "Organisation";
+            ViewData["EmailSortParm"] = sortOrder == "Email" ? "email_desc" : "Email";
+            ViewData["RoleSortParm"] = sortOrder == "Role" ? "role_desc" : "Role";
+            ViewData["BlockedSortParm"] = sortOrder == "Blocked" ? "blocked_desc" : "Blocked";
 
-            var model = new UserIndexViewModel();
-            model.User = new List<UserShortDTO>();
-            
-            foreach(var entityUser in entityUsers)
+            IEnumerable<UserShortDTO> sortedUsers;
+
+            switch (sortOrder)
             {
-                var user = Mapper.Map<UserShortDTO>(entityUser);
-                user.Role = _userManager.GetRolesAsync(entityUser).Result.FirstOrDefault();
-                model.User.Add(user);
+                case "degree_desc":
+                    sortedUsers = users.OrderByDescending(e => e.Degree);
+                    break;
+                case "firstname_desc":
+                    sortedUsers = users.OrderByDescending(e => e.FirstName);
+                    break;
+                case "lastname_desc":
+                    sortedUsers = users.OrderByDescending(e => e.LastName);
+                    break;
+                case "organisation_desc":
+                    sortedUsers = users.OrderByDescending(e => e.Organisation);
+                    break;
+                case "email_desc":
+                    sortedUsers = users.OrderByDescending(e => e.Email);
+                    break;
+                case "role_desc":
+                    sortedUsers = users.OrderByDescending(e => e.Role);
+                    break;
+                case "blocked_desc":
+                    sortedUsers = users.OrderByDescending(e => e.LockoutEnd);
+                    break;
+                case "Degree":
+                    sortedUsers = users.OrderBy(e => e.Degree);
+                    break;
+                case "LastName":
+                    sortedUsers = users.OrderBy(e => e.LastName);
+                    break;
+                case "Organisation":
+                    sortedUsers = users.OrderBy(e => e.Organisation);
+                    break;
+                case "Email":
+                    sortedUsers = users.OrderBy(e => e.Email);
+                    break;
+                case "Role":
+                    sortedUsers = users.OrderBy(e => e.Role);
+                    break;
+                case "Blocked":
+                    sortedUsers = users.OrderBy(e => e.LockoutEnd);
+                    break;
+                default:
+                    sortedUsers = users.OrderBy(e => e.FirstName);
+                    break;
+
             }
-            model.StatusMessage = StatusMessage;
+
+            //int entityUserNumber = entityUsers.Count;
+            //if(entityUserNumber < ((pageNumber-1) * pageSize))
+            //{
+            //    StatusMessage = "Error. Out of range.";
+            //    return RedirectToAction(nameof(Index));
+            //}
+
+            var model = new UserIndexViewModel
+            {
+                User = sortedUsers.ToList(),
+                StatusMessage = StatusMessage
+            };
+
             return View(model);
         }
 

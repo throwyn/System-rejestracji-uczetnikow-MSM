@@ -47,6 +47,10 @@
                     {
                         <text>Done</text>
                     }
+                    else if (item.Deadline < DateTime.Now)
+                    {
+                        <text>Not completed</text>
+                    }
                     else
                     {
                         <text>Waiting</text>
@@ -59,7 +63,7 @@
                     @Html.DisplayFor(modelItem => item.CreationDate)
                 </td>
                 <td style='color: black; text-align: center; '>
-                    @if (item.FileName == null)
+                    @if (item.FileName == null && item.Deadline < DateTime.Now)
                     {
                         <a asp-action="AddReview" asp-controller="Reviews" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-text-color " aria-hidden="true" data-toggle="tooltip" title="Add Review"></span></a> <text>|</text>
                     }

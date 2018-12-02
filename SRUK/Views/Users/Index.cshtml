@@ -14,29 +14,71 @@
              table-layout: fixed;">
     <thead>
         <tr>
-            <th style="width:100;">
-                Degree
-            </th>
             <th style="width:100px;">
-                First name
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DegreeSortParm"]">
+                    Degree
+                    @if (ViewData["DegreeSortParm"].ToString() == "Degree")
+                    {<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true" />}
+                    @if (ViewData["DegreeSortParm"].ToString() == "degree_desc")
+                    {<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true" />}
+                </a>
             </th>
-            <th style="width:100px;">
-                Last name
+            <th style="width:110px;">
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["FirstNameSortParm"]">
+                    First name
+                    @if (ViewData["FirstNameSortParm"].ToString() == "")
+                    {<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true" /> }
+                    @if (ViewData["FirstNameSortParm"].ToString() == "firstname_desc")
+                    {<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true" />}
+                </a>
             </th>
-            <th style="width:200px;">
-                Ogranisation
+            <th style="width:105px;">
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["LastNameSortParm"]">
+                    Last name
+                    @if (ViewData["LastNameSortParm"].ToString() == "LastName")
+                    {<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true" /> }
+                    else if (ViewData["LastNameSortParm"].ToString() == "lastname_desc")
+                    {<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true" />}
+                </a>
             </th>
-            <th style="width:230px;">
-                Email
+            <th style="width:180px;">
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["OrganisationSortParm"]">
+                    Organisation
+                    @if (ViewData["OrganisationSortParm"].ToString() == "Organisation")
+                    {<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true" /> }
+                    else if (ViewData["OrganisationSortParm"].ToString() == "organisation_desc")
+                    {<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true" />}
+                </a>
+            </th>
+            <th style="width:210px;">
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["EmailSortParm"]">
+                    Email
+                    @if (ViewData["EmailSortParm"].ToString() == "Email")
+                    {<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true" /> }
+                    else if (ViewData["EmailSortParm"].ToString() == "email_desc")
+                    {<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true" />}
+                </a>
             </th>
             <th style="width:120px;">
                 Phone number
             </th>
             <th style="width:85px;">
-                Role
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["RoleSortParm"]">
+                    Role
+                    @if (ViewData["RoleSortParm"].ToString() == "Role")
+                    {<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true" /> }
+                    else if (ViewData["RoleSortParm"].ToString() == "role_desc")
+                    {<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true" />}
+                </a>
             </th>
             <th style="width:140px;">
-                Blocked to
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["BlockedSortParm"]">
+                    Blocked to
+                    @if (ViewData["BlockedSortParm"].ToString() == "Blocked")
+                    {<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true" /> }
+                    else if (ViewData["BlockedSortParm"].ToString() == "blocked_desc")
+                    {<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true" />}
+                </a>
             </th>
             <th></th>
         </tr>
@@ -44,8 +86,7 @@
     <tbody>
         @foreach (var item in Model.User)
         {
-
-        <tr @if (item.LockoutEnd > DateTime.Now) { @Html.Raw(@" style='color: gray; '") }>
+        <tr @if (item.LockoutEnd.AddHours(1) > DateTime.Now) { @Html.Raw(@" style='color: gray; '") }>
 
             <td>
                 @Html.DisplayFor(modelItem => item.Degree)
@@ -75,7 +116,7 @@
             <td>
                 @if (item.LockoutEnd > DateTime.Now)
                 {
-                    @Html.DisplayFor(modelItem => item.LockoutEnd)
+                    @item.LockoutEnd.AddHours(DateTime.Now.Hour - DateTime.UtcNow.Hour).ToString("dd.MM.yyyy HH:mm")
                 }
             </td>
             <td style='color: black; '>

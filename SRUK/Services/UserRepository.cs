@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SRUK.Data;
 using SRUK.Entities;
 using SRUK.Models;
@@ -32,10 +33,20 @@ namespace SRUK.Services
         //    return user;
         //}
 
-        public IEnumerable<UserShortDTO> GetUsers()
+        public List<UserShortDTO> GetUsers()
         {
-            var entityUser = _context.Users.Where(u => u.IsDeleted == false).OrderBy(u => u.Id).ToAsyncEnumerable().ToEnumerable();
-            var users = Mapper.Map<IEnumerable<UserShortDTO>>(entityUser);
+            var entityUsers = _context.Users.Where(u => u.IsDeleted != true).OrderBy(u => u.Id).ToAsyncEnumerable().ToEnumerable();
+            List<UserShortDTO> users = new List<UserShortDTO>();
+            
+            foreach (var entityUser in entityUsers)
+            {
+                var user = Mapper.Map<UserShortDTO>(entityUser);
+                user.Role = _userManager.GetRolesAsync(entityUser).Result.FirstOrDefault();
+                if (user.LockoutEnd < DateTime.Now)
+                    user.LockoutEnd = DateTimeOffset.MinValue;
+                users.Add(user);
+            }
+            
             return users;
         }
         public UserDTO GetUser(string id)

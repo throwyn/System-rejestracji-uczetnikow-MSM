@@ -75,7 +75,6 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script type="text/javascript">
-            var data = "@Model.EndDate.ToString()";
         $(function () {
             $('#datetimepickerstart').datetimepicker();
             $('#datetimepickerend').datetimepicker({

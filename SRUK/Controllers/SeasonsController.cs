@@ -75,6 +75,8 @@ namespace SRUK.Controllers
 
             var model = new SeasonCreateViewModel
             {
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now,
                 StatusMessage = StatusMessage
             };
             return View(model);
@@ -98,16 +100,19 @@ namespace SRUK.Controllers
             }
             if (ModelState.IsValid)
             {
-                var offsetTimeZone = TimeZoneInfo.Local.GetUtcOffset(DateTime.Now);
                 SeasonDTO season = Mapper.Map<SeasonDTO>(model);
-                season.StartDate = season.StartDate - offsetTimeZone;
-                season.EndDate = season.EndDate - offsetTimeZone;
 
                 var result = _seasonRepository.AddSeason(season);
                 if (result == 1)
                 {
                     StatusMessage = "Succesfully created.";
                     return RedirectToAction(nameof(Index));
+                }
+                if (result == -1)
+                {
+                    StatusMessage = "Error. This date is already taken";
+                    model.StatusMessage = StatusMessage;
+                    return View(model);
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -154,11 +159,8 @@ namespace SRUK.Controllers
             {
                 try
                 {
-                    var offsetTimeZone = TimeZoneInfo.Local.GetUtcOffset(DateTime.Now);
                     var season = Mapper.Map<SeasonDTO>(model);
-
-                    season.StartDate = season.StartDate - offsetTimeZone;
-                    season.EndDate = season.EndDate - offsetTimeZone;
+                    
                     var result =  _seasonRepository.UpdateSeason(season);
                     if(result == 1)
                     {

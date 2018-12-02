@@ -48,7 +48,7 @@
                     @Html.ActionLink(item.Title, "Details", "Papers", new { Id = item.Id })
                 </td>
                 <td>
-                    @Html.ActionLink(item.Participancy.User.FirstName + " " + item.Participancy.User.LastName, "Details", "Users", new { Id = item.Participancy.UserId })
+                    @Html.ActionLink(item.Participancy.User.Degree + " " + item.Participancy.User.FirstName + " " + item.Participancy.User.LastName, "Details", "Users", new { Id = item.Participancy.UserId })
                 </td>
                 <td>
                     @switch (item.Status)

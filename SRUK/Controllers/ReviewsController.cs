@@ -199,13 +199,12 @@ namespace SRUK.Controllers
                     StatusMessage = "Error. This user cannot become a  critic!";
                     return RedirectToAction("Index", "PaperVersions");
                 }
-                var offsetTimeZone = TimeZoneInfo.Local.GetUtcOffset(DateTime.Now);
 
                 var review = new ReviewDTO
                 {
                     CriticId = model.CriticId,
                     PaperVersionId = model.PaperVersionId,
-                    Deadline = model.Deadline-offsetTimeZone
+                    Deadline = model.Deadline
                 };
 
                 var result = _reviewRepository.CreateReview(review);
@@ -268,8 +267,13 @@ namespace SRUK.Controllers
             var review = _reviewRepository.GetReview(id);
             if (user.Id != review.CriticId)
             {
-                 StatusMessage = "Error. You cannot review this file.";
-                    return RedirectToAction(nameof(MyReviews));
+                StatusMessage = "Error. You cannot review this file.";
+                return RedirectToAction(nameof(MyReviews));
+            }
+            if (review.Deadline <= DateTime.Now)
+            {
+                StatusMessage = "Error. Deadline passed.";
+                return RedirectToAction(nameof(MyReviews));
             }
 
             var model = Mapper.Map<AddReviewViewModel>(review);
@@ -285,6 +289,11 @@ namespace SRUK.Controllers
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var existingReview = _reviewRepository.GetReview(model.Id);
+            if (existingReview.Deadline <= DateTime.Now)
+            {
+                StatusMessage = "Error. Deadline passed.";
+                return RedirectToAction(nameof(MyReviews));
+            }
             if (user.Id != existingReview.CriticId)
             {
                 StatusMessage = "Error. You cannot review this file.";

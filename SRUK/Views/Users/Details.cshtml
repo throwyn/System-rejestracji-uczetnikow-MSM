@@ -48,7 +48,7 @@
                     @Html.DisplayNameFor(model => model.LockoutEnd)
                 </dt>
                 <dd>
-                    @Html.DisplayFor(model => model.LockoutEnd)
+                    @Model.LockoutEnd.AddHours(DateTime.Now.Hour - DateTime.UtcNow.Hour).ToString("dd.MM.yyyy HH:mm")
                 </dd>
             }
                 <dt>
