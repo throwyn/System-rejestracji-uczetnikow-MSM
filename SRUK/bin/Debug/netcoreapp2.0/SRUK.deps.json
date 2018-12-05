@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.0",
-    "signature": "3647fe1e0489a4d1c634f0dd08616c4a7d4d9fc5"
+    "signature": "1104868e8d811a359e303389cf83a36c537929f6"
   },
   "compilationOptions": {
     "defines": [
@@ -26,6 +26,7 @@
         "dependencies": {
           "AutoMapper": "7.0.1",
           "Bootstrap.v3.Datetimepicker.CSS": "4.17.45",
+          "EntityFrameworkPaginate": "1.2.0",
           "Microsoft.AspNetCore.All": "2.0.9",
           "Microsoft.EntityFrameworkCore.Tools": "2.0.3",
           "Microsoft.NETCore.App": "2.0.0",
@@ -61,6 +62,17 @@
         "dependencies": {
           "Moment.js": "2.9.0",
           "bootstrap": "3.3.0"
+        }
+      },
+      "EntityFrameworkPaginate/1.2.0": {
+        "runtime": {
+          "lib/EntityFrameworkPaginate.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        },
+        "compile": {
+          "lib/EntityFrameworkPaginate.dll": {}
         }
       },
       "jQuery/1.9.0": {},
@@ -4865,6 +4877,13 @@
       "sha512": "sha512-CLNTxJbb6gP52h0j6k1bJQbRwviKw9lkkUiYbvPXCgu1K1Cpc8gqvOO2LphOj0exu7Y1BZ9NzxxuLAAffmUJKg==",
       "path": "bootstrap.v3.datetimepicker.css/4.17.45",
       "hashPath": "bootstrap.v3.datetimepicker.css.4.17.45.nupkg.sha512"
+    },
+    "EntityFrameworkPaginate/1.2.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-nn8ej5z6QPXFDO3iuH7EHFzVXaqvCEdGvDDQnhGkL1CjFsQZFRznEDJa2k1zwr5bGO7OFEqlx1QZp+soTmNWpg==",
+      "path": "entityframeworkpaginate/1.2.0",
+      "hashPath": "entityframeworkpaginate.1.2.0.nupkg.sha512"
     },
     "jQuery/1.9.0": {
       "type": "package",

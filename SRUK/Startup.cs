@@ -18,6 +18,7 @@ using SRUK.Models.ManageViewModels;
 using System.Globalization;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
+using EntityFrameworkPaginate;
 
 namespace SRUK
 {
@@ -91,6 +92,7 @@ namespace SRUK
                 cfg.CreateMap<ApplicationUser, UserEditViewModel>();
                 cfg.CreateMap<ApplicationUser, UserShortDTO>();
                 cfg.CreateMap<ApplicationUser, IndexViewModel>();
+                cfg.CreateMap<Page<ApplicationUser>,Page<UserShortDTO>>();
 
 
                 cfg.CreateMap<IndexViewModel, ApplicationUser>()

@@ -18,6 +18,7 @@ using SRUK.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using AutoMapper;
+using SRUK.Extensions;
 
 namespace SRUK.Controllers
 {
@@ -57,13 +58,29 @@ namespace SRUK.Controllers
         public string StatusMessage { get; set; }
 
         // GET: Users
-        public ActionResult Index(int pageNumber = 1, int pageSize = 5, string sortOrder = "")
+        public ActionResult Index(
+            string sortOrder = "", 
+            string degree = "", 
+            string firstName = "", 
+            string lastName = "", 
+            string organisation = "", 
+            string email = "",
+            string role = "")
         {
             if (!User.IsInRole("Admin"))
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Index", "Home");
 
             var users = _userRepository.GetUsers();
 
+            //Filters
+            ViewData["DegreeFilter"] = degree;
+            ViewData["FirstNameFilter"] = firstName;
+            ViewData["LastNameFilter"] = lastName;
+            ViewData["OrganisationFilter"] = organisation;
+            ViewData["EmailFilter"] = email;
+            ViewData["RoleFilter"] = role;
+
+            //Sort Params
             ViewData["DegreeSortParm"] = sortOrder == "Degree" ? "degree_desc" : "Degree";
             ViewData["FirstNameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "firstname_desc" : "";
             ViewData["LastNameSortParm"] = sortOrder == "LastName" ? "lastname_desc" : "LastName";
@@ -118,8 +135,19 @@ namespace SRUK.Controllers
                 default:
                     sortedUsers = users.OrderBy(e => e.FirstName);
                     break;
-
             }
+            if (degree != null)
+                sortedUsers = sortedUsers.Where(u => u.Degree != null && u.Degree.Contains(degree));
+            if (email != null)
+                sortedUsers = sortedUsers.Where(u => u.Email != null && u.Email.Contains(email, StringComparison.OrdinalIgnoreCase));
+            if (firstName != null)
+                sortedUsers = sortedUsers.Where(u => u.FirstName != null && u.FirstName.Contains(firstName, StringComparison.OrdinalIgnoreCase));
+            if (lastName != null)
+                sortedUsers = sortedUsers.Where(u => u.LastName != null && u.LastName.Contains(lastName, StringComparison.OrdinalIgnoreCase));
+            if (organisation != null)
+                sortedUsers = sortedUsers.Where(u => u.Organisation != null && u.Organisation.Contains(organisation, StringComparison.OrdinalIgnoreCase));
+            if (role != null)
+                sortedUsers = sortedUsers.Where(u => u.Role != null && u.Role.Contains(role, StringComparison.OrdinalIgnoreCase));
 
             //int entityUserNumber = entityUsers.Count;
             //if(entityUserNumber < ((pageNumber-1) * pageSize))
@@ -128,11 +156,13 @@ namespace SRUK.Controllers
             //    return RedirectToAction(nameof(Index));
             //}
 
-            var model = new UserIndexViewModel
-            {
-                User = sortedUsers.ToList(),
-                StatusMessage = StatusMessage
-            };
+            ViewBag.Degrees =   new AcademicDegrees().SelectListItems;
+            ViewBag.Roles = GetRolesSelectListItem();
+
+            var model = new UserIndexViewModel();
+            model.User = sortedUsers.ToList();
+            model.StatusMessage = StatusMessage;
+            model.SortOrder = sortOrder;
 
             return View(model);
         }
@@ -188,7 +218,7 @@ namespace SRUK.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-                
+
                 var user = Mapper.Map<ApplicationUser>(model);
                 user.UserName = model.Email;
 
@@ -196,7 +226,7 @@ namespace SRUK.Controllers
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(user, model.Role);
-                    _logger.LogInformation(User.Identity.Name+" created a new account.");
+                    _logger.LogInformation(User.Identity.Name + " created a new account.");
 
                     //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     //var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
@@ -204,7 +234,7 @@ namespace SRUK.Controllers
                     StatusMessage = "Success. User created.";
                     return RedirectToAction(nameof(Index));
                 }
-                else if(result.Errors.FirstOrDefault().Code == "DuplicateUserName")
+                else if (result.Errors.FirstOrDefault().Code == "DuplicateUserName")
                 {
                     StatusMessage = "Error. Email is already taken.";
                     return RedirectToAction(nameof(Create));
@@ -229,7 +259,7 @@ namespace SRUK.Controllers
             ViewBag.Roles = _roleManager.Roles.ToList();
             var entityUser = _userManager.FindByIdAsync(id).Result;
             var user = Mapper.Map<UserEditViewModel>(entityUser);
-            if(entityUser == null)
+            if (entityUser == null)
             {
                 StatusMessage = "Error. User do not exists.";
                 return RedirectToAction(nameof(Index));
@@ -284,7 +314,7 @@ namespace SRUK.Controllers
                 user.EmailConfirmed = model.EmailConfirmed;
                 user.PhoneNumberConfirmed = model.PhoneNumberConfirmed;
                 user.SecurityStamp = Guid.NewGuid().ToString();
-                
+
                 var result = await _userManager.UpdateAsync(user);
 
                 if (result.Succeeded)
@@ -360,5 +390,27 @@ namespace SRUK.Controllers
                 return View();
             }
         }
+
+        #region Helpers
+
+        private List<SelectListItem> GetRolesSelectListItem()
+        {
+
+            var roles = _roleManager.Roles.ToList();
+
+            var result = new List<SelectListItem>()
+            {
+                new SelectListItem { Text = "Role", Value = "" }
+            };
+
+            foreach (var role in roles)
+            {
+                result.Add(new SelectListItem { Text = role.Name, Value = role.Name });
+            }
+
+            return result;
+        }
+    
+            #endregion
     }
 }

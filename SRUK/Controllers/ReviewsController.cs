@@ -270,11 +270,6 @@ namespace SRUK.Controllers
                 StatusMessage = "Error. You cannot review this file.";
                 return RedirectToAction(nameof(MyReviews));
             }
-            if (review.Deadline <= DateTime.Now)
-            {
-                StatusMessage = "Error. Deadline passed.";
-                return RedirectToAction(nameof(MyReviews));
-            }
 
             var model = Mapper.Map<AddReviewViewModel>(review);
             model.StatusMessage = StatusMessage;
@@ -289,11 +284,6 @@ namespace SRUK.Controllers
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var existingReview = _reviewRepository.GetReview(model.Id);
-            if (existingReview.Deadline <= DateTime.Now)
-            {
-                StatusMessage = "Error. Deadline passed.";
-                return RedirectToAction(nameof(MyReviews));
-            }
             if (user.Id != existingReview.CriticId)
             {
                 StatusMessage = "Error. You cannot review this file.";

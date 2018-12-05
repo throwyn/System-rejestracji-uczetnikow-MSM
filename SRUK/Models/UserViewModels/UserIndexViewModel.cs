@@ -9,11 +9,19 @@ namespace SRUK.Models
     {
         public List<UserShortDTO> User { get; set; }
 
-        int PageNumber { get; set; }
+        public string SortOrder { get; set; }
 
-        int PageSize { get; set; }
+        public string SearchDegree { get; set; }
 
-        int NumberOfPages { get; set; }
+        public string SearchFirstName { get; set; }
+
+        public string SearchLastName { get; set; }
+
+        public string SearchOrganisation { get; set; }
+
+        public string SearchEmail { get; set; }
+
+        public string SearchRole { get; set; }
 
         public string StatusMessage { get; set; }
     }

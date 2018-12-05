@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using EntityFrameworkPaginate;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -71,6 +72,46 @@ namespace SRUK.Services
             var users = Mapper.Map<IEnumerable<UserShortDTO>>(entityUsers);
             return users;
         }
+
+        public Page<UserShortDTO> GetFilteredUsers(
+            int pageSize, 
+            int currentPage,
+            short sortBy,
+            string degree,
+            string firstName,
+            string lastName,
+            string organisation,
+            string email,
+            string role
+        )
+        {
+            //Page<UserShortDTO> users;
+
+            var filters = new Filters<ApplicationUser>();
+            var sorts = new Sorts<ApplicationUser>();
+
+            filters.Add(!string.IsNullOrEmpty(degree), x => x.Degree.Contains(degree));
+            filters.Add(!string.IsNullOrEmpty(firstName), x => x.FirstName.Equals(firstName));
+            filters.Add(!string.IsNullOrEmpty(lastName), x => x.LastName.Equals(lastName));
+            filters.Add(!string.IsNullOrEmpty(organisation), x => x.Organisation.Equals(organisation));
+            filters.Add(!string.IsNullOrEmpty(email), x => x.Email.Equals(email));
+            //filters.Add(!string.IsNullOrEmpty(role), x => x.Role.Equals(firstName));
+
+            sorts.Add(sortBy == 1, x => x.Degree);
+            sorts.Add(sortBy == 2, x => x.FirstName);
+            sorts.Add(sortBy == 3, x => x.LastName);
+            sorts.Add(sortBy == 3, x => x.Organisation);
+            sorts.Add(sortBy == 3, x => x.Email);
+           // sorts.Add(sortBy == 3, x => x.Role);
+
+            var entityUsers = _context.Users.Paginate(currentPage, pageSize, sorts, filters);
+
+            var users = Mapper.Map<Page<UserShortDTO>>(entityUsers);
+
+            return users;
+        }
+
+
 
         public bool Save()
         {

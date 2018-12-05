@@ -27,6 +27,15 @@
           "bootstrap": "3.3.0"
         }
       },
+      "EntityFrameworkPaginate/1.2.0": {
+        "type": "package",
+        "compile": {
+          "lib/EntityFrameworkPaginate.dll": {}
+        },
+        "runtime": {
+          "lib/EntityFrameworkPaginate.dll": {}
+        }
+      },
       "jQuery/1.9.0": {
         "type": "package"
       },
@@ -5121,6 +5130,16 @@
         "content/Scripts/bootstrap-datetimepicker.js",
         "content/Scripts/bootstrap-datetimepicker.min.js",
         "tools/install.ps1"
+      ]
+    },
+    "EntityFrameworkPaginate/1.2.0": {
+      "sha512": "nn8ej5z6QPXFDO3iuH7EHFzVXaqvCEdGvDDQnhGkL1CjFsQZFRznEDJa2k1zwr5bGO7OFEqlx1QZp+soTmNWpg==",
+      "type": "package",
+      "path": "entityframeworkpaginate/1.2.0",
+      "files": [
+        "entityframeworkpaginate.1.2.0.nupkg.sha512",
+        "entityframeworkpaginate.nuspec",
+        "lib/EntityFrameworkPaginate.dll"
       ]
     },
     "jQuery/1.9.0": {
@@ -13378,6 +13397,7 @@
     ".NETCoreApp,Version=v2.0": [
       "AutoMapper >= 7.0.1",
       "Bootstrap.v3.Datetimepicker.CSS >= 4.17.45",
+      "EntityFrameworkPaginate >= 1.2.0",
       "Microsoft.AspNetCore.All >= 2.0.9",
       "Microsoft.EntityFrameworkCore.Tools >= 2.0.3",
       "Microsoft.NETCore.App >= 2.0.0",
@@ -13433,6 +13453,10 @@
             "target": "Package",
             "version": "[4.17.45, )"
           },
+          "EntityFrameworkPaginate": {
+            "target": "Package",
+            "version": "[1.2.0, )"
+          },
           "Microsoft.AspNetCore.All": {
             "target": "Package",
             "version": "[2.0.9, )"
@@ -13460,5 +13484,17 @@
         "warn": true
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Pakiet „EntityFrameworkPaginate 1.2.0” został przywrócony przy użyciu elementu „.NETFramework,Version=v4.6.1” zamiast platformy docelowej projektu „.NETCoreApp,Version=v2.0”. Ten pakiet może nie być w pełni kompatybilny z Twoim projektem.",
+      "libraryId": "EntityFrameworkPaginate",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v2.0"
+      ]
+    }
+  ]
 }

@@ -11,7 +11,7 @@ namespace SRUK.Models
     {
         public List<SelectListItem> SelectListItems {get { return new List <SelectListItem>
             {
-                new SelectListItem { Text = "", Value = "" },
+                new SelectListItem { Text = "Academic degree", Value = "" },
                 new SelectListItem { Text = "Prof. DSc. PhD. Eng.", Value = "Prof. DSc. PhD. Eng." },
                 new SelectListItem { Text = "Prof. DSc. PhD.", Value = "Prof. DSc. PhD." },
                 new SelectListItem { Text = "DSc. PhD. Eng.", Value = "DSc. PhD. Eng." },
