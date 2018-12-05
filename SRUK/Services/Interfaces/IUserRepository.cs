@@ -14,7 +14,7 @@ namespace SRUK.Services.Interfaces
         IEnumerable<UserShortDTO> GetAdminsAndCritics();
         UserDTO GetUser(string id);
         ApplicationUser GetApplicationUser(string id);
-        Page<UserShortDTO> GetFilteredUsers(int pageSize,int currentPage,short sortBy,string degree,string firstName,string lastName,string organisation,string email,string role);
+        Page<UserShortDTO> GetFilteredUsers(short sortBy,string degree,string firstName,string lastName,string organisation,string email,string role,int pageSize, int currentPage);
 
         //UserDTO GetUser(string Id);
 

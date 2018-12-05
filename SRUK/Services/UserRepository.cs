@@ -11,6 +11,7 @@ using SRUK.Data;
 using SRUK.Entities;
 using SRUK.Models;
 using SRUK.Services.Interfaces;
+using SRUK.Extensions;
 
 namespace SRUK.Services
 {
@@ -74,39 +75,57 @@ namespace SRUK.Services
         }
 
         public Page<UserShortDTO> GetFilteredUsers(
-            int pageSize, 
-            int currentPage,
             short sortBy,
             string degree,
             string firstName,
             string lastName,
             string organisation,
             string email,
-            string role
+            string role,
+            int pageSize,
+            int currentPage
         )
         {
-            //Page<UserShortDTO> users;
+            if (pageSize == 0) pageSize = 8;
+            if (currentPage == 0) currentPage = 1;
 
-            var filters = new Filters<ApplicationUser>();
-            var sorts = new Sorts<ApplicationUser>();
+            var usersList = GetUsers();
+            IEnumerable<UserShortDTO> results = usersList.ToAsyncEnumerable().ToEnumerable();
 
-            filters.Add(!string.IsNullOrEmpty(degree), x => x.Degree.Contains(degree));
-            filters.Add(!string.IsNullOrEmpty(firstName), x => x.FirstName.Equals(firstName));
-            filters.Add(!string.IsNullOrEmpty(lastName), x => x.LastName.Equals(lastName));
-            filters.Add(!string.IsNullOrEmpty(organisation), x => x.Organisation.Equals(organisation));
-            filters.Add(!string.IsNullOrEmpty(email), x => x.Email.Equals(email));
-            //filters.Add(!string.IsNullOrEmpty(role), x => x.Role.Equals(firstName));
+            results = !string.IsNullOrEmpty(degree) ? results.Where(u => u.Degree != null && u.Degree.Contains(degree, StringComparison.OrdinalIgnoreCase)) : results;
+            results = !string.IsNullOrEmpty(firstName) ? results.Where(u => u.FirstName != null && u.FirstName.Contains(firstName, StringComparison.OrdinalIgnoreCase)) : results;
+            results = !string.IsNullOrEmpty(lastName) ? results.Where(u => u.LastName != null && u.LastName.Contains(lastName, StringComparison.OrdinalIgnoreCase)) : results;
+            results = !string.IsNullOrEmpty(organisation) ? results.Where(u => u.Organisation != null && u.Organisation.Contains(organisation, StringComparison.OrdinalIgnoreCase)) : results;
+            results = !string.IsNullOrEmpty(email) ? results.Where(u => u.Email != null && u.Email.Contains(email, StringComparison.OrdinalIgnoreCase)) : results;
+            results = !string.IsNullOrEmpty(role) ? results.Where(u => u.Role != null && u.Role.Contains(role, StringComparison.OrdinalIgnoreCase)) : results;
 
-            sorts.Add(sortBy == 1, x => x.Degree);
-            sorts.Add(sortBy == 2, x => x.FirstName);
-            sorts.Add(sortBy == 3, x => x.LastName);
-            sorts.Add(sortBy == 3, x => x.Organisation);
-            sorts.Add(sortBy == 3, x => x.Email);
-           // sorts.Add(sortBy == 3, x => x.Role);
+            results = sortBy == 1 ? results.OrderBy(u => u.Degree) : results;
+            results = sortBy == 2 ? results.OrderByDescending(u => u.Degree) : results;
+            results = sortBy == 3 ? results.OrderBy(u => u.FirstName) : results;
+            results = sortBy == 4 ? results.OrderByDescending(u => u.FirstName) : results;
+            results = sortBy == 5 ? results.OrderBy(u => u.LastName) : results;
+            results = sortBy == 6 ? results.OrderByDescending(u => u.LastName) : results;
+            results = sortBy == 7 ? results.OrderBy(u => u.Organisation) : results;
+            results = sortBy == 8 ? results.OrderByDescending(u => u.Organisation) : results;
+            results = sortBy == 9 ? results.OrderBy(u => u.Email) : results;
+            results = sortBy == 10 ? results.OrderByDescending(u => u.Email) : results;
+            results = sortBy == 11 ? results.OrderBy(u => u.Role) : results;
+            results = sortBy == 12 ? results.OrderByDescending(u => u.Role) : results;
 
-            var entityUsers = _context.Users.Paginate(currentPage, pageSize, sorts, filters);
+            int recordCount = results.Count();
+            int pageCount = (int)Math.Ceiling((decimal)recordCount / (decimal)pageSize);
+            results = results.Skip((currentPage - 1) * pageSize).Take(pageSize);
 
-            var users = Mapper.Map<Page<UserShortDTO>>(entityUsers);
+
+            Page<UserShortDTO> users = new Page<UserShortDTO>()
+            {
+                Results = results,
+                RecordCount = recordCount,
+                PageCount = pageCount,
+                CurrentPage = currentPage,
+                PageSize = pageSize
+
+            };
 
             return users;
         }

@@ -20,32 +20,37 @@
             </div>
             <div class="form-group ">
                 <div class="col-lg-12">
-                    <select name="degree" class="form-control" asp-items="ViewBag.Degrees" value="@ViewData["DegreeFilter"]"></select>
+                    <select asp-for="Degree" class="form-control" asp-items="ViewBag.Degrees"></select>
                 </div>
             </div>
             <div class="form-group ">
                 <div class="col-lg-12">
-                    <input asp-for="SearchFirstName" class="form-control" type="text" placeholder="First name" />
+                    <input asp-for="FirstName" class="form-control" type="text" placeholder="First name" />
                 </div>
             </div>
             <div class="form-group ">
                 <div class="col-lg-12">
-                    <input asp-for="SearchLastName" class="form-control" type="text" placeholder="Last name" />
+                    <input asp-for="LastName" class="form-control" type="text" placeholder="Last name" />
                 </div>
             </div>
             <div class="form-group ">
                 <div class="col-lg-12">
-                    <input asp-for="SearchOrganisation" class="form-control" type="text" placeholder="Organisation" />
+                    <input asp-for="Organisation" class="form-control" type="text" placeholder="Organisation" />
                 </div>
             </div>
             <div class="form-group ">
                 <div class="col-lg-12">
-                    <input asp-for="SearchEmail" class="form-control" type="text" placeholder="Email" />
+                    <input asp-for="Email" class="form-control" type="text" placeholder="Email" />
                 </div>
             </div>
             <div class="form-group ">
                 <div class="col-lg-12">
-                    <select asp-for="SearchRole" class="form-control" asp-items="ViewBag.Roles"></select>
+                    <select asp-for="Role" class="form-control" asp-items="ViewBag.Roles"></select>
+                </div>
+            </div>
+            <div class="form-group" style="margin-left:29px;">
+                <div class="col-lg-12">
+                    <select asp-for="SortBy" class="form-control" asp-items="ViewBag.SortBy"></select>
                 </div>
             </div>
         </div>
@@ -57,64 +62,52 @@
             <tr>
                 <th style="width:30px;"></th>
                 <th style="width:175px;">
-                    <a asp-action="Index" asp-route-sortOrder="@ViewData["DegreeSortParm"] ">
-                        Degree
-                        @if (Model.SortOrder == "Degree")
-                        {<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true" />}
-                        @if (Model.SortOrder == "degree_desc")
-                        {<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true" />}
-                    </a>
+                    Degree
+                    @if (Model.SortBy == 1)
+                    {<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true"/>}
+                    @if (Model.SortBy == 2)
+                    {<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true" />}
                 </th>
                 <th style="width:175px;">
-                    <a asp-action="Index" asp-route-sortOrder="@ViewData["FirstNameSortParm"]">
-                        First name
-                        @if (Model.SortOrder == "")
-                        {<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true" />}
-                        @if (Model.SortOrder == "firstname_desc")
-                        {<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true" />}
-                    </a>
+                    First name
+                    @if (Model.SortBy == 3)
+                    {<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true" />}
+                    @if (Model.SortBy == 4)
+                    {<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true" />}
                 </th>
                 <th style="width:175px;">
-                    <a asp-action="Index" asp-route-sortOrder="@ViewData["LastNameSortParm"]">
-                        Last name
-                        @if (Model.SortOrder == "LastName")
-                        {<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true" /> }
-                        else if (Model.SortOrder == "lastname_desc")
-                        {<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true" />}
-                    </a>
+                    Last name
+                    @if (Model.SortBy == 5)
+                    {<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true" />}
+                    @if (Model.SortBy == 6)
+                    {<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true" />}
                 </th>
                 <th style="width:175px;">
-                    <a asp-action="Index" asp-route-sortOrder="@ViewData["OrganisationSortParm"]">
-                        Organisation
-                        @if (Model.SortOrder == "Organisation")
-                        {<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true" /> }
-                        else if (Model.SortOrder == "organisation_desc")
-                        {<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true" />}
-                    </a>
+                    Organisation
+                    @if (Model.SortBy == 7)
+                    {<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true" />}
+                    @if (Model.SortBy == 8)
+                    {<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true" />}
                 </th>
                 <th style="width:175px;">
-                    <a asp-action="Index" asp-route-sortOrder="@ViewData["EmailSortParm"]">
-                        Email
-                        @if (Model.SortOrder == "Email")
-                        {<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true" /> }
-                        else if (Model.SortOrder == "email_desc")
-                        {<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true" />}
-                    </a>
+                    Email
+                    @if (Model.SortBy == 9)
+                    {<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true" />}
+                    @if (Model.SortBy == 10)
+                    {<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true" />}
                 </th>
-                <th style="width:90px;">
-                    <a asp-action="Index" asp-route-sortOrder="@ViewData["RoleSortParm"]">
-                        Role
-                        @if (Model.SortOrder == "Role")
-                        {<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true" /> }
-                        else if (Model.SortOrder == "role_desc")
-                        {<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true" />}
-                    </a>
+                <th style="width:110px;">
+                    Role
+                    @if (Model.SortBy == 11)
+                    {<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true" />}
+                    @if (Model.SortBy == 12)
+                    {<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true" />}
                 </th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.User)
+            @foreach (var item in Model.Results)
             {
                 <tr @if (item.LockoutEnd.AddHours(1) > DateTime.Now) { @Html.Raw(@" style='color: gray; '") }>
 
@@ -150,6 +143,42 @@
     </table>
 
 </form>
+
+<div style="text-align:right; margin-right:5%;">
+    <ul class="pagination">
+
+        @if (Model.CurrentPage == 1)
+        {
+            <li class="disabled"><a>&laquo;</a></li>
+        }
+        else
+        {
+            <li><a href="#">&laquo;</a></li>
+        }
+        @for (var i = 1; i <= Model.PageCount; i++)
+        {
+            if (i == Model.CurrentPage)
+            {
+                <li class="active"><a>@i</a></li>
+            }
+            else
+            {
+                <li><a href="#">@i</a></li>
+            }
+        }
+        @if (Model.CurrentPage == Model.PageCount)
+        {
+            <li class="disabled"><a>&raquo;</a></li>
+        }
+        else
+        {
+            <li><a href="#">&raquo;</a></li>
+        }
+
+    </ul>
+</div>
+
+
 <style>
     th {
         text-align: center;

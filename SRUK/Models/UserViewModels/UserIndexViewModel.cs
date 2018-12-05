@@ -1,27 +1,20 @@
-﻿using System;
+﻿using EntityFrameworkPaginate;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace SRUK.Models
 {
-    public class UserIndexViewModel
+    public class UserIndexViewModel : Page<UserShortDTO>
     {
-        public List<UserShortDTO> User { get; set; }
-
-        public string SortOrder { get; set; }
-
-        public string SearchDegree { get; set; }
-
-        public string SearchFirstName { get; set; }
-
-        public string SearchLastName { get; set; }
-
-        public string SearchOrganisation { get; set; }
-
-        public string SearchEmail { get; set; }
-
-        public string SearchRole { get; set; }
+        public short SortBy { get; set; }
+        public string Degree { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Organisation { get; set; }
+        public string Email { get; set; }
+        public string Role { get; set; }
 
         public string StatusMessage { get; set; }
     }
