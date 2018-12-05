@@ -92,12 +92,12 @@ namespace SRUK.Services
             var usersList = GetUsers();
             IEnumerable<UserShortDTO> results = usersList.ToAsyncEnumerable().ToEnumerable();
 
-            results = !string.IsNullOrEmpty(degree) ? results.Where(u => u.Degree != null && u.Degree.Contains(degree, StringComparison.OrdinalIgnoreCase)) : results;
+            results = !string.IsNullOrEmpty(degree) ? results.Where(u => u.Degree != null && u.Degree == degree) : results;
             results = !string.IsNullOrEmpty(firstName) ? results.Where(u => u.FirstName != null && u.FirstName.Contains(firstName, StringComparison.OrdinalIgnoreCase)) : results;
             results = !string.IsNullOrEmpty(lastName) ? results.Where(u => u.LastName != null && u.LastName.Contains(lastName, StringComparison.OrdinalIgnoreCase)) : results;
             results = !string.IsNullOrEmpty(organisation) ? results.Where(u => u.Organisation != null && u.Organisation.Contains(organisation, StringComparison.OrdinalIgnoreCase)) : results;
             results = !string.IsNullOrEmpty(email) ? results.Where(u => u.Email != null && u.Email.Contains(email, StringComparison.OrdinalIgnoreCase)) : results;
-            results = !string.IsNullOrEmpty(role) ? results.Where(u => u.Role != null && u.Role.Contains(role, StringComparison.OrdinalIgnoreCase)) : results;
+            results = !string.IsNullOrEmpty(role) ? results.Where(u => u.Role != null && u.Role == role) : results;
 
             results = sortBy == 1 ? results.OrderBy(u => u.Degree) : results;
             results = sortBy == 2 ? results.OrderByDescending(u => u.Degree) : results;

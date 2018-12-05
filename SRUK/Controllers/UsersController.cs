@@ -58,27 +58,42 @@ namespace SRUK.Controllers
         public string StatusMessage { get; set; }
 
         // GET: Users
-        public ActionResult Index(UserIndexViewModel model)
+        public ActionResult Index(
+            int currentPage = 1,
+            short sortBy = 0,
+            string degree = "",
+            string firstName = "",
+            string lastName = "",
+            string organisation = "",
+            string email = "",
+            string role = "")
         {
             if (!User.IsInRole("Admin"))
                 return RedirectToAction("Index", "Home");
-            
-
 
             var filteredList = _userRepository.GetFilteredUsers(
-             model.SortBy, model.Degree, model.FirstName, model.LastName, model.Organisation, model.Email, model.Role, model.PageSize, model.CurrentPage);
+             sortBy, degree, firstName, lastName, organisation, email, role, 20, currentPage);
 
-
-            ViewBag.Degrees =   new AcademicDegrees().SelectListItems;
-            ViewBag.Roles = GetRolesSelectListItem();
+            ViewBag.Degrees =   new AcademicDegrees().SelectListItems(degree);
+            ViewBag.Roles = GetRolesSelectListItem(role);
             ViewBag.SortBy = GetUsersSortBySelectListItem();
 
-            model.Results = filteredList.Results;
-            model.CurrentPage = filteredList.CurrentPage;
-            model.PageCount = filteredList.PageCount;
-            model.PageSize = filteredList.PageSize;
-            model.RecordCount = filteredList.RecordCount;
-            model.StatusMessage = StatusMessage;
+            var model = new UserIndexViewModel
+            {
+                Degree = degree,
+                FirstName = firstName,
+                LastName = lastName,
+                Organisation = organisation,
+                Email = email,
+
+
+                Results = filteredList.Results,
+                CurrentPage = filteredList.CurrentPage,
+                PageCount = filteredList.PageCount,
+                PageSize = filteredList.PageSize,
+                RecordCount = filteredList.RecordCount,
+                StatusMessage = StatusMessage
+            };
 
             return View(model);
         }
@@ -113,7 +128,7 @@ namespace SRUK.Controllers
 
             ViewBag.Roles = _roleManager.Roles.ToList();
 
-            ViewBag.Degrees = new AcademicDegrees().SelectListItems;
+            ViewBag.Degrees = new AcademicDegrees().SelectListItems();
             var model = new UserCreateViewModel
             {
                 StatusMessage = StatusMessage
@@ -185,7 +200,7 @@ namespace SRUK.Controllers
             user.Role = _userManager.GetRolesAsync(entityUser).Result.FirstOrDefault();
 
 
-            ViewBag.Degrees = new AcademicDegrees().SelectListItems;
+            ViewBag.Degrees = new AcademicDegrees().SelectListItems();
 
             user.StatusMessage = StatusMessage;
             return View(user);
@@ -220,7 +235,6 @@ namespace SRUK.Controllers
                     }
                 }
 
-                //var user = Mapper.Map<ApplicationUser>(model);
                 user.UserName = model.Email;
                 user.Email = model.Email;
                 user.FirstName = model.FirstName;
@@ -280,9 +294,6 @@ namespace SRUK.Controllers
             try
             {
                 var user = _userManager.FindByIdAsync(id).Result;
-                //await _userManager.RemovePasswordAsync(user);
-                //user = _userManager.FindByIdAsync(id).Result;
-                //var user = Mapper.Map<ApplicationUser>(model);
                 user.UserName = user.Id;
                 user.NormalizedUserName = null;
                 user.NormalizedEmail = null;
@@ -328,6 +339,27 @@ namespace SRUK.Controllers
 
             return result;
         }
+        private List<SelectListItem> GetRolesSelectListItem(string selectedValue)
+        {
+
+            var roles = _roleManager.Roles.ToList();
+
+            var result = new List<SelectListItem>()
+            {
+                new SelectListItem { Text = "Role", Value = "" }
+            };
+
+            foreach (var role in roles)
+            {
+                result.Add(new SelectListItem { Text = role.Name, Value = role.Name });
+            }
+
+            if (selectedValue != null && result.Where(r => r.Value == selectedValue).Count() > 0)
+                result.FirstOrDefault(r => r.Value == selectedValue).Selected = true;
+
+            return result;
+        }
+
         private List<SelectListItem> GetUsersSortBySelectListItem()
         {
 

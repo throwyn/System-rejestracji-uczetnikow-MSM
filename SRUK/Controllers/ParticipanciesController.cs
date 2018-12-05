@@ -182,7 +182,6 @@ namespace SRUK.Controllers
         [Route("MyParticipancies")]
         public ActionResult MyParticipancies()
         {
-
             var userId = _userManager.GetUserId(HttpContext.User);
             var userParticipancies = _participanciesRepository.GetUserParticipancies(userId);
             var model = new MyParticipanciesViewModel()

@@ -45,7 +45,6 @@ namespace SRUK.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl = null)
         {
-            // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             ViewData["ReturnUrl"] = returnUrl;
@@ -60,18 +59,12 @@ namespace SRUK.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
                     return RedirectToLocal(returnUrl);
                 }
-                //if (result.RequiresTwoFactor)
-                //{
-                //    return RedirectToAction(nameof(LoginWith2fa), new { returnUrl, model.RememberMe });
-                //}
                 if (result.IsLockedOut)
                 {
                     _logger.LogWarning("User account locked out.");
@@ -83,8 +76,6 @@ namespace SRUK.Controllers
                     return View(model);
                 }
             }
-
-            // If we got this far, something failed, redisplay form
             return View(model);
         }
         
@@ -101,7 +92,7 @@ namespace SRUK.Controllers
         public IActionResult Register(string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
-            ViewBag.Degrees = new AcademicDegrees().SelectListItems;
+            ViewBag.Degrees = new AcademicDegrees().SelectListItems();
             return View();
         }
 
@@ -119,17 +110,6 @@ namespace SRUK.Controllers
                 {
                     await _userManager.AddToRoleAsync(user, "Participant");
 
-                    //user.Email = model.Email;
-                    //user.FirstName = model.FirstName;
-                    //user.LastName = model.LastName;
-                    //user.Organisation = model.Organisation;
-                    //user.PhoneNumber = model.PhoneNumber;
-                    //user.Degree = model.Degree;
-                    //user.VATID = model.VATID;
-                    //user.SecurityStamp = Guid.NewGuid().ToString();
-
-                    //await _userManager.UpdateAsync(user);
-
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
                     await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
@@ -140,8 +120,6 @@ namespace SRUK.Controllers
                 }
                 AddErrors(result);
             }
-
-            // If we got this far, something failed, redisplay form
             return View(model);
         }
 
@@ -192,9 +170,7 @@ namespace SRUK.Controllers
                     // Don't reveal that the user does not exist or is not confirmed
                     return RedirectToAction(nameof(ForgotPasswordConfirmation));
                 }
-
-                // For more information on how to enable account confirmation and password reset please
-                // visit https://go.microsoft.com/fwlink/?LinkID=532713
+                
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var callbackUrl = Url.ResetPasswordCallbackLink(user.Id, code, Request.Scheme);
                 await _emailSender.SendEmailAsync(model.Email, "Reset Password",

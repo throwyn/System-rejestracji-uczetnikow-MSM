@@ -83,8 +83,6 @@ namespace SRUK.Controllers
         }
 
         // POST: Seasons/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [Route("Create")]
         [ValidateAntiForgeryToken]
@@ -122,16 +120,10 @@ namespace SRUK.Controllers
 
         // GET: Seasons/Edit/5
         [Route("Edit/{id}")]
-        public IActionResult Edit(long? id)
+        public IActionResult Edit(long id)
         {
             if (!User.IsInRole("Admin"))
                 return RedirectToAction("Index", "Home");
-
-            if (id == null)
-            {
-                StatusMessage = "Error. Enter id of season.";
-                return RedirectToAction(nameof(Index));
-            }
 
             var season = _seasonRepository.GetSeason((long)id);
 
@@ -145,12 +137,10 @@ namespace SRUK.Controllers
         }
 
         // POST: Seasons/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [Route("Edit/{id}")]
         [ValidateAntiForgeryToken]
-        public IActionResult EditAsync(SeasonEditViewModel model)
+        public IActionResult Edit(SeasonEditViewModel model)
         {
             if (!User.IsInRole("Admin"))
                 return RedirectToAction("Index", "Home");
@@ -180,16 +170,10 @@ namespace SRUK.Controllers
 
         //// GET: Seasons/Delete/5
         [Route("Delete/{id}")]
-        public IActionResult Delete(long? id)
+        public IActionResult Delete(long id)
         {
             if (!User.IsInRole("Admin"))
                 return RedirectToAction("Index", "Home");
-
-            if (id == null)
-            {
-                StatusMessage = "Error. Enter id of season.";
-                return RedirectToAction(nameof(Index));
-            }
 
             var season = _seasonRepository.GetSeason((long)id);
 

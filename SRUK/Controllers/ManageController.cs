@@ -58,7 +58,7 @@ namespace SRUK.Controllers
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            ViewBag.Degrees = new AcademicDegrees().SelectListItems;
+            ViewBag.Degrees = new AcademicDegrees().SelectListItems();
 
             var model = Mapper.Map<IndexViewModel>(user);
             model.StatusMessage = StatusMessage;

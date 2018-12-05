@@ -10,7 +10,8 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<form class="form-horizontal" role="form" asp-action="Index">
+<form class="form-horizontal" role="form" asp-action="Index" id="form">
+    @Html.Hidden("currentPage", Model.CurrentPage)
     <div class="form-group">
         <div class="form-inline">
             <div class="form-group ">
@@ -20,12 +21,12 @@
             </div>
             <div class="form-group ">
                 <div class="col-lg-12">
-                    <select asp-for="Degree" class="form-control" asp-items="ViewBag.Degrees"></select>
+                    <select name="degree" class="form-control" asp-items="ViewBag.Degrees"></select>
                 </div>
             </div>
             <div class="form-group ">
                 <div class="col-lg-12">
-                    <input asp-for="FirstName" class="form-control" type="text" placeholder="First name" />
+                    <input name="firstName" class="form-control" type="text" value="@Model.FirstName" placeholder="First name" />
                 </div>
             </div>
             <div class="form-group ">
@@ -45,7 +46,7 @@
             </div>
             <div class="form-group ">
                 <div class="col-lg-12">
-                    <select asp-for="Role" class="form-control" asp-items="ViewBag.Roles"></select>
+                    <select name="role" class="form-control" asp-items="ViewBag.Roles"></select>
                 </div>
             </div>
             <div class="form-group" style="margin-left:29px;">
@@ -64,7 +65,7 @@
                 <th style="width:175px;">
                     Degree
                     @if (Model.SortBy == 1)
-                    {<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true"/>}
+                    {<span class="glyphicon glyphicon-sort-by-alphabet" aria-hidden="true" />}
                     @if (Model.SortBy == 2)
                     {<span class="glyphicon glyphicon-sort-by-alphabet-alt" aria-hidden="true" />}
                 </th>
@@ -142,41 +143,41 @@
         </tbody>
     </table>
 
-</form>
 
-<div style="text-align:right; margin-right:5%;">
-    <ul class="pagination">
+    <div style="text-align:right; margin-right:5%;">
+        <ul class="pagination">
 
-        @if (Model.CurrentPage == 1)
-        {
-            <li class="disabled"><a>&laquo;</a></li>
-        }
-        else
-        {
-            <li><a href="#">&laquo;</a></li>
-        }
-        @for (var i = 1; i <= Model.PageCount; i++)
-        {
-            if (i == Model.CurrentPage)
+            @if (Model.CurrentPage == 1)
             {
-                <li class="active"><a>@i</a></li>
+                <li class="disabled"><a>&laquo;</a></li>
             }
             else
             {
-                <li><a href="#">@i</a></li>
+                <li><a href="" onclick="$('#currentPage').val(@(Model.PageCount-1));$('#form').submit();">&laquo;</a></li>
             }
-        }
-        @if (Model.CurrentPage == Model.PageCount)
-        {
-            <li class="disabled"><a>&raquo;</a></li>
-        }
-        else
-        {
-            <li><a href="#">&raquo;</a></li>
-        }
+            @for (var i = 1; i <= Model.PageCount; i++)
+            {
+                if (i == Model.CurrentPage)
+                {
+                    <li class="active"><a>@i</a></li>
+                }
+                else
+                {
+                    <li><a href="" onclick="$('#currentPage').val(@i);$('#form').submit();">@i</a></li>
+                }
+            }
+            @if (Model.CurrentPage == Model.PageCount)
+            {
+                <li class="disabled"><a>&raquo;</a></li>
+            }
+            else
+            {
+                <li><a href="" onclick="$('#currentPage').val(@(Model.PageCount+1));$('#form').submit();">&raquo;</a></li>
+            }
 
-    </ul>
-</div>
+        </ul>
+    </div>
+</form>
 
 
 <style>
