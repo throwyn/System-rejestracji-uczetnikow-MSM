@@ -30,7 +30,7 @@ namespace SRUK.Services
         {
             var entityReview = Mapper.Map<Review>(review);
             _context.Review.Add(entityReview);
-            var result = _context.SaveChangesAsync().Result;
+            var result = _context.SaveChanges();
             return result;
 
         }
