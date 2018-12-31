@@ -94,75 +94,77 @@ namespace SRUK.Controllers
             return View(model);
         }
 
-        // GET: Papers/Create
-        //[Route("Create")]
-        //public IActionResult Create()
-        //{
-        //    if (!User.IsInRole("Admin"))
-        //        return RedirectToAction("Index", "Home");
+        /*CREATE
+         GET: Papers/Create
+        [Route("Create")]
+        public IActionResult Create()
+        {
+            if (!User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Home");
 
-        //    var seasons = _seasonRepository.GetSeasons();
-        //    ViewBag.Seasons = new List<SelectListItem>();
-        //    foreach (var season in seasons)
-        //    {
-        //        ViewBag.Seasons.Add(new SelectListItem { Text = season.Name, Value = season.Id.ToString() });
-        //    };
+            var seasons = _seasonRepository.GetSeasons();
+            ViewBag.Seasons = new List<SelectListItem>();
+            foreach (var season in seasons)
+            {
+                ViewBag.Seasons.Add(new SelectListItem { Text = season.Name, Value = season.Id.ToString() });
+            };
 
 
-        //    var users = _userRepository.GetUsers();
-        //    ViewBag.Users = new List<SelectListItem>();
-        //    foreach (var user in users) {
-        //        ViewBag.Users.Add(new SelectListItem { Text = user.Email, Value = user.Id });
-        //    };
+            var users = _userRepository.GetUsers();
+            ViewBag.Users = new List<SelectListItem>();
+            foreach (var user in users) {
+                ViewBag.Users.Add(new SelectListItem { Text = user.Email, Value = user.Id });
+            };
 
-        //    ViewBag.Statuses = new List<SelectListItem>
-        //    {
-        //        new SelectListItem { Text = "Created", Value = "0" },
-        //        new SelectListItem { Text = "Topic accepted", Value = "1"  },
-        //        new SelectListItem { Text = "Topic rejected", Value = "2"  }
-        //    };
+            ViewBag.Statuses = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Created", Value = "0" },
+                new SelectListItem { Text = "Topic accepted", Value = "1"  },
+                new SelectListItem { Text = "Topic rejected", Value = "2"  }
+            };
 
-        //    var model = new PaperCreateViewModel();
-        //    model.StatusMessage = StatusMessage;
-        //    return View(model);
-        //}
+            var model = new PaperCreateViewModel();
+            model.StatusMessage = StatusMessage;
+            return View(model);
+        }
 
-        // POST: Papers/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[Route("Create")]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult Create(PaperCreateViewModel model)
-        //{
-        //    if (!User.IsInRole("Admin"))
-        //        return RedirectToAction("Index", "Home");
+         POST: Papers/Create
+         To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+         more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [Route("Create")]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(PaperCreateViewModel model)
+        {
+            if (!User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Home");
 
-        //    if (model == null)
-        //    {
-        //        StatusMessage = "Error. Something went wrong.";
-        //        return View(model);
-        //    }
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (_paperRepository.TitleTaken(model.Title).Result)
-        //        {
-        //            StatusMessage = "Error. This title is already taken.";
-        //            return RedirectToAction(nameof(Create));
-        //        }
+            if (model == null)
+            {
+                StatusMessage = "Error. Something went wrong.";
+                return View(model);
+            }
+            if (ModelState.IsValid)
+            {
+                if (_paperRepository.TitleTaken(model.Title).Result)
+                {
+                    StatusMessage = "Error. This title is already taken.";
+                    return RedirectToAction(nameof(Create));
+                }
 
-        //        PaperDTO paper = Mapper.Map<PaperDTO>(model);
-        //        var result = _paperRepository.AddPaperAsync(paper);
-        //        if (result.Result == 1)
-        //        {
-        //            StatusMessage = "Succesfully created.";
-        //            return RedirectToAction(nameof(Index));
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    StatusMessage = "Error. Entered data is not valid.";
-        //    return View(model);
-        //}
+                PaperDTO paper = Mapper.Map<PaperDTO>(model);
+                var result = _paperRepository.AddPaperAsync(paper);
+                if (result.Result == 1)
+                {
+                    StatusMessage = "Succesfully created.";
+                    return RedirectToAction(nameof(Index));
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            StatusMessage = "Error. Entered data is not valid.";
+            return View(model);
+        }
+        */
 
         // GET: Papers/Edit/5
         [Route("Edit/{id}")]
@@ -491,9 +493,19 @@ namespace SRUK.Controllers
                 StatusMessage = "Error. Access denied!";
                 return RedirectToAction(nameof(MyPapers));
             }
+            bool AllReviewsAreCompleted = true;
+            foreach(var version in paper.PaperVersions)
+            {
+                foreach(var review in version.Reviews)
+                {
+                    if (review.OriginalFileName == null)
+                        AllReviewsAreCompleted = false;
+                }
+            }
             var model = Mapper.Map<MyPaperDetailsViewModel>(paper);
             model.StatusMessage = StatusMessage;
             ViewBag.IsRegistrationOpened = _seasonRepository.IsRegistrationOpened();
+            ViewBag.AllReviewsAreCompleted = AllReviewsAreCompleted;
             return View(model);
 
         }

@@ -14,6 +14,7 @@ using SRUK.Models;
 using SRUK.Entities;
 using SRUK.Models.AccountViewModels;
 using SRUK.Services;
+using SRUK.Services.Interfaces;
 
 namespace SRUK.Controllers
 {
@@ -25,13 +26,16 @@ namespace SRUK.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
-
+        private readonly ISeasonRepository _seasonRepository;
+        
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger,
+            ISeasonRepository seasonRepository)
         {
+            _seasonRepository = seasonRepository;
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
@@ -45,8 +49,21 @@ namespace SRUK.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl = null)
         {
+            if (User.Identity.IsAuthenticated)
+                return RedirectToAction("Index", "Home");
+
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
+            var currentSeason = _seasonRepository.GetCurrentSeason();
+            if (currentSeason != null)
+            {
+                ViewBag.Edition = currentSeason.EditionNumber;
+                ViewBag.Year = currentSeason.ConferenceStartDate.Year;
+                ViewBag.Location = currentSeason.Location;
+                ViewBag.ConferenceStartDate = currentSeason.ConferenceStartDate;
+                ViewBag.ConferenceEndDate = currentSeason.ConferenceEndDate;
+
+            }
             ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
@@ -56,6 +73,9 @@ namespace SRUK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
+            if (User.Identity.IsAuthenticated)
+                return RedirectToAction("Index", "Home");
+
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
@@ -91,6 +111,18 @@ namespace SRUK.Controllers
         [AllowAnonymous]
         public IActionResult Register(string returnUrl = null)
         {
+            if (User.Identity.IsAuthenticated)
+                return RedirectToAction("Index", "Home");
+            var currentSeason = _seasonRepository.GetCurrentSeason();
+            if (currentSeason != null)
+            {
+                ViewBag.Edition = currentSeason.EditionNumber;
+                ViewBag.Year = currentSeason.ConferenceStartDate.Year;
+                ViewBag.Location = currentSeason.Location;
+                ViewBag.ConferenceStartDate = currentSeason.ConferenceStartDate;
+                ViewBag.ConferenceEndDate = currentSeason.ConferenceEndDate;
+
+            }
             ViewData["ReturnUrl"] = returnUrl;
             ViewBag.Degrees = new AcademicDegrees().SelectListItems();
             return View();
@@ -101,6 +133,8 @@ namespace SRUK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
         {
+            if (User.Identity.IsAuthenticated)
+                return RedirectToAction("Index", "Home");
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
@@ -154,6 +188,8 @@ namespace SRUK.Controllers
         [AllowAnonymous]
         public IActionResult ForgotPassword()
         {
+            if (User.Identity.IsAuthenticated)
+                return RedirectToAction("Index", "Home");
             return View();
         }
 
@@ -162,6 +198,8 @@ namespace SRUK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
+            if (User.Identity.IsAuthenticated)
+                return RedirectToAction("Index", "Home");
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
@@ -193,6 +231,9 @@ namespace SRUK.Controllers
         [AllowAnonymous]
         public IActionResult ResetPassword(string code = null)
         {
+            if (User.Identity.IsAuthenticated)
+                return RedirectToAction("Index", "Home");
+
             if (code == null)
             {
                 throw new ApplicationException("A code must be supplied for password reset.");
@@ -206,6 +247,9 @@ namespace SRUK.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
+            if (User.Identity.IsAuthenticated)
+                return RedirectToAction("Index", "Home");
+
             if (!ModelState.IsValid)
             {
                 return View(model);

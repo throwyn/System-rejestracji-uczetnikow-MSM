@@ -1,0 +1,26 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "bootstrap-datetimepicker@4.17.47",
+      "destination": "wwwroot/lib/datetimepicker",
+      "files": [
+        "css/bootstrap-datetimepicker.css",
+        "css/bootstrap-datetimepicker-standalone.css",
+        "css/bootstrap-datetimepicker-standalone.min.css",
+        "css/bootstrap-datetimepicker-standalone.min.css.map",
+        "css/bootstrap-datetimepicker.min.css",
+        "js/bootstrap-datetimepicker.min.js"
+
+      ]
+    },
+    {
+      "library": "moment.js@2.22.2",
+      "destination": "wwwroot/lib/moment",
+      "files": [
+        "moment.min.js"
+      ]
+    }
+  ]
+}

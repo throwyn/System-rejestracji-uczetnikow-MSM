@@ -1,4 +1,4 @@
-﻿@model SeasonDeleteViewModel
+﻿@model SeasonDetailsViewModel
 
 @{
     ViewData["Title"] = "Delete";
@@ -18,16 +18,34 @@
             @Html.DisplayFor(model => model.Name)
         </dd>
         <dt>
+            @Html.DisplayNameFor(model => model.EditionNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EditionNumber)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Location)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Location)
+        </dd>
+        <dt>
             @Html.DisplayNameFor(model => model.MainImageFileName)
         </dt>
         <dd>
             @Html.DisplayFor(model => model.MainImageFileName)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.LogoFileName)
+            @Html.DisplayNameFor(model => model.ConferenceStartDate)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.LogoFileName)
+            @Html.DisplayFor(model => model.ConferenceStartDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ConferenceEndDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ConferenceEndDate)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.StartDate)

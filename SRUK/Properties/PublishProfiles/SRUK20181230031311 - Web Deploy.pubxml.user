@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Ten plik jest wykorzystywany przez proces publikowania/pakowania projektu sieci Web. Możesz dostosować zachowanie tego procesu
+ poprzez edycję tego pliku MSBuild. Aby dowiedzieć się więcej o tym działaniu, odwiedź stronę https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAQaw8Ew4HekeERl28sF2O7wAAAAACAAAAAAAQZgAAAAEAACAAAAAMB4VRDlKKlhqycvyi6qMy2GC01g5VBdLdtJmbJcJUcQAAAAAOgAAAAAIAACAAAADgs1xb8t1ox8ehb9/KkKdQjmG+1LyZw1HI6/IcsAbTR4AAAABhoLIZyG/yFU9YF8EhyE3w4qWiRHiEFrylwNCaGTu3LAMDeRCmWeZK8ToVWRF/TloRIUwZqqDt3a0uLsKfOC6JIC42P7zKg1oDMQ9xrk/K6Hg9KvJHH4wMPEA0QZ+3KcwApASskUyu3aE+5Q9Jm1jP+ZaBYCsrq3w5opblGOKHaUAAAABdrTgZx58cvXVILY4UYOCeUgx/NrZRqxsVGFa6S9JicziVCbPv9PIA6U9cGajMJ+eHm2CI9ySmWCRiq7X2SV9K</EncryptedPassword>
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DefaultConnection">
+      <Value>Data Source=tcp:sruk20181230031311dbserver.database.windows.net,1433%3bInitial Catalog=SRUK20181230031311db%3bUser Id=throwyn%40sruk20181230031311dbserver%3bPassword=Mampolakple1</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+</Project>

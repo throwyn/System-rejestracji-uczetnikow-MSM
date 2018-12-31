@@ -8,11 +8,11 @@
 @Html.Partial("_StatusMessage", Model.StatusMessage)
 
 
-@if (ViewBag.CurrentSeason != null)
+@if (ViewBag.CurrentSeason != null && ViewBag.SignedForCurrentSeason == false)
 {
-    <p>
-        <a asp-action="SignUp">Sign up for @ViewBag.CurrentSeason</a>
-    </p>
+<p>
+    <a class="btn btn-default btn-primary" asp-action="SignUp" >Sign up for @ViewBag.CurrentSeason</a>
+</p>
 }
 
 @if (Model.Participancies.Count > 0)
@@ -44,6 +44,7 @@
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Season.Name)
+                    @Html.DisplayFor(modelItem => item.Season.EditionNumber)
                 </td>
                 <td style='color: black; text-align: center; '>
                     @Html.DisplayFor(modelItem => item.ConferenceParticipation)

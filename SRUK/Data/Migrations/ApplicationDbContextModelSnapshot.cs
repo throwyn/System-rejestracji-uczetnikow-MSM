@@ -357,17 +357,24 @@ namespace SRUK.Data.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime>("ConferenceEndDate");
+
+                    b.Property<DateTime>("ConferenceStartDate");
+
                     b.Property<DateTime>("CreationDate")
                         .ValueGeneratedOnAdd()
                         .HasDefaultValueSql("getdate()");
 
                     b.Property<DateTime>("EditDate");
 
+                    b.Property<string>("EditionNumber")
+                        .IsRequired();
+
                     b.Property<DateTime>("EndDate");
 
                     b.Property<bool>("IsDeleted");
 
-                    b.Property<string>("LogoFileName")
+                    b.Property<string>("Location")
                         .IsRequired();
 
                     b.Property<string>("MainImageFileName")

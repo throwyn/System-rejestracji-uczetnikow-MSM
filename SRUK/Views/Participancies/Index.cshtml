@@ -35,6 +35,7 @@
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Season.Name)
+                    @Html.DisplayFor(modelItem => item.Season.EditionNumber)
                 </td>
                 <td>
                     @Html.ActionLink(item.User.FirstName + " " + item.User.LastName, "Details", "Users", new { Id = item.User.Id })

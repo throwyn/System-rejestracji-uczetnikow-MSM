@@ -55,12 +55,30 @@ namespace SRUK.Services
         public int UpdateSeason(SeasonDTO season)
         {
             Season seasonNew = Mapper.Map<Season>(season);
+            var seasons = _context.Season.Where(s => s.IsDeleted != true && s.Id != season.Id);
+            foreach (var existingSeason in seasons)
+            {
+                if (!(seasonNew.EndDate <= existingSeason.StartDate || seasonNew.StartDate >= existingSeason.EndDate))
+                {
+                    return -1;
+                }
+                if (!(seasonNew.ConferenceEndDate <= existingSeason.ConferenceStartDate || seasonNew.ConferenceStartDate >= existingSeason.ConferenceEndDate))
+                {
+                    return -1;
+                }
+            }
             var seasonToUpdate =  _context.Season.Find(season.Id);
-
-            seasonToUpdate.LogoFileName = seasonNew.LogoFileName;
+            
             seasonToUpdate.MainImageFileName = seasonNew.MainImageFileName;
             seasonToUpdate.StartDate = seasonNew.StartDate;
             seasonToUpdate.EndDate = seasonNew.EndDate;
+            seasonToUpdate.ConferenceStartDate = seasonNew.ConferenceStartDate;
+            seasonToUpdate.ConferenceEndDate = seasonNew.ConferenceEndDate;
+            seasonToUpdate.EditionNumber = seasonNew.EditionNumber;
+            seasonToUpdate.Location = seasonNew.Location;
+            seasonToUpdate.IsDeleted = seasonNew.IsDeleted;
+            seasonToUpdate.Name = seasonNew.Name;
+
 
             int result =   _context.SaveChanges();
 
@@ -95,9 +113,12 @@ namespace SRUK.Services
         public SeasonDTO GetCurrentSeason()
         {
             var entitySeason = _context.Season.Where(s => s.StartDate < DateTime.Now && s.EndDate > DateTime.Now).SingleOrDefault();
-
-            var season = Mapper.Map<SeasonDTO>(entitySeason);
-            return season;
+            if(entitySeason != null)
+            {
+                var season = Mapper.Map<SeasonDTO>(entitySeason);
+                return season;
+            }
+            return null;
         }
     }
 }

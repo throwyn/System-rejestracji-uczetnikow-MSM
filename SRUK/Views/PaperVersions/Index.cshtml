@@ -94,7 +94,7 @@
                     {
                         <text> | </text>
                         <a asp-action="Delete" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class="glyphicon glyphicon-trash" aria-hidden="true" data-toggle="tooltip" title="Delete"></span></a><text> | </text>
-                        <a asp-action="RejectVersion" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-remove" aria-hidden="true" data-toggle="tooltip" title="Reject version"></span></a>
+                        <a asp-action="RejectVersion" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-minus" aria-hidden="true" data-toggle="tooltip" title="Reject version"></span></a>
                     }
                     @if (item.Status == 4)
                     {

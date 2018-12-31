@@ -20,6 +20,8 @@ namespace SRUK.Models
         [Display(Name = "Paper publication")]
         public bool Publication { get; set; }
 
+        public DateTime Deadline { get; set; }
+
         public string StatusMessage { get; set; }
     }
 }

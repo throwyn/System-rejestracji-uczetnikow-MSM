@@ -72,7 +72,7 @@ namespace SRUK.Controllers
                 return RedirectToAction("Index", "Home");
 
             var filteredList = _userRepository.GetFilteredUsers(
-             sortBy, degree, firstName, lastName, organisation, email, role, 20, currentPage);
+             sortBy, degree, firstName, lastName, organisation, email, role, 5, currentPage);
 
             ViewBag.Degrees =   new AcademicDegrees().SelectListItems(degree);
             ViewBag.Roles = GetRolesSelectListItem(role);
@@ -236,6 +236,11 @@ namespace SRUK.Controllers
                 }
 
                 user.UserName = model.Email;
+                user.Country = model.Country;
+                user.City = model.City;
+                user.PostalCode = model.PostalCode;
+                user.Address = model.Address;
+                user.OrganisationAdderss = model.OrganisationAdderss;
                 user.Email = model.Email;
                 user.FirstName = model.FirstName;
                 user.LastName = model.LastName;

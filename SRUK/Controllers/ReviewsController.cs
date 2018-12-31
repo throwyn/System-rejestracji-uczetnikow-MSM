@@ -171,7 +171,6 @@ namespace SRUK.Controllers
                 PaperVersionId = version.Id,
                 StatusMessage = StatusMessage
             };
-            ViewBag.DateTimeNow = DateTime.Now.AddMonths(1);
             return View(model);
         }
 
@@ -233,7 +232,7 @@ namespace SRUK.Controllers
                 return RedirectToAction("MyPapers", "Papers");
             }
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            if (review.CriticId != user.Id && review.PaperVersion.Paper.Participancy.User.Id != user.Id && !User.IsInRole("Admin"))
+            if (review.CriticId != user.Id && !User.IsInRole("Admin"))
             {
                 StatusMessage = "Error. You don't have permission to do that.";
                 return RedirectToAction("MyPapers", "Papers");
@@ -241,7 +240,7 @@ namespace SRUK.Controllers
 
             var path = Path.Combine(
                            Directory.GetCurrentDirectory(),
-                           "Files\\Reviews", review.FileName);
+                           "wwwroot\\Reviews", review.FileName);
             if (!System.IO.File.Exists(path))
             {
                 StatusMessage = "Error. This file don't exists.";
@@ -308,7 +307,7 @@ namespace SRUK.Controllers
             {
                 string newFileName = Guid.NewGuid().ToString() + model.File.FileName.Substring(model.File.FileName.Length - 4);
                 var path = Path.Combine(
-                        Directory.GetCurrentDirectory(), "Files\\Reviews",
+                        Directory.GetCurrentDirectory(), "wwwroot\\Reviews",
                         newFileName);
 
                 using (var stream = new FileStream(path, FileMode.Create))
@@ -317,7 +316,7 @@ namespace SRUK.Controllers
                 }
 
                 var review = Mapper.Map<ReviewDTO>(model);
-                review.OriginalFileName = model.File.FileName;
+                review.OriginalFileName = model.File.FileName.Split('\\').Last();
                 review.FileName = newFileName;
                 review.CompletionDate = DateTime.Now;
 

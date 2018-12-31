@@ -13,13 +13,19 @@ namespace SRUK.Models
         public string Name { get; set; }
 
         public string MainImageFileName { get; set; }
-        
-        public string LogoFileName { get; set; }
 
         public DateTime StartDate { get; set; }
         
         public DateTime EndDate { get; set; }
         
+        public DateTime ConferenceStartDate { get; set; }
+        
+        public DateTime ConferenceEndDate { get; set; }
+        
+        public string Location { get; set; }
+        
+        public string EditionNumber { get; set; }
+
         public DateTime CreationDate { get; set; }
         
         public DateTime EditDate { get; set; }

@@ -41,7 +41,7 @@ namespace SRUK
             {
                 AllowedForNewUsers = true,
                 DefaultLockoutTimeSpan = TimeSpan.FromHours(2),
-                MaxFailedAccessAttempts = 2
+                MaxFailedAccessAttempts = 10
             };
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>{options.Lockout = lockoutOptions;})
@@ -113,7 +113,7 @@ namespace SRUK
                 cfg.CreateMap<SeasonCreateViewModel, SeasonDTO>();
                 cfg.CreateMap<SeasonDTO, SeasonEditViewModel>();
                 cfg.CreateMap<SeasonEditViewModel, SeasonDTO>();
-                cfg.CreateMap<SeasonDTO, SeasonDeleteViewModel>();
+                cfg.CreateMap<SeasonDTO, SeasonDetailsViewModel>();
 
                 //Participations
                 cfg.CreateMap<Participancy, ParticipancyDTO>();

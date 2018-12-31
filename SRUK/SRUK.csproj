@@ -18,6 +18,11 @@
     <Compile Remove="Data\Migrations\20181130121302_ChangeUtcTimeToServerTimeMigration.Designer.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Data\Migrations\przywracanieIdentity" />
+    <None Remove="Data\przywracanieIdentity" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.1" />
@@ -112,6 +117,59 @@
   <ItemGroup>
     <Folder Include="Files\Reviews\" />
     <Folder Include="Files\Papers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Papers\02197ff8-1ffa-4102-87eb-bdea476edc19.pdf" />
+    <None Include="wwwroot\Papers\08742631-68e8-4f1a-b8fd-dda71b04a52e.pdf" />
+    <None Include="wwwroot\Papers\2642ce2f-88d1-47dc-b7f8-a261fe03fa13.pdf" />
+    <None Include="wwwroot\Papers\33b34733-4300-418e-a71e-18b59c73546a.pdf" />
+    <None Include="wwwroot\Papers\3a3ede1a-abe5-4baa-9bff-2a13679ead2b.pdf" />
+    <None Include="wwwroot\Papers\4fcae8fd-4f65-4128-8151-eb9df625047e.pdf" />
+    <None Include="wwwroot\Papers\5f9360ed-5e1c-4142-946e-0ff60408e550.pdf" />
+    <None Include="wwwroot\Papers\61040d01-7637-424b-854f-5422c0d9fd24.pdf" />
+    <None Include="wwwroot\Papers\6f9b6cae-6a49-4265-8eaf-86aad1cb4a02.pdf" />
+    <None Include="wwwroot\Papers\710c27db-21e2-41ce-ac65-df116468a880.pdf" />
+    <None Include="wwwroot\Papers\7b3d5fbc-189a-49b4-8b37-ed3906c2424b.pdf" />
+    <None Include="wwwroot\Papers\83e25121-cc4d-4380-a92c-863df7911b0f.pdf" />
+    <None Include="wwwroot\Papers\848cbd83-b924-449b-9e43-3ce982101cb2.pdf" />
+    <None Include="wwwroot\Papers\850eab7f-560d-4984-9d8d-fd1c75f64ad2.pdf" />
+    <None Include="wwwroot\Papers\91a28b50-089c-47e6-a1cb-299a7c551a1d.pdf" />
+    <None Include="wwwroot\Papers\9acad3f6-7a69-4d5f-8115-29d5acbc2473.pdf" />
+    <None Include="wwwroot\Papers\aa43deba-2ad3-4f7c-aa52-2cc87a6b8895.pdf" />
+    <None Include="wwwroot\Papers\ab189eaa-2f2b-4d33-967e-3dc5a29e481d.pdf" />
+    <None Include="wwwroot\Papers\b25a736c-f3c7-460a-9acc-e1d4dff0ccdf.pdf" />
+    <None Include="wwwroot\Papers\b9c1457d-bd28-497c-818b-7f859dfd462f.pdf" />
+    <None Include="wwwroot\Papers\ba8bdfeb-7cb3-421b-9a7a-7c5903218392.pdf" />
+    <None Include="wwwroot\Papers\d5d30034-4ebc-4c37-aade-83e519676483.pdf" />
+    <None Include="wwwroot\Papers\d83b7d70-d62d-45c4-907f-2872a4505c68.pdf" />
+    <None Include="wwwroot\Papers\de54620e-c781-475e-8227-d824b6f403c4.pdf" />
+    <None Include="wwwroot\Papers\efbeb89c-4e03-4b3a-939f-7fd47fe93335.pdf" />
+    <None Include="wwwroot\Papers\fa8de9ea-00e3-4517-81f8-cffbdd018a8a.pdf" />
+    <None Include="wwwroot\Reviews\00490b13-fe5e-4112-92e5-3637a94ec79a.pdf" />
+    <None Include="wwwroot\Reviews\02a03b52-6e34-4a72-9445-09ddb681447d.pdf" />
+    <None Include="wwwroot\Reviews\0b63beb0-2431-4f80-9a6c-f0a9f0071430.pdf" />
+    <None Include="wwwroot\Reviews\0d913d07-1ece-4888-9b61-5b4862458472.pdf" />
+    <None Include="wwwroot\Reviews\12deaf48-7c39-4f32-a856-1ae4ffb36579.pdf" />
+    <None Include="wwwroot\Reviews\198f4194-af4d-48f0-a21a-0f6bb73e4512.pdf" />
+    <None Include="wwwroot\Reviews\1dd39119-2384-4eca-8e6c-24ee30408f62.pdf" />
+    <None Include="wwwroot\Reviews\1f1a2971-cca3-48b1-92b5-c1bde37ac5a4.pdf" />
+    <None Include="wwwroot\Reviews\2f8695db-2a47-498c-a0f2-78a8b8a6bccb.pdf" />
+    <None Include="wwwroot\Reviews\459ce8a5-cdeb-411c-b832-a98f3495fafc.pdf" />
+    <None Include="wwwroot\Reviews\46f6f9e6-1648-4aa7-9110-0af9721a476a.pdf" />
+    <None Include="wwwroot\Reviews\491bad00-6119-4b1d-a18a-ace3eadb1ad6.pdf" />
+    <None Include="wwwroot\Reviews\4a36b4dc-f36f-4ce8-b3a7-6048b61994ef.pdf" />
+    <None Include="wwwroot\Reviews\6718e4e6-f3c2-4811-a9ce-ed1831fbecb4.pdf" />
+    <None Include="wwwroot\Reviews\6ab0bee8-72d3-4c22-bb44-74cdc4f81566.pdf" />
+    <None Include="wwwroot\Reviews\7f342fa2-5e4a-4bfa-a417-265f557cbc06.pdf" />
+    <None Include="wwwroot\Reviews\85cd035f-592b-45f1-8b22-6ae0e364ffaf.pdf" />
+    <None Include="wwwroot\Reviews\8fe67328-6f20-4311-9901-256c24d6e7f4.pdf" />
+    <None Include="wwwroot\Reviews\b0e2c561-89a3-41bf-8a2b-20e2a32a0edb.pdf" />
+    <None Include="wwwroot\Reviews\b93302e2-1baa-4ed7-b288-de39bbe1573d.pdf" />
+    <None Include="wwwroot\Reviews\c975dba2-f09c-4218-9ef9-4381a48b9ebf.pdf" />
+    <None Include="wwwroot\Reviews\d96b8748-0195-41ce-9c5e-7505394aca7f.pdf" />
+    <None Include="wwwroot\Reviews\f8b18874-138c-48a0-aeee-20bd2528173d.pdf" />
+    <None Include="wwwroot\Reviews\fe212bb3-89fc-4b5a-9d83-c4f8c85c74b7.pdf" />
   </ItemGroup>
 
 </Project>

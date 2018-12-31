@@ -20,13 +20,22 @@ namespace SRUK.Entities
         public string MainImageFileName { get; set; }
 
         [Required]
-        public string LogoFileName { get; set; }
-
-        [Required]
         public DateTime StartDate { get; set; }
 
         [Required]
         public DateTime EndDate { get; set; }
+
+        [Required]
+        public DateTime ConferenceStartDate { get; set; }
+
+        [Required]
+        public DateTime ConferenceEndDate { get; set; }
+
+        [Required]
+        public string Location { get; set; }
+
+        [Required]
+        public string EditionNumber { get; set; }
 
         [Required]
         public DateTime CreationDate { get; set; }

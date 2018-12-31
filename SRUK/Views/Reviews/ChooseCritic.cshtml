@@ -60,7 +60,7 @@
     <script type="text/javascript">
         $(function () {
             $('#datetimepickerdeadline').datetimepicker();
-            $('#datetimepickerdeadline').data("DateTimePicker").defaultDate(moment("@ViewBag.DateTimeNow", 'DD.MM.YYYY HH:mm:ss')).format("DD.MM.YYYY HH:mm");
+            $('#datetimepickerdeadline').data("DateTimePicker").defaultDate(moment(new Date().setMonth(new Date().getMonth()+1))).format("DD.MM.YYYY HH:mm");
         });
     </script>
 }

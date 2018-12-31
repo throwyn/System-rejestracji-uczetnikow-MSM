@@ -131,7 +131,7 @@ namespace SRUK.Controllers
                 return RedirectToAction("MyPapers", "Papers");
             }
 
-            if (paper.Status != 1)
+            if (paper.Status != 1 && paper.Status != 5)
             {
                 StatusMessage = "Error. You cannot add new version.";
                 return RedirectToAction("MyPapers", "Papers");
@@ -152,7 +152,7 @@ namespace SRUK.Controllers
             {
                 string newFileName = Guid.NewGuid().ToString() + model.File.FileName.Substring(model.File.FileName.Length - 4);
                 var path = Path.Combine(
-                        Directory.GetCurrentDirectory(), "Files\\Papers",
+                        Directory.GetCurrentDirectory(), "wwwroot\\Papers",
                         newFileName);
 
                 using (var stream = new FileStream(path, FileMode.Create))
@@ -162,7 +162,7 @@ namespace SRUK.Controllers
                 var paperVersion = new PaperVersionDTO
                 {
                     PaperId = model.PaperId,
-                    OriginalFileName = model.File.FileName,
+                    OriginalFileName = model.File.FileName.Split('\\').Last(),
                     FileName = newFileName,
                     Status = 0
                 };
@@ -198,7 +198,7 @@ namespace SRUK.Controllers
 
             var path = Path.Combine(
                            Directory.GetCurrentDirectory(),
-                           "Files\\Papers", paperVersion.FileName);
+                           "wwwroot\\Papers", paperVersion.FileName);
             if (!System.IO.File.Exists(path))
             {
                 StatusMessage = "Error. This file don't exists.";

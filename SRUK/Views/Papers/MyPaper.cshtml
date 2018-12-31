@@ -77,12 +77,12 @@
                     Filename
                 </th>
                 <th>
-                    Comment
+                    Admin's comment
                 </th>
                 <th>
                     Status
                 </th>
-                <th></th>
+                <th style="width:100px;"></th>
             </tr>
         </thead>
         <tbody>
@@ -100,14 +100,14 @@
                         {
                             if (i > 0)
                             {<text>|</text> }
-                        i++;
-                        <a asp-action="Review" asp-controller="Reviews" asp-route-id="@review.Id"><span class="glyphicon glyphicon-text-color" aria-hidden="true" data-toggle="tooltip" title="Review details [@i]"></span></a>
+                            i++;
+                            <a asp-action="Review" asp-controller="Reviews" asp-route-id="@review.Id"><span class="glyphicon glyphicon-text-color" aria-hidden="true" data-toggle="tooltip" title="Review details [@i]"></span></a>
+                        }
                     }
-                }
-                else
-                {
+                    else
+                    {
                     <text>None</text>
-                }
+                    }
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.CreationDate)
@@ -151,8 +151,8 @@
                 </td>
             </tr>
             }
-            @if (!(Model.Status == 3) && !(Model.Status == 4))
-            {
+            @if (((Model.Status == 1) || (Model.Status == 5)) && ViewBag.AllReviewsAreCompleted)
+             {
                 <tr>
                     <td></td>
                     <td></td>
@@ -161,11 +161,12 @@
                     <td></td>
                     <td></td>
                     <td style='color: black; text-align:center;'>
-                        <a asp-action="Add" asp-controller="PaperVersions" asp-route-id="@Model.Id"><span class="glyphicon glyphicon-file" aria-hidden="true" data-toggle="tooltip" title="Add new version"></span></a>
+                        <a class="btn btn-primary" asp-action="Add" asp-controller="PaperVersions" asp-route-id="@Model.Id">Upload new version</a>
 
                     </td>
                 </tr>
-            }
+              }
+                
         </tbody>
     </table>
 

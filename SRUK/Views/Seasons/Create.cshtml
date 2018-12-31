@@ -19,14 +19,43 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="EditionNumber" class="control-label"></label>
+                <input asp-for="EditionNumber" class="form-control" />
+                <span asp-validation-for="EditionNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Location" class="control-label"></label>
+                <input asp-for="Location" class="form-control" />
+                <span asp-validation-for="Location" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="MainImageFileName" class="control-label"></label>
                 <input asp-for="MainImageFileName" class="form-control" />
                 <span asp-validation-for="MainImageFileName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="LogoFileName" class="control-label"></label>
-                <input asp-for="LogoFileName" class="form-control" />
-                <span asp-validation-for="LogoFileName" class="text-danger"></span>
+                <label asp-for="ConferenceStartDate" class="control-label"></label>
+                <div class="form-group">
+                    <div class='input-group date' id='datetimepickerconfstart'>
+                        <input asp-for="ConferenceStartDate" class="form-control" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+                <span asp-validation-for="ConferenceStartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ConferenceEndDate" class="control-label"></label>
+                <div class="form-group">
+                    <div class='input-group date' id='datetimepickerconfend'>
+                        <input asp-for="ConferenceEndDate" class="form-control" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+                <span asp-validation-for="ConferenceEndDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="StartDate" class="control-label"></label>
@@ -62,17 +91,30 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script type="text/javascript">
         $(function () {
+            $('#datetimepickerconfstart').datetimepicker();
+            $('#datetimepickerconfend').datetimepicker({
+                useCurrent: false, //Important! See issue #1075
+            });
+            $('#datetimepickerconfend').data("DateTimePicker").defaultDate(moment(new Date())).format("DD.MM.YYYY HH:mm");
+            $('#datetimepickerconfstart').data("DateTimePicker").defaultDate(moment(new Date())).format("DD.MM.YYYY HH:mm");
+
+            $("#datetimepickerconfstart").on("dp.change", function (e) {
+                $('#datetimepickerconfend').data("DateTimePicker").minDate(e.date);
+            });
+            $("#datetimepickerconfend").on("dp.change", function (e) {
+                $('#datetimepickerconfstart').data("DateTimePicker").maxDate(e.date);
+            });
+
             $('#datetimepickerstart').datetimepicker();
             $('#datetimepickerend').datetimepicker({
                 useCurrent: false, //Important! See issue #1075
             });
-            $('#datetimepickerend').data("DateTimePicker").defaultDate(moment("@Model.EndDate.ToString()", 'DD.MM.YYYY HH:mm:ss')).format("DD.MM.YYYY HH:mm");
-            $('#datetimepickerstart').data("DateTimePicker").defaultDate(moment("@Model.StartDate.ToString()", 'DD.MM.YYYY HH:mm:ss')).format("DD.MM.YYYY HH:mm");
+            $('#datetimepickerend').data("DateTimePicker").defaultDate(moment(new Date())).format("DD.MM.YYYY HH:mm");
+            $('#datetimepickerstart').data("DateTimePicker").defaultDate(moment(new Date())).format("DD.MM.YYYY HH:mm");
 
             $("#datetimepickerstart").on("dp.change", function (e) {
                 $('#datetimepickerend').data("DateTimePicker").minDate(e.date);

@@ -11,70 +11,100 @@
             <h4>Create a new account.</h4>
             <hr />
             <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group col-md-12">
+            <div class="form-group">
                 <label asp-for="Email"></label>
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
-            <div class="form-group col-md-12">
+            <div class="form-group">
                 <label asp-for="Password"></label>
                 <input asp-for="Password" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
-            <div class="form-group col-md-12">
+            <div class="form-group">
                 <label asp-for="ConfirmPassword"></label>
                 <input asp-for="ConfirmPassword" class="form-control" />
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
             @*<div class="form-group col-md-12">
-                <label asp-for="Degree"></label>
-                <select asp-for="Degree" class="form-control" asp-items="ViewBag.Degrees"></select>
-                <span asp-validation-for="Degree" class="text-danger"></span>
-            </div>
-            <div class="form-group col-md-6">
-                <label asp-for="FirstName"></label>
-                <input asp-for="FirstName" class="form-control" />
-                <span asp-validation-for="FirstName" class="text-danger"></span>
-            </div>
-            <div class="form-group col-md-6">
-                <label asp-for="LastName"></label>
-                <input asp-for="LastName" class="form-control" />
-                <span asp-validation-for="LastName" class="text-danger"></span>
-            </div>
-            <div class="form-group col-md-12">
-                <label asp-for="Organisation"></label>
-                <input asp-for="Organisation" class="form-control" />
-                <span asp-validation-for="Organisation" class="text-danger"></span>
-            </div>
-            <div class="form-group col-md-12">
-                <label asp-for="VATID"></label>
-                <input asp-for="VATID" class="form-control" />
-                <span asp-validation-for="VATID" class="text-danger"></span>
-            </div>
-            <div class="form-group col-md-12">
-                <label asp-for="PhoneNumber"></label>(not required)
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-            </div>*@
-            <div class="form-group col-md-12">
+                    <label asp-for="Degree"></label>
+                    <select asp-for="Degree" class="form-control" asp-items="ViewBag.Degrees"></select>
+                    <span asp-validation-for="Degree" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="FirstName"></label>
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label asp-for="LastName"></label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-12">
+                    <label asp-for="Organisation"></label>
+                    <input asp-for="Organisation" class="form-control" />
+                    <span asp-validation-for="Organisation" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-12">
+                    <label asp-for="VATID"></label>
+                    <input asp-for="VATID" class="form-control" />
+                    <span asp-validation-for="VATID" class="text-danger"></span>
+                </div>
+                <div class="form-group col-md-12">
+                    <label asp-for="PhoneNumber"></label>(not required)
+                    <input asp-for="PhoneNumber" class="form-control" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>*@
+            <div class="form-group">
                 <a class="btn btn-default" asp-area="" asp-controller="Home" asp-action="Index">
                     Go back
                 </a>
                 <button type="submit" class="btn btn-default">Register</button>
             </div>
-            <div class="form-group col-md-12">
+            <div class="form-group">
                 <p>
                     <a asp-action="Login">Have an account?</a>
                 </p>
             </div>
         </form>
     </div>
-    <div class="col-md-6 col-md-push-1">
+    <div class="col-md-8">
 
-        <img src="~/images/logo_msm_en.png" alt="MSM" class="img-responsive" />
+        <div class="col-md-10 header">
+            <img src="~/images/logo_pl.png" alt="MSM" class="img-responsive  center-block" />
+            <div class="carousel-caption" role="option">
+            </div>
+            @if (@ViewBag.Edition != null)
+            {
+                <h2>@ViewBag.Edition International Seminar of Metrology</h2>
+                <h3>ISM'@ViewBag.Year</h3>
+                <h3>@ViewBag.Location</h3>
+                <h4>
+                    @if (ViewBag.ConferenceStartDate.Month == ViewBag.ConferenceEndDate.Month)
+                    {
+                        @ViewBag.ConferenceStartDate.Day <text> - </text> @ViewBag.ConferenceEndDate.ToString("d MMMM yyyy")
+                    }
+                    else
+                    {
+                        @ViewBag.ConferenceStartDate.ToString("d MMMM") <text> - </text> @ViewBag.ConferenceEndDate.ToString("d MMMM yyyy")
+                    }
+                </h4>
+            }
+            else
+            {
+                <h3>International Seminar of Metrology</h3>
+            }
+        </div>
     </div>
 </div>
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
 }
+
+<style>
+    .header {
+        text-align: center;
+    }
+</style>

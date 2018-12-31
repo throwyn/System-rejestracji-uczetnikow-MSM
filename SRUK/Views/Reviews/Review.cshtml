@@ -16,12 +16,6 @@
                 @if (Model.OriginalFileName != null)
                 {
                     <dt>
-                        @Html.DisplayNameFor(model => model.OriginalFileName)
-                    </dt>
-                    <dd>
-                        <a asp-action="Download" asp-controller="Reviews" asp-route-id="@Model.Id">@Model.OriginalFileName <span class="glyphicon glyphicon-download-alt" aria-hidden="true" data-toggle="tooltip" title="Download review"></span></a>
-                    </dd>
-                    <dt>
                         @Html.DisplayNameFor(model => model.IsPositive)
                     </dt>
                     <dd>

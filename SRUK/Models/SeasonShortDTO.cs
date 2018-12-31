@@ -9,20 +9,25 @@ namespace SRUK.Models
     public class SeasonShortDTO
     {
         public long Id { get; set; }
-
+        
         public string Name { get; set; }
 
         public string MainImageFileName { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:g}")]
+        public DateTime ConferenceStartDate { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:g}")]
+        public DateTime ConferenceEndDate { get; set; }
         
-        public string LogoFileName { get; set; }
+        public string Location { get; set; }
+        
+        public string EditionNumber { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:g}")]
         public DateTime StartDate { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:g}")]
         public DateTime EndDate { get; set; }
-
-        [DisplayFormat(DataFormatString = "{0:g}")]
-        public DateTime CreationDate { get; set; }
     }
 }

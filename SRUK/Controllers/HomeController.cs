@@ -5,13 +5,31 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SRUK.Models;
+using SRUK.Services.Interfaces;
 
 namespace SRUK.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ISeasonRepository _seasonRepository;
+
+        public HomeController(ISeasonRepository seasonRepository)
+        {
+            _seasonRepository = seasonRepository;
+        }
+
         public IActionResult Index()
         {
+            var currentSeason = _seasonRepository.GetCurrentSeason();
+            if (currentSeason != null)
+            {
+                ViewBag.Edition = currentSeason.EditionNumber;
+                ViewBag.Year = currentSeason.ConferenceStartDate.Year;
+                ViewBag.Location = currentSeason.Location;
+                ViewBag.ConferenceStartDate = currentSeason.ConferenceStartDate;
+                ViewBag.ConferenceEndDate = currentSeason.ConferenceEndDate;
+                
+            }
             return View();
         }
 

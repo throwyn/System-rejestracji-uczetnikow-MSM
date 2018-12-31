@@ -7,9 +7,6 @@
 <h2>Papers</h2>
 @Html.Partial("_StatusMessage", Model.StatusMessage)
 
-<p>
-    <a asp-action="Create"></a>Create new
-</p>
 @if (Model.Papers.Count > 0)
 {
     <table class="table table-hover">
@@ -42,7 +39,7 @@
             {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Participancy.Season.Name)
+                    @Html.DisplayFor(modelItem => item.Participancy.Season.EditionNumber)
                 </td>
                 <td>
                     @Html.ActionLink(item.Title, "Details", "Papers", new { Id = item.Id })

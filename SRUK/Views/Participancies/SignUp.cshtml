@@ -9,6 +9,10 @@
 
 <h4>Participation</h4>
 <hr />
+<div class="alert alert-info alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    Registration is available until @Model.Deadline.ToString("d.MM.yyyy")
+</div>
 <div class="row">
     <div class="col-md-6">
         <form asp-action="SignUp">
@@ -21,7 +25,7 @@
                 <label asp-for="Publication" class="control-label col-md-3"></label>
                 @Html.CheckBoxFor(m => m.Publication, new { @class = "col-md-2" })
             </div>
-            It is mandatory for the conference participants to complete the <a asp-controller="Manage" asp-action="Index">profile</a>.
+            <b>It is mandatory for the conference participants to complete the <a asp-controller="Manage" asp-action="Index">profile</a>.</b>
             <div class="form-group">
                 <input type="submit" value="Sign up" class="btn btn-default" />
             </div>

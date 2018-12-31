@@ -21,90 +21,53 @@
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
-
+        <link rel="stylesheet" href="~/lib/datetimepicker/css/bootstrap-datetimepicker.css" />
     </environment>
 </head>
 <body>
     @if (SignInManager.IsSignedIn(User))
     {
-        if (User.IsInRole("Admin"))
-        {
-            <nav class="navbar navbar-inverse navbar-fixed-top">
-                <div class="container">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">MSM</a>
-                    </div>
-                    <div class="navbar-collapse collapse">
-                        <ul class="nav navbar-nav">
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">ISM</a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        @if (User.IsInRole("Admin"))
+                        {
                             <li><a asp-area="" asp-controller="Participancies" asp-action="MyParticipancies">Participancies</a></li>
                             <li><a asp-area="" asp-controller="Papers" asp-action="MyPapers">My Papers</a></li>
                             <li><a asp-area="" asp-controller="Reviews" asp-action="MyReviews">My Reviews</a></li>
-                            <li></li>
                             <li><a asp-area="" asp-controller="Users" asp-action="Index">Users</a></li>
                             <li><a asp-area="" asp-controller="Participancies" asp-action="Index">Participants</a></li>
                             <li><a asp-area="" asp-controller="Papers" asp-action="Index">Papers</a></li>
                             <li><a asp-area="" asp-controller="PaperVersions" asp-action="Index">Versions</a></li>
                             <li><a asp-area="" asp-controller="Reviews" asp-action="Index">Reviews</a></li>
                             <li><a asp-area="" asp-controller="Seasons" asp-action="Index">Seasons</a></li>
-                        </ul>
-                        @await Html.PartialAsync("_LoginPartial")
-                    </div>
-                </div>
-            </nav>
-        }
-        else if (User.IsInRole("Critic"))
-        {
-            <nav class="navbar navbar-inverse navbar-fixed-top">
-                <div class="container">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">MSM</a>
-                    </div>
-                    <div class="navbar-collapse collapse">
-                        <ul class="nav navbar-nav">
+                        }
+                        else if (User.IsInRole("Critic"))
+                        {
                             <li><a asp-area="" asp-controller="Participancies" asp-action="MyParticipancies">Participancies</a></li>
                             <li><a asp-area="" asp-controller="Papers" asp-action="MyPapers">My Papers</a></li>
                             <li><a asp-area="" asp-controller="Reviews" asp-action="MyReviews">My Reviews</a></li>
-                        </ul>
-                        @await Html.PartialAsync("_LoginPartial")
-                    </div>
-                </div>
-            </nav>
-        }
-        else
-        {
-            <nav class="navbar navbar-inverse navbar-fixed-top">
-                <div class="container">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">MSM</a>
-                    </div>
-                    <div class="navbar-collapse collapse">
-                        <ul class="nav navbar-nav">
+                        }
+                        else
+                        {
                             <li><a asp-area="" asp-controller="Participancies" asp-action="MyParticipancies">Participancies</a></li>
                             <li><a asp-area="" asp-controller="Papers" asp-action="MyPapers">My Papers</a></li>
-                        </ul>
-                        @await Html.PartialAsync("_LoginPartial")
-                    </div>
+                        }
+                    </ul>
+                    @await Html.PartialAsync("_LoginPartial")
                 </div>
-            </nav>
-        }
+            </div>
+        </nav>
     }
     @*else
         {
@@ -118,7 +81,7 @@
         @RenderBody()
         <hr />
         <footer style="text-align:right;">
-            <p>&copy; 2018 - Registration System For Conference Participants</p>
+            <p>&copy; 2019 - Registration System For Conference Participants</p>
         </footer>
     </div>
 
@@ -143,6 +106,8 @@
                 integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
+        <script src="~/lib/moment/moment.min.js"></script>
+        <script src="~/lib/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
     </environment>
     @RenderSection("Scripts", required: false)
 </body>

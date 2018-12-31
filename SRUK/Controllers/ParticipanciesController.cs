@@ -81,16 +81,22 @@ namespace SRUK.Controllers
         public ActionResult SignUp()
         {
             var userId = _userManager.GetUserId(HttpContext.User);
-            var currentSeason = _seasonRepository.GetCurrentSeason().Name;
+            var currentSeason = _seasonRepository.GetCurrentSeason();
             if (currentSeason == null)
             {
-                StatusMessage = "Signing up is forbidden for now.";
+                StatusMessage = "Error. Signing up is forbidden for now.";
+                return RedirectToAction("MyParticipancies");
+            }
+            if (_participanciesRepository.GetUserCurrentParticipancy(userId) != null)
+            {
+                StatusMessage = "Error. You are already signed up!.";
                 return RedirectToAction("MyParticipancies");
             }
             var model = new ParticipancySignUpViewModel()
             {
-                SeasonName = currentSeason,
-                StatusMessage = StatusMessage
+                SeasonName = currentSeason.Name + " " + currentSeason.EditionNumber,
+                StatusMessage = StatusMessage,
+                Deadline = currentSeason.EndDate
             };
             return View(model);
         }
@@ -106,12 +112,17 @@ namespace SRUK.Controllers
                 var currentSeason = _seasonRepository.GetCurrentSeason();
                 if (currentSeason == null)
                 {
-                    StatusMessage = "Signing up is forbidden for now.";
+                    StatusMessage = "Error. Signing up is forbidden for now.";
+                    return RedirectToAction("MyParticipancies");
+                }
+                if (_participanciesRepository.GetUserCurrentParticipancy(userId) != null)
+                {
+                    StatusMessage = "Error. You are already signed up!.";
                     return RedirectToAction("MyParticipancies");
                 }
                 var participancy = Mapper.Map<ParticipancyDTO>(model);
                 participancy.UserId = userId;
-                participancy.SeasonId = _seasonRepository.GetCurrentSeasonId();
+                participancy.SeasonId = currentSeason.Id;
                 var result = _participanciesRepository.AddParticipancy(participancy);
                 if (result == 1)
                 {
@@ -129,20 +140,21 @@ namespace SRUK.Controllers
         public ActionResult Edit(long id)
         {
             var userId = _userManager.GetUserId(HttpContext.User);
-            var currentSeason = _seasonRepository.GetCurrentSeason().Name;
-            if (currentSeason == null)
-            {
-                StatusMessage = "Error. Editing is forbidden for now.";
-                return RedirectToAction("MyParticipancies");
-            }
             var participation = _participanciesRepository.GetParticipancy(id);
             if(participation.UserId != userId)
             {
                 StatusMessage = "Error, you don't have permission to do that.";
                 return RedirectToAction("MyParticipancies");
             }
+            var season = _seasonRepository.GetSeason(participation.SeasonId);
+            var currentSeason = _seasonRepository.GetCurrentSeason();
+            if (season == null || season.Id != currentSeason.Id)
+            {
+                StatusMessage = "Error. Editing is forbidden for now.";
+                return RedirectToAction("MyParticipancies");
+            }
             var model = Mapper.Map<ParticipancyEditViewModel>(participation);
-            model.SeasonName = currentSeason;
+            model.SeasonName = currentSeason.Name + " " + currentSeason.EditionNumber;
             return View(model);
         }
 
@@ -184,13 +196,17 @@ namespace SRUK.Controllers
         {
             var userId = _userManager.GetUserId(HttpContext.User);
             var userParticipancies = _participanciesRepository.GetUserParticipancies(userId);
+            var currentSeason = _seasonRepository.GetCurrentSeason();
             var model = new MyParticipanciesViewModel()
             {
                 Participancies = userParticipancies.ToList(),
                 StatusMessage = StatusMessage
             };
-            if(_participanciesRepository.UserCanSignToCurrentSeason(userId))
-                ViewBag.CurrentSeason = _seasonRepository.GetCurrentSeason().Name;
+            if (currentSeason != null)
+            {
+                ViewBag.CurrentSeason = currentSeason.Name + " " + currentSeason.EditionNumber;
+                ViewBag.SignedForCurrentSeason = _participanciesRepository.GetUserCurrentParticipancy(userId)!=null?true:false;
+            }
             return View(model);
         }
 

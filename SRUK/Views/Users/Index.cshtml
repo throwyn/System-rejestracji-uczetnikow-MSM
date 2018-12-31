@@ -8,54 +8,22 @@
 @Html.Partial("_StatusMessage", Model.StatusMessage)
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn btn-sm btn-primary" asp-action="Create">Add new</a>
 </p>
 <form class="form-horizontal" role="form" asp-action="Index" id="form">
     @Html.Hidden("currentPage", Model.CurrentPage)
-    <div class="form-group">
-        <div class="form-inline">
-            <div class="form-group ">
-                <div class="col-lg-12">
-                    <button type="submit" class="form-control "><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
-                </div>
+    <p>
+            <div class="form-inline">
+                        <button type="submit" class="form-control "><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                        <select name="degree" class="form-control" asp-items="ViewBag.Degrees"></select>
+                        <input name="firstName" class="form-control" type="text" value="@Model.FirstName" placeholder="First name"style="width:130px;"  />
+                        <input asp-for="LastName" class="form-control" type="text" placeholder="Last name"style="width:130px;"  />
+                        <input asp-for="Organisation" class="form-control" type="text" placeholder="Organisation"/>
+                        <input asp-for="Email" class="form-control" type="text" placeholder="Email" style="width:150px;" />
+                        <select name="role" class="form-control" asp-items="ViewBag.Roles"></select>
+                        <select asp-for="SortBy" class="form-control" asp-items="ViewBag.SortBy"></select>
             </div>
-            <div class="form-group ">
-                <div class="col-lg-12">
-                    <select name="degree" class="form-control" asp-items="ViewBag.Degrees"></select>
-                </div>
-            </div>
-            <div class="form-group ">
-                <div class="col-lg-12">
-                    <input name="firstName" class="form-control" type="text" value="@Model.FirstName" placeholder="First name" />
-                </div>
-            </div>
-            <div class="form-group ">
-                <div class="col-lg-12">
-                    <input asp-for="LastName" class="form-control" type="text" placeholder="Last name" />
-                </div>
-            </div>
-            <div class="form-group ">
-                <div class="col-lg-12">
-                    <input asp-for="Organisation" class="form-control" type="text" placeholder="Organisation" />
-                </div>
-            </div>
-            <div class="form-group ">
-                <div class="col-lg-12">
-                    <input asp-for="Email" class="form-control" type="text" placeholder="Email" />
-                </div>
-            </div>
-            <div class="form-group ">
-                <div class="col-lg-12">
-                    <select name="role" class="form-control" asp-items="ViewBag.Roles"></select>
-                </div>
-            </div>
-            <div class="form-group" style="margin-left:29px;">
-                <div class="col-lg-12">
-                    <select asp-for="SortBy" class="form-control" asp-items="ViewBag.SortBy"></select>
-                </div>
-            </div>
-        </div>
-    </div>
+    </p>
     <table class="table table-hover" style=" width: 100%; word-wrap:break-word;
              table-layout: fixed;">
         <thead>

@@ -62,8 +62,9 @@ namespace SRUK.Controllers
                 StatusMessage = "Error. Season do not exists.";
                 return RedirectToAction(nameof(Index));
             }
+            var model = Mapper.Map<SeasonDetailsViewModel>(season);
 
-            return View(season);
+            return View(model);
         }
 
         // GET: Seasons/Create
@@ -75,8 +76,6 @@ namespace SRUK.Controllers
 
             var model = new SeasonCreateViewModel
             {
-                StartDate = DateTime.Now,
-                EndDate = DateTime.Now,
                 StatusMessage = StatusMessage
             };
             return View(model);
@@ -183,7 +182,7 @@ namespace SRUK.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var model = Mapper.Map<SeasonDeleteViewModel>(season);
+            var model = Mapper.Map<SeasonDetailsViewModel>(season);
             return View(model);
         }
 
