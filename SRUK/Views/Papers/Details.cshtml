@@ -153,13 +153,19 @@
                     @Html.DisplayFor(modelItem => item.CreationDate)
                 </td>
                 <td style='color: black; text-align:center;'>
-                    <a asp-action="Download" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a><text> | </text>
-                    <a asp-action="ChooseCritic" asp-controller="Reviews" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-user " aria-hidden="true" data-toggle="tooltip" title="Choose critic"></span></a>
+                    <a asp-action="Download" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span></a>
+                    @if (item.Reviews.Where(r => r.Recommendation == 5).Count() == 1)
+                    {
+                        <text>|</text>
+                        <a asp-action="AddCritic" asp-controller="Reviews" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-user " aria-hidden="true" data-toggle="tooltip" title="Add critic"></span></a>
+
+                    }
                     @if (item.Status == 0)
                     {
                         <text>|</text>
+                        <a asp-action="ChooseCritic" asp-controller="Reviews" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-user " aria-hidden="true" data-toggle="tooltip" title="Choose critic"></span></a><text>|</text>
                         <a asp-action="Delete" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class="glyphicon glyphicon-trash" ifia-hidden="true"></span></a><text>|</text>
-                        <a asp-action="RejectVersion" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-remove" aria-hidden="true" data-toggle="tooltip" title="Reject version"></span></a>
+                        <a asp-action="RejectVersion" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-minus" aria-hidden="true" data-toggle="tooltip" title="Reject version"></span></a>
 
                     }
                 </td>

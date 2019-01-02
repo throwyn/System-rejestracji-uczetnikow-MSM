@@ -34,6 +34,14 @@ namespace SRUK.Services
             return result;
 
         }
+        public int CreateReviews(IEnumerable<ReviewDTO> reviews)
+        {
+            var entityReviews = Mapper.Map<IEnumerable<Review>>(reviews);
+            _context.Review.AddRange(entityReviews);
+            var result = _context.SaveChanges();
+            return result;
+
+        }
         public IEnumerable<ReviewShortDTO> GetUserReviews(string userId)
         {
             var entityReviews = _context.Review.Include(r => r.PaperVersion).Include(r => r.PaperVersion.Paper).Include(r => r.PaperVersion.Paper.Participancy).Include(r => r.PaperVersion.Paper.Participancy.User).Where(r => r.CriticId == userId);
@@ -60,14 +68,11 @@ namespace SRUK.Services
             entityReview.FileName = review.FileName;
             entityReview.OriginalFileName = review.OriginalFileName;
 
-            entityReview.EditorialErrors = review.EditorialErrors;
-            entityReview.TechnicalErrors = review.TechnicalErrors;
-            entityReview.RepeatReview = review.RepeatReview;
-            entityReview.Unsuitable = review.Unsuitable;
-            entityReview.IsPositive = review.IsPositive;
+            entityReview.Recommendation = review.Recommendation;
             entityReview.CompletionDate = review.CompletionDate;
 
-            entityReview.Comment = review.Comment;
+            entityReview.CommentForAdmin = review.CommentForAdmin;
+            entityReview.CommentForAuthor = review.CommentForAuthor;
             var result = _context.SaveChanges();
             return result;
         }

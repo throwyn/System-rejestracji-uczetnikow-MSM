@@ -11,17 +11,25 @@ namespace SRUK.Models
         TopicAccepted = 1,
         TopicRejected = 2,
         Accepted = 3,
-        Discarded = 4,
-        SmallMistakes = 5
+        Discarded = 4
     }
 
     public enum PaperVersionStatus
     {
         DocumentReceived = 0,
-        WaitingForReview = 1,
+        WaitingForReviews = 1,
         Accepted = 2,
         Rejected = 3,
-        WaitingForVerdict = 4,
-        SmallMistakes = 5
+        MinorRevision = 4,
+        MajorRevision = 5
+    }
+    public enum ReviewRecommendationStatus
+    {
+        Created = 0,
+        Canceled = 1,
+        Accepted = 2,
+        AcceptedWithMinorChanges = 3,
+        MajorRevision = 4,
+        Rejected = 5
     }
 }

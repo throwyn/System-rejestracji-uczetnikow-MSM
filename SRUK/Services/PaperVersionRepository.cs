@@ -71,11 +71,11 @@ namespace SRUK.Services
         {
             return  SetStatus(id, 3);
         }
-        public int SetStatusWaitingForVerdict(long id)
+        public int SetStatusMinorRevision(long id)
         {
             return  SetStatus(id, 4);
         }
-        public int SetStatusSmallMistakes(long id)
+        public int SetStatusMajorRevision(long id)
         {
             return  SetStatus(id, 5);
         }

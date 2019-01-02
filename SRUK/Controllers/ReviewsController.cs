@@ -132,9 +132,6 @@ namespace SRUK.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            //if (User.IsInRole("Admin") || review.CriticId == user.Id)
-            //    return RedirectToAction("Details", "Reviews", new { id });
-
             if (user.Id != review.PaperVersion.Paper.Participancy.User.Id)
                 return RedirectToAction("Index", "Home");
 
@@ -142,11 +139,87 @@ namespace SRUK.Controllers
             model.StatusMessage = StatusMessage;
             return View(model);
         }
+        // GET: AddCritic/{id}
+        [HttpGet]
+        [Route("AddCritic/{id}")]
+        public IActionResult AddCritic(long id)
+        {
+            if (!User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Home");
+
+            var version = _paperVersionRepository.GetPaperVersion(id);
+
+            if (version == null)
+            {
+                StatusMessage = "Error. Paper do not exists.";
+                return RedirectToAction("Index", "PaperVersions");
+            }
+            var users = _userRepository.GetAdminsAndCritics();
+            ViewBag.Critics = new List<SelectListItem>();
+            foreach (var user in users)
+            {
+                ViewBag.Critics.Add(new SelectListItem { Text = user.Degree + " " + user.FirstName + " " + user.LastName + " (" + user.Email + ')', Value = user.Id });
+            };
+
+            var model = new AddCriticViewModel()
+            {
+                PaperVersion = version,
+                PaperVersionId = version.Id,
+                StatusMessage = StatusMessage
+            };
+            return View(model);
+        }
+
+        // POST: AddCritic/{id}
+        [HttpPost]
+        [Route("AddCritic/{id}")]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddCritic(AddCriticViewModel model)
+        {
+            if (!User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Home");
+
+            if (ModelState.IsValid)
+            {
+
+                var version = _paperVersionRepository.GetPaperVersion(model.PaperVersionId);
+                if (version == null)
+                {
+                    StatusMessage = "Error. Paper do not exists.";
+                    return RedirectToAction("Index", "PaperVersions");
+                }
+                var critic = _userRepository.GetApplicationUser(model.CriticId);
+                if (!_userManager.IsInRoleAsync(critic, "Critic").Result && !_userManager.IsInRoleAsync(critic, "Admin").Result)
+                {
+                    StatusMessage = "Error. This user cannot become a  critic!";
+                    return RedirectToAction("Index", "PaperVersions");
+                }
+                
+                var review = new ReviewDTO
+                {
+                    CriticId = model.CriticId,
+                    PaperVersionId = model.PaperVersionId,
+                    Deadline = model.Deadline
+                };
+                
+                var result = _reviewRepository.CreateReview(review);
+                if (result == 1)
+                {
+                    _paperVersionRepository.SetStatusWaitingForReview(model.PaperVersionId);
+
+                    StatusMessage = "Critic has been choosen.";
+                    return RedirectToAction("Index", "PaperVersions");
+                }
+
+            }
+            StatusMessage = "Error. Entered data is not valid.";
+            return RedirectToAction("Index", "PaperVersions");
+        }
 
         // GET: ChooseCritic/{id}
         [HttpGet]
-        [Route("ChooseCritic/{id}")]
-        public IActionResult ChooseCritic(long id)
+        [Route("ChooseCritics/{id}")]
+        public IActionResult ChooseCritics(long id)
         {
             if (!User.IsInRole("Admin"))
                 return RedirectToAction("Index", "Home");
@@ -165,7 +238,7 @@ namespace SRUK.Controllers
                 ViewBag.Critics.Add(new SelectListItem { Text = user.Degree+" "+user.FirstName+" "+user.LastName+" ("+user.Email+')', Value = user.Id });
             };
 
-            var model = new ChooseCriticViewModel()
+            var model = new ChooseCriticsViewModel()
             {
                 PaperVersion = version,
                 PaperVersionId = version.Id,
@@ -176,9 +249,9 @@ namespace SRUK.Controllers
 
         // POST: ChooseCritic/{id}
         [HttpPost]
-        [Route("ChooseCritic/{id}")]
+        [Route("ChooseCritics/{id}")]
         [ValidateAntiForgeryToken]
-        public IActionResult ChooseCritic(ChooseCriticViewModel model)
+        public IActionResult ChooseCritics(ChooseCriticsViewModel model)
         {
             if (!User.IsInRole("Admin"))
                 return RedirectToAction("Index", "Home");
@@ -192,26 +265,42 @@ namespace SRUK.Controllers
                     StatusMessage = "Error. Paper do not exists.";
                     return RedirectToAction("Index", "PaperVersions");
                 }
-                var critic = _userRepository.GetApplicationUser(model.CriticId);
-                if(!_userManager.IsInRoleAsync(critic,"Critic").Result && !_userManager.IsInRoleAsync(critic, "Admin").Result)
+                var firstCritic = _userRepository.GetApplicationUser(model.FirstCriticId);
+                var secondCritic = _userRepository.GetApplicationUser(model.SecondCriticId);
+                if (!_userManager.IsInRoleAsync(firstCritic, "Critic").Result && !_userManager.IsInRoleAsync(firstCritic, "Admin").Result)
                 {
-                    StatusMessage = "Error. This user cannot become a  critic!";
+                    StatusMessage = "Error. First user cannot become a  critic!";
+                    return RedirectToAction("Index", "PaperVersions");
+                }
+                if (!_userManager.IsInRoleAsync(secondCritic, "Critic").Result && !_userManager.IsInRoleAsync(secondCritic, "Admin").Result)
+                {
+                    StatusMessage = "Error. Second user cannot become a  critic!";
                     return RedirectToAction("Index", "PaperVersions");
                 }
 
-                var review = new ReviewDTO
+                List<ReviewDTO> list = new List<ReviewDTO>();
+                list.Add(new ReviewDTO
                 {
-                    CriticId = model.CriticId,
+                    CriticId = model.FirstCriticId,
                     PaperVersionId = model.PaperVersionId,
                     Deadline = model.Deadline
-                };
+                }
+                );
+                list.Add(new ReviewDTO
+                {
+                    CriticId = model.SecondCriticId,
+                    PaperVersionId = model.PaperVersionId,
+                    Deadline = model.Deadline
+                });
 
-                var result = _reviewRepository.CreateReview(review);
-                if (result == 1)
+                IEnumerable<ReviewDTO> reviews = list;
+
+                var result = _reviewRepository.CreateReviews(reviews);
+                if (result == 2)
                 {
                      _paperVersionRepository.SetStatusWaitingForReview(model.PaperVersionId);
                     
-                    StatusMessage = "Critic has been choosen.";
+                    StatusMessage = "Critics has been choosen.";
                     return RedirectToAction("Index", "PaperVersions");
                 }
 
@@ -326,28 +415,28 @@ namespace SRUK.Controllers
                 if (result == 1)
                 {
                     var reviews = _reviewRepository.GetPaperVersionReviews(existingReview.PaperVersionId);
-                    if(reviews.Where(r=>r.IsPositive).Count() == reviews.Count())
+                    if (reviews.Where(r => r.Recommendation == 2).Count() >= 2)
                     {
-                         _paperVersionRepository.SetStatusVersionAccepted(existingReview.PaperVersionId);
-                         _paperRepository.SetStatuAccepted(existingReview.PaperVersion.PaperId);
+                        _paperVersionRepository.SetStatusVersionAccepted(existingReview.PaperVersionId);
+                        _paperRepository.SetStatuAccepted(existingReview.PaperVersion.PaperId);
                     }
-                
-                    else if (review.Unsuitable)
-                         _paperVersionRepository.SetStatusWaitingForVerdict(existingReview.PaperVersionId);
-                    else if ((review.TechnicalErrors || review.EditorialErrors) && review.RepeatReview)
+                    else if (reviews.Where(r => r.Recommendation == 5).Count() >= 2)
                     {
-                         _paperVersionRepository.SetStatusVersionRejected(existingReview.PaperVersionId);
+                        _paperVersionRepository.SetStatusVersionRejected(existingReview.PaperVersionId);
+                        _paperRepository.SetStatusDiscarded(existingReview.PaperVersion.PaperId);
                     }
-                    else if ((review.TechnicalErrors || review.EditorialErrors) && !review.RepeatReview)
+                    else if (reviews.Where(r => r.Recommendation == 3).Count() >= 2)
+                         _paperVersionRepository.SetStatusMinorRevision(existingReview.PaperVersionId);
+                    else if (reviews.Where(r => r.Recommendation == 4).Count() >= 2)
+                         _paperVersionRepository.SetStatusMajorRevision(existingReview.PaperVersionId);
+                    else if (reviews.Where(r => r.Recommendation == 3).Count() >= 1 && reviews.Where(r => r.Recommendation == 2).Count() >= 1)
+                        _paperVersionRepository.SetStatusMinorRevision(existingReview.PaperVersionId);
+                    else if (reviews.Where(r => r.Recommendation == 4).Count() >= 1 && (reviews.Where(r => r.Recommendation == 2 || r.Recommendation == 3).Count() >= 1))
+                        _paperVersionRepository.SetStatusMajorRevision(existingReview.PaperVersionId);
+                    else if(reviews.Where(r => r.Recommendation > 1).Count() == 2 && reviews.Where(r => r.Recommendation == 5).Count() == 1)
                     {
-                         _paperRepository.SetStatusSmallMistakesLeft(existingReview.PaperVersion.PaperId);
-                         _paperVersionRepository.SetStatusSmallMistakes(existingReview.PaperVersionId);
+                        //wysłac info do admina o wyborze kolejnego 
                     }
-                    else
-                    {
-                         _paperVersionRepository.SetStatusWaitingForVerdict(existingReview.PaperVersionId);
-                    }
-
 
                     StatusMessage = "Succesfully added.";
                     return RedirectToAction(nameof(MyReviews));
@@ -403,7 +492,7 @@ namespace SRUK.Controllers
             var result = _reviewRepository.RemoveReview(model.Id);
             if (result > 0 )
             {
-                StatusMessage = "Critic cancelled.";
+                StatusMessage = "Critic canceled.";
                 return RedirectToAction(nameof(Index));
             }
             StatusMessage = "Something went wrong.";

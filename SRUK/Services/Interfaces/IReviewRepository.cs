@@ -11,6 +11,7 @@ namespace SRUK.Services.Interfaces
         IEnumerable<ReviewShortDTO> GetReviews();
         ReviewDTO GetReview(long id);
         int CreateReview(ReviewDTO review);
+        int CreateReviews(IEnumerable<ReviewDTO> reviews);
         IEnumerable<ReviewShortDTO> GetUserReviews(string userId);
         int AddReview(ReviewDTO review);
         IEnumerable<ReviewDTO> GetPaperVersionReviews(long paperVersionId);

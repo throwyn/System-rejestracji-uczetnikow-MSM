@@ -21,19 +21,14 @@ namespace SRUK.Entities
         public PaperVersion PaperVersion { get; set; }
         public long PaperVersionId { get; set; }
 
-        public bool? EditorialErrors { get; set; }
-        public bool? TechnicalErrors { get; set; }
-        public bool? RepeatReview { get; set; }
-        public bool? IsPositive { get; set; }
-        public bool? Unsuitable { get; set; }
-
         public string FileName { get; set; }
         public string OriginalFileName { get; set; }
 
-        public string Comment { get; set; }
+        public string CommentForAuthor { get; set; }
+        public string CommentForAdmin { get; set; }
 
         [Required]
-        public byte Status { get; set; }
+        public byte Recommendation { get; set; }
 
         [Required]
         public DateTime CreationDate { get; set; }

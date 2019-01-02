@@ -7,12 +7,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SRUK.Models
 {
-    public class ChooseCriticViewModel
+    public class AddCriticViewModel
     {
         [Required]
         [Display(Name = "Critic")]
         public string CriticId { get; set; }
-        
+
         public PaperVersionDTO PaperVersion { get; set; }
         public long PaperVersionId { get; set; }
 

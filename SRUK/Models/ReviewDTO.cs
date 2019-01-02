@@ -15,18 +15,13 @@ namespace SRUK.Models
         public PaperVersionDTO PaperVersion { get; set; }
         public long PaperVersionId { get; set; }
 
-        public bool EditorialErrors { get; set; }
-        public bool TechnicalErrors { get; set; }
-        public bool RepeatReview { get; set; }
-        public bool IsPositive { get; set; }
-        public bool Unsuitable { get; set; }
-        
+        public byte Recommendation { get; set; }
+
         public string FileName { get; set; }
         public string OriginalFileName { get; set; }
 
-        public byte Status { get; set; }
-
-        public string Comment { get; set; }
+        public string CommentForAuthor { get; set; }
+        public string CommentForAdmin { get; set; }
 
         public DateTime Deadline { get; set; }
 

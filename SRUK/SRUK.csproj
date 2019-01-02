@@ -85,7 +85,10 @@
     <Content Update="Views\Reviews\AddReview.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Reviews\ChooseCritic.cshtml">
+    <Content Update="Views\Reviews\AddCritic.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Reviews\ChooseCritics.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
     <Content Update="Views\Reviews\MyReview.cshtml">

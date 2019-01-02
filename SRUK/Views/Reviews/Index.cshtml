@@ -7,6 +7,8 @@
 <h2>Reviews</h2>
 @Html.Partial("_StatusMessage", Model.StatusMessage)
 
+@if(Model.Reviews.Count() > 0)
+{
 <table class="table table-hover">
     <thead>
         <tr>
@@ -73,6 +75,8 @@
         }
     </tbody>
 </table>
+
+}
 
 <style>
     th {

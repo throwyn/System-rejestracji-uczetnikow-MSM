@@ -15,8 +15,9 @@ namespace SRUK.Services.Interfaces
         int SetStatusWaitingForReview(long id);
         int SetStatusVersionAccepted(long id);
         int SetStatusVersionRejected(long id);
-        int SetStatusWaitingForVerdict(long id);
-        int SetStatusSmallMistakes(long id);
+        int SetStatusMinorRevision(long id);
+        int SetStatusMajorRevision(long id);
         int SetComment(long id, string comment);
+
     }
 }

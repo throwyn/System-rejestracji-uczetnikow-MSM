@@ -1,0 +1,81 @@
+﻿@model ChooseCriticsViewModel
+
+@{
+    ViewData["Title"] = "Choosing critic";
+}
+
+<h2>Review</h2>
+@Html.Partial("_StatusMessage", Model.StatusMessage)
+<h4>
+    Choosing critic
+</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="ChooseCritic">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="PaperVersionId" />
+            <div class="row">
+                <div class="form-group col-md-4">
+                    @Html.Label("Author")
+                    @Html.ActionLink(Model.PaperVersion.Paper.Participancy.User.FirstName + ' ' + Model.PaperVersion.Paper.Participancy.User.LastName, "Details", "Users", new { Id = Model.PaperVersion.Paper.Participancy.UserId })
+                </div>
+                <div class="form-group col-md-8">
+                    @Html.Label("Title")
+                    @Html.ActionLink(Model.PaperVersion.Paper.Title, "Details", "Papers", new { Id = Model.PaperVersion.Paper.Id })
+                </div>
+            </div>
+                <div class="row">
+                    <div class="form-group col-md-10">
+                        <label asp-for="FirstCriticId" class="control-label"></label>
+                        <select asp-for="FirstCriticId" class="form-control selectpicker" asp-items="ViewBag.Critics"></select>
+                    </div>
+                    <div class="form-group col-md-10">
+                        <label asp-for="SecondCriticId" class="control-label"></label>
+                        <select asp-for="SecondCriticId" class="form-control selectpicker" asp-items="ViewBag.Critics"></select>
+                    </div>
+                    <div class="form-group col-md-5">
+                        <label asp-for="Deadline" class="control-label"></label>
+
+                        <div class='input-group date' id='datetimepickerdeadline'>
+                            <input asp-for="Deadline" class="form-control" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<style>
+    th {
+        text-align: center;
+    }
+</style>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<script type="text/javascript">
+    $(function () {
+        var today = new Date();
+        $('#datetimepickerdeadline').datetimepicker();
+        $('#datetimepickerdeadline').data("DateTimePicker").defaultDate(moment(new Date(today.getFullYear(), today.getMonth()+1, today.getDate(), 0, 0, 0))).format("DD.MM.YYYY HH:mm");
+    });
+
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker({
+        liveSearch: true });
+    });
+</script>
+    </script>
+}
