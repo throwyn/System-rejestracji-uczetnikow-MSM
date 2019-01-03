@@ -58,6 +58,11 @@ namespace SRUK.Services
             return result;
         }
 
+        public int SetStatusDocumentRecieved(long id)
+        {
+            return SetStatus(id, 0);
+        }
+
         public int SetStatusWaitingForReview(long id)
         {
             return  SetStatus(id, 1);

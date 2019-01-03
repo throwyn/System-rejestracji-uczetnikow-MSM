@@ -265,6 +265,11 @@ namespace SRUK.Controllers
                     StatusMessage = "Error. Paper do not exists.";
                     return RedirectToAction("Index", "PaperVersions");
                 }
+                if (model.FirstCriticId == model.SecondCriticId)
+                {
+                    StatusMessage = "Error. Two different critics should be chosen!";
+                    return RedirectToAction("ChooseCritics", model.PaperVersionId);
+                }
                 var firstCritic = _userRepository.GetApplicationUser(model.FirstCriticId);
                 var secondCritic = _userRepository.GetApplicationUser(model.SecondCriticId);
                 if (!_userManager.IsInRoleAsync(firstCritic, "Critic").Result && !_userManager.IsInRoleAsync(firstCritic, "Admin").Result)
@@ -477,6 +482,12 @@ namespace SRUK.Controllers
             if (!User.IsInRole("Admin"))
                 return RedirectToAction("Index", "Home");
             var review = _reviewRepository.GetReview(id);
+            if(review == null)
+            {
+
+                StatusMessage = "Error. Review do not exists.";
+                return RedirectToAction(nameof(Index));
+            }
 
             var model = Mapper.Map<ReviewDetailsViewModel>(review);
             model.StatusMessage = StatusMessage;
@@ -490,12 +501,18 @@ namespace SRUK.Controllers
             if (!User.IsInRole("Admin"))
                 return RedirectToAction("Index", "Home");
             var result = _reviewRepository.RemoveReview(model.Id);
-            if (result > 0 )
+            if (result == 1 )
             {
+                var version = _paperVersionRepository.GetPaperVersion(model.PaperVersionId);
+                if(version.Reviews.Count() == 0)
+                {
+                    _paperVersionRepository.SetStatusDocumentRecieved(model.PaperVersionId);
+                }
+
                 StatusMessage = "Critic canceled.";
                 return RedirectToAction(nameof(Index));
             }
-            StatusMessage = "Something went wrong.";
+            StatusMessage = "Error. Something went wrong.";
             return RedirectToAction(nameof(Index));
         }
 

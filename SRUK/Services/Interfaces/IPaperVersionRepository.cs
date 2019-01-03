@@ -12,6 +12,7 @@ namespace SRUK.Services.Interfaces
         PaperVersionDTO GetPaperVersion(long id);
         IEnumerable<PaperVersionShortDTO> GetVersions();
         int DeleteVersion(long id);
+        int SetStatusDocumentRecieved(long id);
         int SetStatusWaitingForReview(long id);
         int SetStatusVersionAccepted(long id);
         int SetStatusVersionRejected(long id);
