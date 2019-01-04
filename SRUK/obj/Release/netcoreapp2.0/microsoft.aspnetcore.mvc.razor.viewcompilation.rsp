@@ -44,13 +44,15 @@ C:\Users\Damian\Desktop\SRUK\SRUK
 --file=C:\Users\Damian\Desktop\SRUK\SRUK\Views\Participancies\MyParticipancies.cshtml
 --file=C:\Users\Damian\Desktop\SRUK\SRUK\Views\Participancies\SignUp.cshtml
 --file=C:\Users\Damian\Desktop\SRUK\SRUK\Views\Participancies\_StatusMessage.cshtml
+--file=C:\Users\Damian\Desktop\SRUK\SRUK\Views\Reviews\AddCritic.cshtml
 --file=C:\Users\Damian\Desktop\SRUK\SRUK\Views\Reviews\AddReview.cshtml
 --file=C:\Users\Damian\Desktop\SRUK\SRUK\Views\Reviews\CancelCritic.cshtml
---file=C:\Users\Damian\Desktop\SRUK\SRUK\Views\Reviews\ChooseCritic.cshtml
+--file=C:\Users\Damian\Desktop\SRUK\SRUK\Views\Reviews\ChooseCritics.cshtml
 --file=C:\Users\Damian\Desktop\SRUK\SRUK\Views\Reviews\Details.cshtml
 --file=C:\Users\Damian\Desktop\SRUK\SRUK\Views\Reviews\Index.cshtml
 --file=C:\Users\Damian\Desktop\SRUK\SRUK\Views\Reviews\MyReview.cshtml
 --file=C:\Users\Damian\Desktop\SRUK\SRUK\Views\Reviews\MyReviews.cshtml
+--file=C:\Users\Damian\Desktop\SRUK\SRUK\Views\Reviews\RejectReviewing.cshtml
 --file=C:\Users\Damian\Desktop\SRUK\SRUK\Views\Reviews\Review.cshtml
 --file=C:\Users\Damian\Desktop\SRUK\SRUK\Views\Reviews\_StatusMessage.cshtml
 --file=C:\Users\Damian\Desktop\SRUK\SRUK\Views\Seasons\Create.cshtml

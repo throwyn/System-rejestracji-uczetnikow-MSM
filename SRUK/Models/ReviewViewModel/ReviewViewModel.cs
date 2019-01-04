@@ -20,17 +20,11 @@ namespace SRUK.Models
         [Display(Name = "Recommendation")]
         public byte Recommendation { get; set; }
 
-        [Display(Name = "System filename")]
-        public string FileName { get; set; }
-
         [Display(Name = "Original filename")]
         public string OriginalFileName { get; set; }
 
-        [Display(Name = "Comment for author")]
+        [Display(Name = "Comment")]
         public string CommentForAuthor { get; set; }
-
-        [Display(Name = "Comment for admin")]
-        public string CommentForAdmin { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:g}")]
         [Display(Name = "Date of choosing critic")]
@@ -42,9 +36,6 @@ namespace SRUK.Models
         [DisplayFormat(DataFormatString = "{0:g}")]
         [Display(Name = "Completion date")]
         public DateTime CompletionDate { get; set; }
-
-        [Display(Name = "Is deleted")]
-        public bool IsDeleted { get; set; }
 
         public string StatusMessage { get; set; }
     }

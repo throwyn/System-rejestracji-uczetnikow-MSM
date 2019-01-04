@@ -61,7 +61,7 @@
                 </td>
                 <td style='color: black; text-align: center; '>
                     <a asp-action="Download" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class="glyphicon glyphicon-download-alt" aria-hidden="true" data-toggle="tooltip" title="Download"></span></a>
-                    @if (item.Reviews.Where(r => r.Recommendation == 5).Count() == 1 || (item.Status == 1 && item.Reviews.Count() <= 1))
+                    @if ((item.Reviews.Where(r => r.Recommendation == 5).Count() == 1 && item.Reviews.Count() == 2) || (item.Status == 1 && item.Reviews.Count() <= 1))
                     {
                         <text>|</text>
                         <a asp-action="AddCritic" asp-controller="Reviews" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-user " aria-hidden="true" data-toggle="tooltip" title="Add critic"></span></a>

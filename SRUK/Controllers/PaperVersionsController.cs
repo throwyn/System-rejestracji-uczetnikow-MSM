@@ -34,6 +34,7 @@ namespace SRUK.Controllers
         private readonly IPaperRepository _paperRepository;
         private readonly IPaperVersionRepository _paperVersionRepository;
         private readonly IParticipanciesRepository _participanciesRepository;
+        private readonly IReviewRepository _reviewRepository;
 
         public PaperVersionsController(
             IUserRepository userRepository,
@@ -43,7 +44,8 @@ namespace SRUK.Controllers
             RoleManager<IdentityRole> roleManager,
             IPaperRepository paperRepository,
             IPaperVersionRepository paperVersionRepository,
-            IParticipanciesRepository participanciesRepository
+            IParticipanciesRepository participanciesRepository,
+            IReviewRepository reviewRepository
             )
         {
             _userRepository = userRepository;
@@ -54,6 +56,7 @@ namespace SRUK.Controllers
             _paperRepository = paperRepository;
             _paperVersionRepository = paperVersionRepository;
             _participanciesRepository = participanciesRepository;
+            _reviewRepository = reviewRepository;
         }
 
         [TempData]
@@ -170,14 +173,29 @@ namespace SRUK.Controllers
                 paper = _paperRepository.GetPaper(paper.Id);
 
                 var differentJustCreatedVersion = paper.PaperVersions.FirstOrDefault(v => v.Status == 0 && v.Id != newVersionId);
+                var versionWithMinorChanges = paper.PaperVersions.FirstOrDefault(v => v.Status == 4);
+                var pastVersionsWithReviews = paper.PaperVersions.Where(v => (v.Status == 4 || v.Status == 5) && v.Reviews.Count() >= 2).OrderByDescending(v=>v.CreationDate);
                 if (differentJustCreatedVersion != null)
                     _paperVersionRepository.SetStatusVersionRejected(differentJustCreatedVersion.Id);
-                
-                var versionWithMinorChanges = paper.PaperVersions.FirstOrDefault(v => v.Status == 4);
-                if (versionWithMinorChanges != null)
+                else if (versionWithMinorChanges != null)
                 {
                     _paperVersionRepository.SetStatusVersionAccepted(newVersionId);
                     _paperRepository.SetStatuAccepted(paper.Id);
+                }
+                if(pastVersionsWithReviews.Count() >= 1)
+                {
+                    var lastReviews = pastVersionsWithReviews.First().Reviews.Where(r => r.Recommendation != 5 && r.Recommendation != 1);
+                    foreach(var critic in lastReviews)
+                    {
+                        var review = new ReviewDTO
+                        {
+                            CriticId = critic.CriticId,
+                            PaperVersionId = newVersionId,
+                            Deadline = DateTime.Now.AddMonths(1)
+                        };
+                        _reviewRepository.CreateReview(review);
+                    }
+                    _paperVersionRepository.SetStatusWaitingForReview(newVersionId);
                 }
 
                 StatusMessage = "Version has beed added.";

@@ -1395,3 +1395,97 @@ END;
 
 GO
 
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20190102212710_RebuildReviewMigration')
+BEGIN
+    DECLARE @var27 sysname;
+    SELECT @var27 = [d].[name]
+    FROM [sys].[default_constraints] [d]
+    INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+    WHERE ([d].[parent_object_id] = OBJECT_ID(N'Review') AND [c].[name] = N'EditorialErrors');
+    IF @var27 IS NOT NULL EXEC(N'ALTER TABLE [Review] DROP CONSTRAINT [' + @var27 + '];');
+    ALTER TABLE [Review] DROP COLUMN [EditorialErrors];
+END;
+
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20190102212710_RebuildReviewMigration')
+BEGIN
+    DECLARE @var28 sysname;
+    SELECT @var28 = [d].[name]
+    FROM [sys].[default_constraints] [d]
+    INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+    WHERE ([d].[parent_object_id] = OBJECT_ID(N'Review') AND [c].[name] = N'IsPositive');
+    IF @var28 IS NOT NULL EXEC(N'ALTER TABLE [Review] DROP CONSTRAINT [' + @var28 + '];');
+    ALTER TABLE [Review] DROP COLUMN [IsPositive];
+END;
+
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20190102212710_RebuildReviewMigration')
+BEGIN
+    DECLARE @var29 sysname;
+    SELECT @var29 = [d].[name]
+    FROM [sys].[default_constraints] [d]
+    INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+    WHERE ([d].[parent_object_id] = OBJECT_ID(N'Review') AND [c].[name] = N'RepeatReview');
+    IF @var29 IS NOT NULL EXEC(N'ALTER TABLE [Review] DROP CONSTRAINT [' + @var29 + '];');
+    ALTER TABLE [Review] DROP COLUMN [RepeatReview];
+END;
+
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20190102212710_RebuildReviewMigration')
+BEGIN
+    DECLARE @var30 sysname;
+    SELECT @var30 = [d].[name]
+    FROM [sys].[default_constraints] [d]
+    INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+    WHERE ([d].[parent_object_id] = OBJECT_ID(N'Review') AND [c].[name] = N'TechnicalErrors');
+    IF @var30 IS NOT NULL EXEC(N'ALTER TABLE [Review] DROP CONSTRAINT [' + @var30 + '];');
+    ALTER TABLE [Review] DROP COLUMN [TechnicalErrors];
+END;
+
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20190102212710_RebuildReviewMigration')
+BEGIN
+    DECLARE @var31 sysname;
+    SELECT @var31 = [d].[name]
+    FROM [sys].[default_constraints] [d]
+    INNER JOIN [sys].[columns] [c] ON [d].[parent_column_id] = [c].[column_id] AND [d].[parent_object_id] = [c].[object_id]
+    WHERE ([d].[parent_object_id] = OBJECT_ID(N'Review') AND [c].[name] = N'Unsuitable');
+    IF @var31 IS NOT NULL EXEC(N'ALTER TABLE [Review] DROP CONSTRAINT [' + @var31 + '];');
+    ALTER TABLE [Review] DROP COLUMN [Unsuitable];
+END;
+
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20190102212710_RebuildReviewMigration')
+BEGIN
+    EXEC sp_rename N'Review.Status', N'Recommendation', N'COLUMN';
+END;
+
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20190102212710_RebuildReviewMigration')
+BEGIN
+    EXEC sp_rename N'Review.Comment', N'CommentForAuthor', N'COLUMN';
+END;
+
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20190102212710_RebuildReviewMigration')
+BEGIN
+    ALTER TABLE [Review] ADD [CommentForAdmin] nvarchar(max) NULL;
+END;
+
+GO
+
+IF NOT EXISTS(SELECT * FROM [__EFMigrationsHistory] WHERE [MigrationId] = N'20190102212710_RebuildReviewMigration')
+BEGIN
+    INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+    VALUES (N'20190102212710_RebuildReviewMigration', N'2.0.3-rtm-10026');
+END;
+
+GO
+

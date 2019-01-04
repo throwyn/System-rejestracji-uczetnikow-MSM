@@ -75,8 +75,8 @@
 
 
         $('.recommendationRadioLabel').click(function () {
-            if ($('#radioNeedComment1').is(':checked')) { $('#CommentForAuthor').attr("required", "required") }
-            else if (!$('#radioNeedComment1').is(':checked')) { $('#CommentForAuthor').removeAttr("required", "required") }
+            if (!$('#radioNeedComment1').is(':checked') || !$('#radioNeedComment2').is(':checked')) { $('#CommentForAuthor').removeAttr("required", "required") }
+            if ($('#radioNeedComment1').is(':checked') || $('#radioNeedComment2').is(':checked')) { $('#CommentForAuthor').attr("required", "required") }
         });
 
 
