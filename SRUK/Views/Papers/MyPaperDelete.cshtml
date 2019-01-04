@@ -20,18 +20,7 @@
             @Html.DisplayNameFor(model => model.Status)
         </dt>
         <dd>
-            @switch (Model.Status)
-            {
-                case 0:
-                    <text>Created</text>
-                    break;
-                case 1:
-                    <text>Topic approved</text>
-                    break;
-                case 2:
-                    <text>Topic rejected</text>
-                    break;
-            }
+            @DictionariesHelper.PaperStatuses[Model.Status]
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Participancy.Season)

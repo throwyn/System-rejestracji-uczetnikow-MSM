@@ -42,45 +42,17 @@
                     @Html.ActionLink(item.Paper.Participancy.User.Degree + " " + item.Paper.Participancy.User.FirstName + " " + item.Paper.Participancy.User.LastName, "Details", "Users", new { Id = item.Paper.Participancy.User.Id })
                 </td>
                 <td>
-                    @switch (item.Status)
+                    @DictionariesHelper.PaperVersionStatuses[item.Status]
+                    @if (item.Comment != null)
                     {
-                        case 0:
-                            <text>Document received</text>
-                            break;
-                        case 1:
-                            <text>Waiting for review</text>
-                            break;
-                        case 2:
-                            <text>Accepted</text>
-                            break;
-                        case 3:
-                            <text>Rejected </text>
-                            @if(item.Comment != null)
-                            {
-                                <text><span class="glyphicon glyphicon-comment" aria-hidden="true" data-toggle="tooltip" title="@item.Comment"></span></text>
-                            }
-                                break;
-                        case 4:
-                            <text>Minor revision</text>
-                            break;
-                        case 5:
-                            <text>Major revision</text>
-                            break;
+                        <text><span class="glyphicon glyphicon-comment" aria-hidden="true" data-toggle="tooltip" title="@item.Comment"></span></text>
                     }
                 </td>
                 <td style='color: black; text-align: center; '>
                     @foreach (var review in item.Reviews)
                     {
-                        if (review.FileName == null)
-                        {
-                            <a asp-action="Details" asp-controller="Reviews" asp-route-id="@review.Id"><span class="glyphicon glyphicon-text-color" aria-hidden="true" data-toggle="tooltip" title="Not finished"></span></a>
-
-                        }
-                        else
-                        {
-                            <a asp-action="Details" asp-controller="Reviews" asp-route-id="@review.Id"><span class="glyphicon glyphicon-text-color" aria-hidden="true" data-toggle="tooltip" title="Finished"></span></a>
-
-                        }
+                            <a asp-action="Details" asp-controller="Reviews" asp-route-id="@review.Id"><span class="glyphicon glyphicon-text-color" aria-hidden="true" data-toggle="tooltip" title="@DictionariesHelper.RecommendationStatuses[review.Recommendation]"></span></a>
+                            
                     }
                 </td>
 
@@ -89,7 +61,7 @@
                 </td>
                 <td style='color: black; text-align: center; '>
                     <a asp-action="Download" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class="glyphicon glyphicon-download-alt" aria-hidden="true" data-toggle="tooltip" title="Download"></span></a>
-                    @if (item.Reviews.Where(r => r.Recommendation == 5).Count() == 1)
+                    @if (item.Reviews.Where(r => r.Recommendation == 5).Count() == 1 || (item.Status == 1 && item.Reviews.Count() <= 1))
                     {
                         <text>|</text>
                         <a asp-action="AddCritic" asp-controller="Reviews" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-user " aria-hidden="true" data-toggle="tooltip" title="Add critic"></span></a>

@@ -13,7 +13,7 @@
         <div class="col-md-6">
             <h4 style="text-align:center;">Review</h4>
             <dl class="dl-horizontal">
-                @if (Model.OriginalFileName != null)
+                @if (Model.Recommendation > 1)
                 {
 
                     <dt>
@@ -23,40 +23,22 @@
                         <a asp-action="Download" asp-controller="Reviews" asp-route-id="@Model.Id">@Model.OriginalFileName <span class="glyphicon glyphicon-download-alt" aria-hidden="true" data-toggle="tooltip" title="Download review"></span></a>
                     </dd>
                     <dt>
-                        @Html.DisplayNameFor(model => model.IsPositive)
+                        @Html.DisplayNameFor(model => model.Recommendation)
                     </dt>
                     <dd>
-                        @Html.DisplayFor(model => model.IsPositive)
+                        @DictionariesHelper.RecommendationStatuses[Model.Recommendation]
                     </dd>
                     <dt>
-                        @Html.DisplayNameFor(model => model.Unsuitable)
+                        @Html.DisplayNameFor(model => model.CommentForAdmin)
                     </dt>
                     <dd>
-                        @Html.DisplayFor(model => model.Unsuitable)
+                        @Html.DisplayFor(model => model.CommentForAdmin)
                     </dd>
                     <dt>
-                        @Html.DisplayNameFor(model => model.EditorialErrors)
+                        @Html.DisplayNameFor(model => model.CommentForAuthor)
                     </dt>
                     <dd>
-                        @Html.DisplayFor(model => model.EditorialErrors)
-                    </dd>
-                    <dt>
-                        @Html.DisplayNameFor(model => model.TechnicalErrors)
-                    </dt>
-                    <dd>
-                        @Html.DisplayFor(model => model.TechnicalErrors)
-                    </dd>
-                    <dt>
-                        @Html.DisplayNameFor(model => model.RepeatReview)
-                    </dt>
-                    <dd>
-                        @Html.DisplayFor(model => model.RepeatReview)
-                    </dd>
-                    <dt>
-                        @Html.DisplayNameFor(model => model.Comment)
-                    </dt>
-                    <dd>
-                        @Html.DisplayFor(model => model.Comment)
+                        @Html.DisplayFor(model => model.CommentForAuthor)
                     </dd>
                     <dt>
                         @Html.DisplayNameFor(model => model.CompletionDate)

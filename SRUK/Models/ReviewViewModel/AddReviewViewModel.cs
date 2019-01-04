@@ -16,34 +16,22 @@ namespace SRUK.Models
         public PaperVersionDTO PaperVersion { get; set; }
 
         [Required]
-        [Display(Name = "Editorial errors")]
-        public bool EditorialErrors { get; set; }
-
-        [Required]
-        [Display(Name = "Technical errors")]
-        public bool TechnicalErrors { get; set; }
-
-        [Required]
-        [Display(Name = "Repeat review")]
-        public bool RepeatReview { get; set; }
-
-        [Required]
-        [Display(Name = "Is positive")]
-        public bool IsPositive { get; set; }
-
-        [Required]
-        [Display(Name = "Completely unsuitable")]
-        public bool Unsuitable { get; set; }
+        [Display(Name = "Recommendation")]
+        public byte Recommendation { get; set; }
 
         [Required]
         [Display(Name = "Review file")]
         public IFormFile File { get; set; }
 
         [Display(Name = "Comment for administration")]
-        public string Comment { get; set; }
+        public string CommentForAdmin { get; set; }
+
+        [Display(Name = "Comment for author")]
+        public string CommentForAuthor { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:g}")]
         public DateTime CreationDate { get; set; }
+
         public string StatusMessage { get; set; }
     }
 }

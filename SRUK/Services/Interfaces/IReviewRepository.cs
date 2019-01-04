@@ -16,5 +16,6 @@ namespace SRUK.Services.Interfaces
         int AddReview(ReviewDTO review);
         IEnumerable<ReviewDTO> GetPaperVersionReviews(long paperVersionId);
         int RemoveReview(long id);
+        int SetRecommendationCancelled(long id);
     }
 }

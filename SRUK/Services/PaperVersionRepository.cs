@@ -24,9 +24,8 @@ namespace SRUK.Services
         {
             PaperVersion newPaper = Mapper.Map<PaperVersion>(paperVersion);
              _context.PaperVerison.Add(newPaper);
-
-            int result =  _context.SaveChanges();
-            return result;
+            _context.SaveChanges();
+            return (int)newPaper.Id;
         }
 
         public PaperVersionDTO GetPaperVersion(long id)

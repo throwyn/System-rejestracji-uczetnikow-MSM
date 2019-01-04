@@ -7,38 +7,26 @@
 <h2>Review</h2>
 @Html.Partial("_StatusMessage", Model.StatusMessage)
 <h4>
-    Adding review for <a asp-action="Download" asp-controller="PaperVersions" asp-route-id="@Model.PaperVersion.Id">"@Model.PaperVersion.Paper.Title"  <span class="glyphicon glyphicon-download-alt" aria-hidden="true" data-toggle="tooltip" title="Download"></span></a>
+    Adding review for "@Model.PaperVersion.Paper.Title" 
 </h4>
 <hr />
 <form asp-action="AddReview" method="post" enctype="multipart/form-data">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input type="hidden" asp-for="Id" />
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="form-group row">
-                <label asp-for="IsPositive" class="control-label col-md-6"></label>
-                @Html.CheckBoxFor(m => m.IsPositive, new { @class = "col-md-2" })
-                <span asp-validation-for="IsPositive" class="text-danger"></span>
+                <p><b><a asp-action="Download" asp-controller="PaperVersions" asp-route-id="@Model.PaperVersion.Id">Download paper <span class="glyphicon glyphicon-download-alt" aria-hidden="true" data-toggle="tooltip" title="Download"></span></a></b></p>
             </div>
             <div class="form-group row">
-                <label asp-for="Unsuitable" class="control-label col-md-6 "></label>
-                @Html.CheckBoxFor(m => m.Unsuitable, new { @class = "col-md-2" })
-                <span asp-validation-for="Unsuitable" class="text-danger"></span>
-            </div>
-            <div class="form-group row">
-                <label asp-for="EditorialErrors" class="control-label col-md-6"></label>
-                @Html.CheckBoxFor(m => m.EditorialErrors, new { @class = "col-md-2" })
-                <span asp-validation-for="EditorialErrors" class="text-danger"></span>
-            </div>
-            <div class="form-group row">
-                <label asp-for="TechnicalErrors" class="control-label col-md-6"></label>
-                @Html.CheckBoxFor(m => m.TechnicalErrors, new { @class = "col-md-2" })
-                <span asp-validation-for="TechnicalErrors" class="text-danger"></span>
-            </div>
-            <div class="form-group row">
-                <label asp-for="RepeatReview" class="control-label col-md-6"></label>
-                @Html.CheckBoxFor(m => m.RepeatReview, new { @class = "col-md-2" })
-                <span asp-validation-for="RepeatReview" class="text-danger"></span>
+                <p><label asp-for="Recommendation" class="control-label"></label></p>
+                <div class="col-md-12">
+                    <p><label class="recommendationRadioLabel">@Html.RadioButtonFor(m => m.Recommendation, 2) Accepted</label></p>
+                    <p><label class="recommendationRadioLabel">@Html.RadioButtonFor(m => m.Recommendation, 3, new { @id="radioNeedComment1"}) Accepted with minor changes</label></p>
+                    <p><label class="recommendationRadioLabel">@Html.RadioButtonFor(m => m.Recommendation, 4, new { @id="radioNeedComment2"}) Major revision</label></p>
+                    <p><label class="recommendationRadioLabel">@Html.RadioButtonFor(m => m.Recommendation, 5) Rejected</label></p>
+                    <span asp-validation-for="Recommendation" class="text-danger"></span>
+                </div>
             </div>
         </div>
         <div class="col-md-4">
@@ -48,9 +36,14 @@
                 <span asp-validation-for="File" class="text-danger"></span>
             </div>
             <div class="form-group row" style="margin-left:inherit;">
-                <label asp-for="Comment" class="control-label"></label>
-                @Html.TextAreaFor(m => m.Comment, new { @class = "form-control col-md-2", @rows = "5", @style = "max-width: 100%; min-width:100%;" })
-                <span asp-validation-for="Comment" class="text-danger"></span>
+                <label asp-for="CommentForAuthor" class="control-label"></label>
+                @Html.TextAreaFor(m => m.CommentForAuthor, new { @class = "form-control col-md-2", @rows = "5", @style = "max-width: 100%; min-width:100%;" })
+                <span asp-validation-for="CommentForAuthor" class="text-danger"></span>
+            </div>
+            <div class="form-group row" style="margin-left:inherit;">
+                <label asp-for="CommentForAdmin" class="control-label"></label>
+                @Html.TextAreaFor(m => m.CommentForAdmin, new { @class = "form-control col-md-2", @rows = "5", @style = "max-width: 100%; min-width:100%;" })
+                <span asp-validation-for="CommentForAdmin" class="text-danger"></span>
             </div>
         </div>
     </div>
@@ -71,65 +64,76 @@
     th {
         text-align: center;
     }
+    .recommendationRadioLabel{
+        font-weight: normal;
+    }
 </style>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script>
-        $('#IsPositive').change(function () {
-            if (this.checked) {
-                $('#Unsuitable').prop('checked', false).prop('disabled', true);
-                $('#EditorialErrors').prop('checked', false).prop('disabled', true);
-                $('#TechnicalErrors').prop('checked', false).prop('disabled', true);
-                $('#RepeatReview').prop('checked', false).prop('disabled', true);
-            } else {
-                $('#Unsuitable').removeAttr('disabled', true);
-                $('#EditorialErrors').removeAttr('disabled');
-                $('#TechnicalErrors').removeAttr('disabled');
-                $('#RepeatReview').removeAttr('disabled');
-            }
 
+
+        $('.recommendationRadioLabel').click(function () {
+            if ($('#radioNeedComment1').is(':checked')) { $('#CommentForAuthor').attr("required", "required") }
+            else if (!$('#radioNeedComment1').is(':checked')) { $('#CommentForAuthor').removeAttr("required", "required") }
         });
-        $('#Unsuitable').change(function () {
-            if (this.checked) {
-                $('#IsPositive').prop('checked', false).prop('disabled', true);
-                $('#EditorialErrors').prop('checked', false).prop('disabled', true);
-                $('#TechnicalErrors').prop('checked', false).prop('disabled', true);
-                $('#RepeatReview').prop('checked', false).prop('disabled', true);
-            } else {
-                $('#IsPositive').removeAttr('disabled', true);
-                $('#EditorialErrors').removeAttr('disabled');
-                $('#TechnicalErrors').removeAttr('disabled');
-                $('#RepeatReview').removeAttr('disabled');
-            }
-        });
-        $('#EditorialErrors').change(function () {
-            if (this.checked) {
-                $('#IsPositive').prop('checked', false).prop('disabled', true);
-                $('#Unsuitable').prop('checked', false).prop('disabled', true);
-            } else if (!$('#EditorialErrors').is(':checked') && !$('#TechnicalErrors').is(':checked') && !$('#RepeatReview').is(':checked')) {
-                $('#IsPositive').removeAttr('disabled', true);
-                $('#Unsuitable').removeAttr('disabled');
-            }
-        });
-        $('#TechnicalErrors').change(function () {
-            if (this.checked) {
-                $('#IsPositive').prop('checked', false).prop('disabled', true);
-                $('#Unsuitable').prop('checked', false).prop('disabled', true);
-            } else if (!$('#EditorialErrors').is(':checked') && !$('#TechnicalErrors').is(':checked') && !$('#RepeatReview').is(':checked')) {
-                $('#IsPositive').removeAttr('disabled', true);
-                $('#Unsuitable').removeAttr('disabled');
-            }
-        });
-        $('#RepeatReview').change(function () {
-            if (this.checked) {
-                $('#IsPositive').prop('checked', false).prop('disabled', true);
-                $('#Unsuitable').prop('checked', false).prop('disabled', true);
-            } else if (!$('#EditorialErrors').is(':checked') && !$('#TechnicalErrors').is(':checked') && !$('#RepeatReview').is(':checked')) {
-                $('#IsPositive').removeAttr('disabled', true);
-                $('#Unsuitable').removeAttr('disabled');
-            }
-        }); 
+
+
+        //$('#IsPositive').change(function () {
+        //    if (this.checked) {
+        //        $('#Unsuitable').prop('checked', false).prop('disabled', true);
+        //        $('#EditorialErrors').prop('checked', false).prop('disabled', true);
+        //        $('#TechnicalErrors').prop('checked', false).prop('disabled', true);
+        //        $('#RepeatReview').prop('checked', false).prop('disabled', true);
+        //    } else {
+        //        $('#Unsuitable').removeAttr('disabled', true);
+        //        $('#EditorialErrors').removeAttr('disabled');
+        //        $('#TechnicalErrors').removeAttr('disabled');
+        //        $('#RepeatReview').removeAttr('disabled');
+        //    }
+
+        //});
+        //$('#Unsuitable').change(function () {
+        //    if (this.checked) {
+        //        $('#IsPositive').prop('checked', false).prop('disabled', true);
+        //        $('#EditorialErrors').prop('checked', false).prop('disabled', true);
+        //        $('#TechnicalErrors').prop('checked', false).prop('disabled', true);
+        //        $('#RepeatReview').prop('checked', false).prop('disabled', true);
+        //    } else {
+        //        $('#IsPositive').removeAttr('disabled', true);
+        //        $('#EditorialErrors').removeAttr('disabled');
+        //        $('#TechnicalErrors').removeAttr('disabled');
+        //        $('#RepeatReview').removeAttr('disabled');
+        //    }
+        //});
+        //$('#EditorialErrors').change(function () {
+        //    if (this.checked) {
+        //        $('#IsPositive').prop('checked', false).prop('disabled', true);
+        //        $('#Unsuitable').prop('checked', false).prop('disabled', true);
+        //    } else if (!$('#EditorialErrors').is(':checked') && !$('#TechnicalErrors').is(':checked') && !$('#RepeatReview').is(':checked')) {
+        //        $('#IsPositive').removeAttr('disabled', true);
+        //        $('#Unsuitable').removeAttr('disabled');
+        //    }
+        //});
+        //$('#TechnicalErrors').change(function () {
+        //    if (this.checked) {
+        //        $('#IsPositive').prop('checked', false).prop('disabled', true);
+        //        $('#Unsuitable').prop('checked', false).prop('disabled', true);
+        //    } else if (!$('#EditorialErrors').is(':checked') && !$('#TechnicalErrors').is(':checked') && !$('#RepeatReview').is(':checked')) {
+        //        $('#IsPositive').removeAttr('disabled', true);
+        //        $('#Unsuitable').removeAttr('disabled');
+        //    }
+        //});
+        //$('#RepeatReview').change(function () {
+        //    if (this.checked) {
+        //        $('#IsPositive').prop('checked', false).prop('disabled', true);
+        //        $('#Unsuitable').prop('checked', false).prop('disabled', true);
+        //    } else if (!$('#EditorialErrors').is(':checked') && !$('#TechnicalErrors').is(':checked') && !$('#RepeatReview').is(':checked')) {
+        //        $('#IsPositive').removeAttr('disabled', true);
+        //        $('#Unsuitable').removeAttr('disabled');
+        //    }
+        //}); 
 
     </script>
 }

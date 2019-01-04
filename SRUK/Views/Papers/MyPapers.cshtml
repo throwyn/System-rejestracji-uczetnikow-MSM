@@ -45,27 +45,7 @@
                         @Html.ActionLink(item.Title, "MyPaper", "Papers", new { Id = item.Id })
                     </td>
                     <td>
-                        @switch (item.Status)
-                        {
-                            case 0:
-                                <text>Created</text>
-                                break;
-                            case 1:
-                                <text>Topic approved</text>
-                                break;
-                            case 2:
-                                <text>Topic rejected</text>
-                                break;
-                            case 3:
-                                <text>Accepted</text>
-                                break;
-                            case 4:
-                                <text>Discarded</text>
-                                break;
-                            case 5:
-                                <text>Small mistakes left</text>
-                                break;
-                        }
+                        @DictionariesHelper.PaperStatuses[item.Status]
                         @*@Html.DisplayFor(modelItem => item.Status)*@
                     </td>
 

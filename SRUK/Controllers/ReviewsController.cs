@@ -194,6 +194,12 @@ namespace SRUK.Controllers
                     StatusMessage = "Error. This user cannot become a  critic!";
                     return RedirectToAction("Index", "PaperVersions");
                 }
+                if(version.Reviews.FirstOrDefault(r => r.CriticId == critic.Id) != null)
+                {
+                    StatusMessage = "Error. "+critic.FirstName+" " +critic.LastName +" is already assigned to this version!";
+                    var a = version.Reviews.Where(r => r.CriticId == critic.Id);
+                    return RedirectToAction("AddCritic", "Reviews", new { Id = model.PaperVersionId });
+                }
                 
                 var review = new ReviewDTO
                 {
@@ -482,7 +488,7 @@ namespace SRUK.Controllers
             if (!User.IsInRole("Admin"))
                 return RedirectToAction("Index", "Home");
             var review = _reviewRepository.GetReview(id);
-            if(review == null)
+            if (review == null)
             {
 
                 StatusMessage = "Error. Review do not exists.";
@@ -501,10 +507,54 @@ namespace SRUK.Controllers
             if (!User.IsInRole("Admin"))
                 return RedirectToAction("Index", "Home");
             var result = _reviewRepository.RemoveReview(model.Id);
-            if (result == 1 )
+            if (result == 1)
             {
                 var version = _paperVersionRepository.GetPaperVersion(model.PaperVersionId);
-                if(version.Reviews.Count() == 0)
+                if (version.Reviews.Count() == 0)
+                {
+                    _paperVersionRepository.SetStatusDocumentRecieved(model.PaperVersionId);
+                }
+
+                StatusMessage = "Critic canceled.";
+                return RedirectToAction(nameof(Index));
+            }
+            StatusMessage = "Error. Something went wrong.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Reviews/RejectReviewing/5
+        [HttpGet]
+        [Route("RejectReviewing/{id}")]
+        public async Task<IActionResult> RejectReviewing(long id)
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var review = _reviewRepository.GetReview(id);
+            if (review == null)
+            {
+                StatusMessage = "Error. Review do not exists.";
+                return RedirectToAction(nameof(Index));
+            }
+            if(review.CriticId != user.Id)
+            {
+                StatusMessage = "Error. You cannot reject this!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var model = Mapper.Map<ReviewDetailsViewModel>(review);
+            model.StatusMessage = StatusMessage;
+            return View(model);
+        }
+        // POST: Reviews/RejectReviewing/5
+        [HttpPost]
+        [Route("RejectReviewing/{id}")]
+        public async Task<IActionResult> RejectReviewing(ReviewDetailsViewModel model)
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var result = _reviewRepository.RemoveReview(model.Id);
+            if (result == 1)
+            {
+                var version = _paperVersionRepository.GetPaperVersion(model.PaperVersionId);
+                if (version.Reviews.Count() == 0)
                 {
                     _paperVersionRepository.SetStatusDocumentRecieved(model.PaperVersionId);
                 }

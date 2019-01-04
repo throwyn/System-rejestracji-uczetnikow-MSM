@@ -19,9 +19,16 @@
                 <dd>
                     <a asp-action="Details" asp-controller="Users" asp-route-id="@Model.PaperVersion.Paper.Participancy.UserId">@Model.Critic.Degree @Model.Critic.FirstName @Model.Critic.LastName </a>
                 </dd>
-                @if (Model.OriginalFileName != null)
+                @if (Model.Recommendation == 0)
                 {
-
+                    <text>Review is not ready yet.</text>
+                }
+                else if (Model.Recommendation == 1)
+                {
+                    <text>Review has been cancelled</text>
+                }
+                else
+                {
                     <dt>
                         @Html.DisplayNameFor(model => model.OriginalFileName)
                     </dt>
@@ -35,40 +42,28 @@
                         @Html.DisplayFor(model => model.FileName)
                     </dd>
                     <dt>
-                        @Html.DisplayNameFor(model => model.IsPositive)
+                        @Html.DisplayNameFor(model => model.Recommendation)
                     </dt>
                     <dd>
-                        @Html.DisplayFor(model => model.IsPositive)
+                        @DictionariesHelper.RecommendationStatuses[Model.Recommendation]
                     </dd>
                     <dt>
-                        @Html.DisplayNameFor(model => model.Unsuitable)
+                        @Html.DisplayNameFor(model => model.CommentForAdmin)
                     </dt>
                     <dd>
-                        @Html.DisplayFor(model => model.Unsuitable)
+                        @Html.DisplayFor(model => model.CommentForAdmin)
                     </dd>
                     <dt>
-                        @Html.DisplayNameFor(model => model.EditorialErrors)
+                        @Html.DisplayNameFor(model => model.CommentForAuthor)
                     </dt>
                     <dd>
-                        @Html.DisplayFor(model => model.EditorialErrors)
+                        @Html.DisplayFor(model => model.CommentForAuthor)
                     </dd>
                     <dt>
-                        @Html.DisplayNameFor(model => model.TechnicalErrors)
+                        @Html.DisplayNameFor(model => model.CompletionDate)
                     </dt>
                     <dd>
-                        @Html.DisplayFor(model => model.TechnicalErrors)
-                    </dd>
-                    <dt>
-                        @Html.DisplayNameFor(model => model.RepeatReview)
-                    </dt>
-                    <dd>
-                        @Html.DisplayFor(model => model.RepeatReview)
-                    </dd>
-                    <dt>
-                        @Html.DisplayNameFor(model => model.Comment)
-                    </dt>
-                    <dd>
-                        @Html.DisplayFor(model => model.Comment)
+                        @Html.DisplayFor(model => model.CompletionDate)
                     </dd>
                 }
                 <dt>

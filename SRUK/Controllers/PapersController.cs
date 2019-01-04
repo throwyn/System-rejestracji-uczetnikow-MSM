@@ -185,7 +185,9 @@ namespace SRUK.Controllers
             {
                 new SelectListItem { Text = "Created", Value = "0" },
                 new SelectListItem { Text = "Topic accepted", Value = "1"  },
-                new SelectListItem { Text = "Topic rejected", Value = "2"  }
+                new SelectListItem { Text = "Topic rejected", Value = "2"  },
+                new SelectListItem { Text = "Accepted", Value = "3"  },
+                new SelectListItem { Text = "Discarded", Value = "4"  }
             };
 
             var model = Mapper.Map<PaperEditViewModel>(paper);

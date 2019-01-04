@@ -88,6 +88,9 @@
     <Content Update="Views\Reviews\AddCritic.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Reviews\RejectReviewing.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Reviews\ChooseCritics.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>

@@ -114,7 +114,7 @@ namespace SRUK.Controllers
             if (model == null)
             {
                 StatusMessage = "Error. Something went wrong.";
-                return View(model);
+                return View();
             }
             if (model.File == null || model.File.Length == 0)
             {
@@ -131,7 +131,7 @@ namespace SRUK.Controllers
                 return RedirectToAction("MyPapers", "Papers");
             }
 
-            if (paper.Status != 1 && paper.Status != 5)
+            if (paper.Status != 1)
             {
                 StatusMessage = "Error. You cannot add new version.";
                 return RedirectToAction("MyPapers", "Papers");
@@ -166,12 +166,22 @@ namespace SRUK.Controllers
                     FileName = newFileName,
                     Status = 0
                 };
-                var result = _paperVersionRepository.AddPaperVersion(paperVersion);
-                if(result == 1)
+                var newVersionId = _paperVersionRepository.AddPaperVersion(paperVersion);
+                paper = _paperRepository.GetPaper(paper.Id);
+
+                var differentJustCreatedVersion = paper.PaperVersions.FirstOrDefault(v => v.Status == 0 && v.Id != newVersionId);
+                if (differentJustCreatedVersion != null)
+                    _paperVersionRepository.SetStatusVersionRejected(differentJustCreatedVersion.Id);
+                
+                var versionWithMinorChanges = paper.PaperVersions.FirstOrDefault(v => v.Status == 4);
+                if (versionWithMinorChanges != null)
                 {
-                    StatusMessage = "Version has beed added.";
-                    return RedirectToAction("MyPaper", "Papers", new { id = model.PaperId });
+                    _paperVersionRepository.SetStatusVersionAccepted(newVersionId);
+                    _paperRepository.SetStatuAccepted(paper.Id);
                 }
+
+                StatusMessage = "Version has beed added.";
+                return RedirectToAction("MyPaper", "Papers", new { id = model.PaperId });
             }
             StatusMessage = "Error. Entered data is not valid.";
             return RedirectToAction("MyPapers", "Papers");

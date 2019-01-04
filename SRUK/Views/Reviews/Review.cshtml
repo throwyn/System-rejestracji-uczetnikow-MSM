@@ -13,37 +13,33 @@
         <div class="col-md-6">
             <h4 style="text-align:center;">Review</h4>
             <dl class="dl-horizontal">
-                @if (Model.OriginalFileName != null)
+                @if (Model.Recommendation == 0)
+                {
+                    <text>Review is not ready yet.</text>
+                }
+                else if (Model.Recommendation == 1)
+                {
+                    <text>Review has been cancelled</text>
+                }
+                else
                 {
                     <dt>
-                        @Html.DisplayNameFor(model => model.IsPositive)
+                        @Html.DisplayNameFor(model => model.Recommendation)
                     </dt>
                     <dd>
-                        @Html.DisplayFor(model => model.IsPositive)
+                        @DictionariesHelper.RecommendationStatuses[Model.Recommendation]
                     </dd>
                     <dt>
-                        @Html.DisplayNameFor(model => model.Unsuitable)
+                        @Html.DisplayNameFor(model => model.CommentForAdmin)
                     </dt>
                     <dd>
-                        @Html.DisplayFor(model => model.Unsuitable)
+                        @Html.DisplayFor(model => model.CommentForAdmin)
                     </dd>
                     <dt>
-                        @Html.DisplayNameFor(model => model.EditorialErrors)
+                        @Html.DisplayNameFor(model => model.CommentForAuthor)
                     </dt>
                     <dd>
-                        @Html.DisplayFor(model => model.EditorialErrors)
-                    </dd>
-                    <dt>
-                        @Html.DisplayNameFor(model => model.TechnicalErrors)
-                    </dt>
-                    <dd>
-                        @Html.DisplayFor(model => model.TechnicalErrors)
-                    </dd>
-                    <dt>
-                        @Html.DisplayNameFor(model => model.RepeatReview)
-                    </dt>
-                    <dd>
-                        @Html.DisplayFor(model => model.RepeatReview)
+                        @Html.DisplayFor(model => model.CommentForAuthor)
                     </dd>
                     <dt>
                         @Html.DisplayNameFor(model => model.CompletionDate)
@@ -51,10 +47,6 @@
                     <dd>
                         @Html.DisplayFor(model => model.CompletionDate)
                     </dd>
-                }
-                else
-                {
-                    <text>Review is not ready yet.</text>
                 }
             </dl>
         </div>

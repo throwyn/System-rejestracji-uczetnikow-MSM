@@ -36,16 +36,16 @@
             <tr>
                 <td>
 
-                    <a asp-action="MyReview" asp-route-id="@item.Id">@item.PaperVersion.Paper.Title</a>
+                    @item.PaperVersion.Paper.Title
 
                 </td>
                 <td>
                     @item.PaperVersion.Paper.Participancy.User.Degree @item.PaperVersion.Paper.Participancy.User.FirstName  @item.PaperVersion.Paper.Participancy.User.LastName
                 </td>
                 <td style="text-align:center;">
-                    @if (item.FileName != null)
+                    @if (item.Recommendation != 0)
                     {
-                        <text>Done</text>
+                        @DictionariesHelper.RecommendationStatuses[item.Recommendation]
                     }
                     else
                     {
@@ -61,7 +61,9 @@
                 <td style='color: black; text-align: center; '>
                     @if (item.FileName == null)
                     {
-                        <a asp-action="AddReview" asp-controller="Reviews" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-text-color " aria-hidden="true" data-toggle="tooltip" title="Add Review"></span></a> 
+                        <a asp-action="AddReview" asp-controller="Reviews" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-text-color " aria-hidden="true" data-toggle="tooltip" title="Add Review"></span></a>
+                        <text>|</text>
+                        <a asp-action="RejectReviewing" asp-controller="Reviews" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-remove " aria-hidden="true" data-toggle="tooltip" title="Reject reviewing"></span></a>
                     }
                     else
                     {

@@ -84,6 +84,13 @@ namespace SRUK.Services
             int result = _context.SaveChanges();
             return result;
         }
+        public int SetRecommendationCancelled(long id)
+        {
+            Review review = _context.Review.FirstOrDefault(s => s.Id == id);
+            review.Recommendation = 1;
+            int result = _context.SaveChanges();
+            return result;
+        }
 
 
     }

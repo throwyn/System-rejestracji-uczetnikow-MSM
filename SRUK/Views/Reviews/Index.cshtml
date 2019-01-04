@@ -48,9 +48,9 @@
                 @Html.ActionLink(item.Critic.Degree + " " + item.Critic.FirstName + " " + item.Critic.LastName, "Details", "Users", new { Id = item.Critic.Id })
             </td>
             <td style="text-align:center;">
-                @if (item.OriginalFileName != null)
+                @if (item.Recommendation != 0)
                 {
-                    <text>Done</text>
+                    @DictionariesHelper.RecommendationStatuses[item.Recommendation]
                 }
                 else
                 {
