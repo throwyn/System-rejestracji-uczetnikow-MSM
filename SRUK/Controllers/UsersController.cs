@@ -73,7 +73,7 @@ namespace SRUK.Controllers
                 return RedirectToAction("Index", "Home");
 
             var filteredList = _userRepository.GetFilteredUsers(
-             sortBy, degree, firstName, lastName, organisation, email, role, 5, currentPage);
+             sortBy, degree, firstName, lastName, organisation, email, role, 20, currentPage);
 
             ViewBag.Degrees =   new AcademicDegrees().SelectListItems(degree);
             ViewBag.Roles = GetRolesSelectListItem(role);
@@ -86,6 +86,7 @@ namespace SRUK.Controllers
                 LastName = lastName,
                 Organisation = organisation,
                 Email = email,
+                Role = role,
 
 
                 Results = filteredList.Results,
@@ -327,24 +328,7 @@ namespace SRUK.Controllers
         }
 
         #region Helpers
-
-        private List<SelectListItem> GetRolesSelectListItem()
-        {
-
-            var roles = _roleManager.Roles.ToList();
-
-            var result = new List<SelectListItem>()
-            {
-                new SelectListItem { Text = "Role", Value = "" }
-            };
-
-            foreach (var role in roles)
-            {
-                result.Add(new SelectListItem { Text = role.Name, Value = role.Name });
-            }
-
-            return result;
-        }
+        
         private List<SelectListItem> GetRolesSelectListItem(string selectedValue)
         {
 

@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using EntityFrameworkPaginate;
 using Microsoft.EntityFrameworkCore;
 using SRUK.Data;
 using SRUK.Entities;
+using SRUK.Extensions;
 using SRUK.Models;
 using SRUK.Services.Interfaces;
 using System;
@@ -25,6 +27,59 @@ namespace SRUK.Services
             var entityParticipancies = _context.Participancy.Where(p => p.IsDeleted == false).Include(p => p.User).Include(p => p.Season);
             var participancies = Mapper.Map<IEnumerable<ParticipancyShortDTO>>(entityParticipancies);
             return participancies;
+        }
+
+        public Page<ParticipancyShortDTO> GetFilteredParticipancies(
+            short sortBy,
+            string firstName,
+            string lastName,
+            string season,
+            bool? conferenceParticipation,
+            bool? publication,
+            int pageSize,
+            int currentPage
+        )
+        {
+            if (pageSize == 0) pageSize = 10;
+            if (currentPage == 0) currentPage = 1;
+
+            IEnumerable<ParticipancyShortDTO> results = GetParticipancies();
+            
+            results = !string.IsNullOrEmpty(firstName) ? results.Where(u => u.User.FirstName != null && u.User.FirstName.Contains(firstName, StringComparison.OrdinalIgnoreCase)) : results;
+            results = !string.IsNullOrEmpty(lastName) ? results.Where(u => u.User.LastName != null && u.User.LastName.Contains(lastName, StringComparison.OrdinalIgnoreCase)) : results;
+            results = !string.IsNullOrEmpty(season) ? results.Where(u => u.Season.Id == Convert.ToInt32(season)) : results;
+            results = conferenceParticipation != null ? results.Where(u => u.ConferenceParticipation == conferenceParticipation) : results;
+            results = publication != null ? results.Where(u => u.Publication == publication) : results;
+
+            results = sortBy == 1 ? results.OrderBy(u => u.Season.EndDate) : results;
+            results = sortBy == 2 ? results.OrderByDescending(u => u.Season.EndDate) : results;
+            results = sortBy == 3 ? results.OrderBy(u => u.User.FirstName) : results;
+            results = sortBy == 4 ? results.OrderByDescending(u => u.User.FirstName) : results;
+            results = sortBy == 5 ? results.OrderBy(u => u.User.LastName) : results;
+            results = sortBy == 6 ? results.OrderByDescending(u => u.User.LastName) : results;
+            results = sortBy == 7 ? results.OrderBy(u => u.ConferenceParticipation) : results;
+            results = sortBy == 8 ? results.OrderByDescending(u => u.ConferenceParticipation) : results;
+            results = sortBy == 9 ? results.OrderBy(u => u.Publication) : results;
+            results = sortBy == 10 ? results.OrderByDescending(u => u.Publication) : results;
+            results = sortBy == 11 ? results.OrderBy(u => u.CreationDate) : results;
+            results = sortBy == 12 ? results.OrderByDescending(u => u.CreationDate) : results;
+
+            int recordCount = results.Count();
+            int pageCount = (int)Math.Ceiling((decimal)recordCount / (decimal)pageSize);
+            results = results.Skip((currentPage - 1) * pageSize).Take(pageSize);
+
+
+            Page<ParticipancyShortDTO> participations = new Page<ParticipancyShortDTO>()
+            {
+                Results = results,
+                RecordCount = recordCount,
+                PageCount = pageCount,
+                CurrentPage = currentPage,
+                PageSize = pageSize
+
+            };
+
+            return participations;
         }
 
         public IEnumerable<ParticipancyShortDTO> GetUserParticipancies(string userId)

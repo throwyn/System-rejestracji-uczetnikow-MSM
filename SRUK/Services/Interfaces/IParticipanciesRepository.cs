@@ -1,4 +1,5 @@
-﻿using SRUK.Models;
+﻿using EntityFrameworkPaginate;
+using SRUK.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,16 @@ namespace SRUK.Services.Interfaces
         IEnumerable<ParticipancyShortDTO> GetUserParticipancies(string userId);
 
         ParticipancyDTO GetParticipancy(long id);
+        Page<ParticipancyShortDTO> GetFilteredParticipancies(
+            short sortBy,
+            string firstName,
+            string lastName,
+            string season,
+            bool? conferenceParticipation,
+            bool? publication,
+            int pageSize,
+            int currentPage
+        );
 
         int AddParticipancy(ParticipancyDTO paper);
         int UpdateParticipancy(ParticipancyDTO paper);

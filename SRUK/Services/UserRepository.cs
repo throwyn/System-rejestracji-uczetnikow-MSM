@@ -86,11 +86,10 @@ namespace SRUK.Services
             int currentPage
         )
         {
-            if (pageSize == 0) pageSize = 8;
+            if (pageSize == 0) pageSize = 10;
             if (currentPage == 0) currentPage = 1;
 
-            var usersList = GetUsers();
-            IEnumerable<UserShortDTO> results = usersList.ToAsyncEnumerable().ToEnumerable();
+            IEnumerable<UserShortDTO> results = GetUsers();
 
             results = !string.IsNullOrEmpty(degree) ? results.Where(u => u.Degree != null && u.Degree == degree) : results;
             results = !string.IsNullOrEmpty(firstName) ? results.Where(u => u.FirstName != null && u.FirstName.Contains(firstName, StringComparison.OrdinalIgnoreCase)) : results;

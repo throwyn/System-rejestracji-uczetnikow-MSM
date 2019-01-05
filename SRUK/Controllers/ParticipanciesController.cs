@@ -59,20 +59,40 @@ namespace SRUK.Controllers
         public string StatusMessage { get; set; }
 
         // GET: Participancies
-        public ActionResult Index()
+        public ActionResult Index(
+            int currentPage = 1,
+            short sortBy = 0,
+            string firstName = "",
+            string lastName = "",
+            string season = "",
+            bool? conferenceParticipation = null,
+            bool? publication = null)
         {
+            if (!User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Home");
+            var filteredList = _participanciesRepository.GetFilteredParticipancies(sortBy, firstName, lastName, season, conferenceParticipation, publication, 3, currentPage);
 
-            if (User.IsInRole("Admin"))
+            ViewBag.Seasons = GetSeasonsSelectListItem(season);
+            ViewBag.SortBy = GetUsersSortBySelectListItem(sortBy);
+            ViewBag.Publication = BoolSelectListItem("Publication",publication);
+            ViewBag.Participation = BoolSelectListItem("Participation",conferenceParticipation);
+
+            var model = new ParticipancyIndexViewModel()
             {
-                var participancies = _participanciesRepository.GetParticipancies();
-                var model = new ParticipancyIndexViewModel()
-                {
-                    Participancies = participancies.ToList(),
-                    StatusMessage = StatusMessage
-                };
-                return View(model);
-            }
-            return RedirectToAction("Index", "Home");
+                FirstName = firstName,
+                LastName = lastName,
+                Season = season,
+                ConferenceParticipation = conferenceParticipation,
+                Publication = publication,
+
+                Results = filteredList.Results,
+                CurrentPage = filteredList.CurrentPage,
+                PageCount = filteredList.PageCount,
+                PageSize = filteredList.PageSize,
+                RecordCount = filteredList.RecordCount,
+                StatusMessage = StatusMessage
+            };
+            return View(model);
 
         }
         // GET: Participancies/SignUp
@@ -210,6 +230,69 @@ namespace SRUK.Controllers
             return View(model);
         }
 
+
+        #region Helpers
+        private List<SelectListItem> GetSeasonsSelectListItem(string selectedValue)
+        {
+
+            var seasons = _seasonRepository.GetSeasons().ToList();
+
+            var result = new List<SelectListItem>()
+            {
+                new SelectListItem { Text = "Season", Value = "" }
+            };
+
+            foreach (var season in seasons)
+            {
+                result.Add(new SelectListItem { Text = season.EditionNumber, Value = season.Id.ToString() });
+            }
+
+            if (selectedValue != null && result.Where(r => r.Value == selectedValue).Count() > 0)
+                result.FirstOrDefault(r => r.Value == selectedValue).Selected = true;
+
+            return result;
+        }
+
+        private List<SelectListItem> GetUsersSortBySelectListItem(int? selected)
+        {
+
+            var result = new List<SelectListItem>()
+            {
+                new SelectListItem { Text = "Sort by", Value = "" },
+                new SelectListItem { Text = "Oldest season first", Value = "1" },
+                new SelectListItem { Text = "Latest season first", Value = "2" },
+                new SelectListItem { Text = "First name Asc", Value = "3" },
+                new SelectListItem { Text = "First name Desc", Value = "4" },
+                new SelectListItem { Text = "Last name Asc", Value = "5" },
+                new SelectListItem { Text = "Last name Desc", Value = "6" },
+                new SelectListItem { Text = "Without participation first", Value = "7" },
+                new SelectListItem { Text = "With participation first", Value = "8" },
+                new SelectListItem { Text = "Without publication first", Value = "9" },
+                new SelectListItem { Text = "With publication first", Value = "10" },
+                new SelectListItem { Text = "Oldest first", Value = "11" },
+                new SelectListItem { Text = "Latest first", Value = "12" },
+            };
+            if (selected > 0)
+                result.FirstOrDefault(r => r.Value == selected.ToString()).Selected = true;
+
+            return result;
+        }
+        private List<SelectListItem> BoolSelectListItem(string Title, bool? selected)
+        {
+
+            var result = new List<SelectListItem>()
+            {
+                new SelectListItem { Text = Title, Value = "" },
+                new SelectListItem { Text = "Yes", Value = "True" },
+                new SelectListItem { Text = "No", Value = "False" }
+            };
+            if (selected != null)
+                result.FirstOrDefault(r => r.Value == selected.ToString()).Selected = true;
+
+            return result; 
+        }
+
+        #endregion
 
     }
 }
