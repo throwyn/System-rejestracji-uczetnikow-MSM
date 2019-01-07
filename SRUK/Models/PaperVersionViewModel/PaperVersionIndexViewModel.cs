@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using EntityFrameworkPaginate;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using System;
 using System.Collections.Generic;
@@ -8,9 +9,14 @@ using System.Threading.Tasks;
 
 namespace SRUK.Models
 {
-    public class PaperVersionIndexViewModel
+    public class PaperVersionIndexViewModel : Page<PaperVersionShortDTO>
     {
-        public List<PaperVersionShortDTO> Versions { get; set; }
+        public short SortBy { get; set; }
+        
+        public string Title { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Status { get; set; }
 
         public string StatusMessage { get; set; }
     }

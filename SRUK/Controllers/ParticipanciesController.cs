@@ -200,12 +200,10 @@ namespace SRUK.Controllers
                 var participancy = Mapper.Map<ParticipancyDTO>(model);
                 var result = _participanciesRepository.UpdateParticipancy(participancy);
                 if (result == 1)
-                {
-                    StatusMessage = "Succesfully edited.";
-                    return RedirectToAction(nameof(MyParticipancies));
-                }
+                     StatusMessage = "Succesfully edited.";
+            return RedirectToAction(nameof(MyParticipancies));
 
-            }
+        }
             model.StatusMessage = "Error. Entered data is not valid.";
             return View(model);
         }

@@ -7,8 +7,19 @@
 <h2>Papers</h2>
 @Html.Partial("_StatusMessage", Model.StatusMessage)
 
-@if (Model.Papers.Count > 0)
-{
+<form class="form-horizontal" role="form" asp-action="Index" id="form">
+    @Html.Hidden("currentPage", Model.CurrentPage)
+    <p>
+        <div class="form-inline">
+            <button class="form-control " onclick="$('#currentPage').val(@(1));$('#form').submit();return false;"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+            <select name="Season" class="form-control" asp-items="ViewBag.Seasons"></select>
+            <input asp-for="Title" class="form-control" type="text" placeholder="Title" style="width:250px;" />
+            <input asp-for="FirstName" class="form-control" type="text" placeholder="First name" style="width:130px;" />
+            <input asp-for="LastName" class="form-control" type="text" placeholder="Last name" style="width:130px;" />
+            <select name="Status" class="form-control" asp-items="ViewBag.Statuses"></select>
+            <select asp-for="SortBy" class="form-control" asp-items="ViewBag.SortBy"></select>
+        </div>
+    </p>
     <table class="table table-hover">
         <thead>
             <tr>
@@ -27,7 +38,7 @@
                 <th>
                     Creation date
                 </th>
-                @if (Model.Papers.Where(p => p.Status == 0).Count() > 0)
+                @if (Model.Results.Where(p => p.Status == 0).Count() > 0)
                 {
                     <th>Approve topic</th>
                 }
@@ -35,53 +46,83 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.Papers)
+            @foreach (var item in Model.Results)
             {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Participancy.Season.EditionNumber)
-                </td>
-                <td>
-                    @Html.ActionLink(item.Title, "Details", "Papers", new { Id = item.Id })
-                </td>
-                <td>
-                    @Html.ActionLink(item.Participancy.User.Degree + " " + item.Participancy.User.FirstName + " " + item.Participancy.User.LastName, "Details", "Users", new { Id = item.Participancy.UserId })
-                </td>
-                <td>
-                    @DictionariesHelper.PaperStatuses[item.Status]
-                </td>
-
-                <td style='color: black; text-align: center; '>
-                    @Html.DisplayFor(modelItem => item.CreationDate)
-                </td>
-                @if (item.Status == 0)
-                {
-                    <td style='color: black; text-align: center; '>
-                        <a asp-action="ApproveTopic" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-ok " aria-hidden="true" data-toggle="tooltip" title="Approve Topic"></span></a> |
-                        <a asp-action="RejectTopic" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-remove" aria-hidden="true" data-toggle="tooltip" title="Reject Topic"></span></a>
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Participancy.Season.EditionNumber)
                     </td>
-                }
-                else
-                {
-                    <td></td>
-                }
-                <td style='color: black; text-align: center; '>
-                    <a asp-action="Edit" asp-route-id="@item.Id"><span class="glyphicon glyphicon-pencil" aria-hidden="true" data-toggle="tooltip" title="Edit"></span></a> |
-                    <a asp-action="Details" asp-route-id="@item.Id"><span class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="tooltip" title="Details"></span></a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id"><span class="glyphicon glyphicon-trash" aria-hidden="true" data-toggle="tooltip" title="Delete"></span></a>
-                </td>
-            </tr>
+                    <td>
+                        @Html.ActionLink(item.Title, "Details", "Papers", new { Id = item.Id })
+                    </td>
+                    <td>
+                        @Html.ActionLink(item.Participancy.User.Degree + " " + item.Participancy.User.FirstName + " " + item.Participancy.User.LastName, "Details", "Users", new { Id = item.Participancy.UserId })
+                    </td>
+                    <td>
+                        @DictionariesHelper.PaperStatuses[item.Status]
+                    </td>
+
+                    <td style='color: black; text-align: center; '>
+                        @Html.DisplayFor(modelItem => item.CreationDate)
+                    </td>
+                    @if (item.Status == 0)
+                    {
+                        <td style='color: black; text-align: center; '>
+                            <a asp-action="ApproveTopic" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-ok " aria-hidden="true" data-toggle="tooltip" title="Approve Topic"></span></a> |
+                            <a asp-action="RejectTopic" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-remove" aria-hidden="true" data-toggle="tooltip" title="Reject Topic"></span></a>
+                        </td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+                    <td style='color: black; text-align: center; '>
+                        <a asp-action="Edit" asp-route-id="@item.Id"><span class="glyphicon glyphicon-pencil" aria-hidden="true" data-toggle="tooltip" title="Edit"></span></a> |
+                        <a asp-action="Details" asp-route-id="@item.Id"><span class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="tooltip" title="Details"></span></a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id"><span class="glyphicon glyphicon-trash" aria-hidden="true" data-toggle="tooltip" title="Delete"></span></a>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
-}
-else
-{
 
-}
+    <div style="text-align:right; margin-right:5%;">
+        <ul class="pagination">
 
-<style>
-    th {
-        text-align: center;
-    }
-</style>
+            @if (Model.CurrentPage == 1)
+            {
+                <li class="disabled"><a>&laquo;</a></li>
+            }
+            else
+            {
+                <li><a onclick="$('#currentPage').val(@(Model.CurrentPage-1));$('#form').submit();return false;" href="#">&laquo;</a></li>
+            }
+            @for (var i = 1; i <= Model.PageCount; i++)
+            {
+                if (i == Model.CurrentPage)
+                {
+                    <li class="active"><a>@i</a></li>
+                }
+                else
+                {
+                    <li><a onclick="$('#currentPage').val(@i);$('#form').submit();return false;" href="#">@i</a></li>
+                }
+            }
+            @if (Model.CurrentPage == Model.PageCount)
+            {
+                <li class="disabled"><a>&raquo;</a></li>
+            }
+            else
+            {
+                <li><a onclick="$('#currentPage').val(@(Model.CurrentPage+1));$('#form').submit();return false;" href="#">&raquo;</a></li>
+            }
+
+        </ul>
+    </div>
+</form>
+
+    <style>
+        th {
+            text-align: center;
+        }
+    </style>

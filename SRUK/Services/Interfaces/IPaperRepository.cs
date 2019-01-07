@@ -1,4 +1,5 @@
-﻿using SRUK.Models;
+﻿using EntityFrameworkPaginate;
+using SRUK.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace SRUK.Services.Interfaces
     {
         IEnumerable<PaperShortDTO> GetPapers();
         PaperDTO GetPaper(long id);
+        Page<PaperShortDTO> GetFilteredPapers(short sortBy,string season,string title,string firstName,string lastName, string status,int pageSize,int currentPage);
         IEnumerable<PaperShortDTO> GetUserPapers(string userId);
 
         int AddPaper(PaperDTO paper);

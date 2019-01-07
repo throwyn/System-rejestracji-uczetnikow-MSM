@@ -9,6 +9,7 @@ namespace SRUK.Models
     public class UserIndexViewModel : Page<UserShortDTO>
     {
         public short SortBy { get; set; }
+
         public string Degree { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

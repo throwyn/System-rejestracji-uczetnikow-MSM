@@ -73,7 +73,7 @@ namespace SRUK.Controllers
                 return RedirectToAction("Index", "Home");
 
             var filteredList = _userRepository.GetFilteredUsers(
-             sortBy, degree, firstName, lastName, organisation, email, role, 20, currentPage);
+             sortBy, degree, firstName, lastName, organisation, email, role, 10, currentPage);
 
             ViewBag.Degrees =   new AcademicDegrees().SelectListItems(degree);
             ViewBag.Roles = GetRolesSelectListItem(role);

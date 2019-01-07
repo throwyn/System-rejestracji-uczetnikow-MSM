@@ -63,23 +63,42 @@ namespace SRUK.Controllers
         public string StatusMessage { get; set; }
 
         // GET: Papers
-        public ActionResult Index()
+        public ActionResult Index(
+            int currentPage = 1,
+            short sortBy = 0,
+            string title = "",
+            string firstName = "",
+            string lastName = "",
+            string status = "")
         {
 
-            if (User.IsInRole("Admin"))
+            if (!User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Home");
+
+            var filteredList = _paperVersionRepository.GetFilteredVersions(
+             sortBy, title, firstName, lastName, status, 10, currentPage);
+
+            var model = new PaperVersionIndexViewModel
             {
-                var versions = _paperVersionRepository.GetVersions();
-                var model = new PaperVersionIndexViewModel
-                {
-                    Versions = versions.ToList(),
-                    StatusMessage = StatusMessage
-                };
-                return View(model);
-            }
-            return RedirectToAction("Index", "Home");
+                Title = title,
+                FirstName = firstName,
+                LastName = lastName,
+                Status = status,
+
+                Results = filteredList.Results,
+                CurrentPage = filteredList.CurrentPage,
+                PageCount = filteredList.PageCount,
+                PageSize = filteredList.PageSize,
+                RecordCount = filteredList.RecordCount,
+                StatusMessage = StatusMessage
+            };
+
+            ViewBag.Statuses = GetVersionsStatusesSelectListItem(status);
+            ViewBag.SortBy = GetVersionsSortBySelectListItem(sortBy);
+            return View(model);
 
         }
-        
+
 
         // GET: PaperVersions/Add
         [Route("Add/{id}")]
@@ -392,6 +411,45 @@ namespace SRUK.Controllers
             };
         }
 
+        private List<SelectListItem> GetVersionsStatusesSelectListItem(string selected)
+        {
+
+            var result = new List<SelectListItem>()
+            {
+                new SelectListItem { Text = "Status", Value = "" },
+                new SelectListItem { Text = "Document recieved", Value = "0" },
+                new SelectListItem { Text = "Waiting for reviews", Value = "1" },
+                new SelectListItem { Text = "Accepted", Value = "2" },
+                new SelectListItem { Text = "Rejected", Value = "3" },
+                new SelectListItem { Text = "Minor revision", Value = "4" },
+                new SelectListItem { Text = "Major revision", Value = "5" },
+            };
+            if (selected != null)
+                result.FirstOrDefault(r => r.Value == selected.ToString()).Selected = true;
+
+            return result;
+        }
+
+        private List<SelectListItem> GetVersionsSortBySelectListItem(int? selected)
+        {
+
+            var result = new List<SelectListItem>()
+            {
+                new SelectListItem { Text = "Sort by", Value = "" },
+                new SelectListItem { Text = "Title Asc", Value = "1" },
+                new SelectListItem { Text = "Title Desc", Value = "2" },
+                new SelectListItem { Text = "First name Asc", Value = "3" },
+                new SelectListItem { Text = "First name Desc", Value = "4" },
+                new SelectListItem { Text = "Last name Asc", Value = "5" },
+                new SelectListItem { Text = "Last name Desc", Value = "6" },
+                new SelectListItem { Text = "Oldest first", Value = "7" },
+                new SelectListItem { Text = "Latest first", Value = "8" }
+            };
+            if (selected > 0)
+                result.FirstOrDefault(r => r.Value == selected.ToString()).Selected = true;
+
+            return result;
+        }
         #endregion
 
     }

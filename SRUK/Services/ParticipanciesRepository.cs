@@ -62,7 +62,7 @@ namespace SRUK.Services
             results = sortBy == 9 ? results.OrderBy(u => u.Publication) : results;
             results = sortBy == 10 ? results.OrderByDescending(u => u.Publication) : results;
             results = sortBy == 11 ? results.OrderBy(u => u.CreationDate) : results;
-            results = sortBy == 12 ? results.OrderByDescending(u => u.CreationDate) : results;
+            results = sortBy == 12 || sortBy == 0 ? results.OrderByDescending(u => u.CreationDate) : results;
 
             int recordCount = results.Count();
             int pageCount = (int)Math.Ceiling((decimal)recordCount / (decimal)pageSize);

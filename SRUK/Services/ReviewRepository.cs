@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using EntityFrameworkPaginate;
 using Microsoft.EntityFrameworkCore;
 using SRUK.Data;
 using SRUK.Entities;
+using SRUK.Extensions;
 using SRUK.Models;
 using SRUK.Services.Interfaces;
 using System;
@@ -26,6 +28,64 @@ namespace SRUK.Services
             var reviews = Mapper.Map<IEnumerable<ReviewShortDTO>>(entityReviews);
             return reviews;
         }
+
+        public Page<ReviewShortDTO> GetFilteredReviews(
+            short sortBy,
+            string title,
+            string firstNameAuthor,
+            string lastNameAuthor,
+            string firstNameCritic,
+            string lastNameCritic,
+            string status,
+            int pageSize,
+            int currentPage
+        )
+        {
+
+            if (pageSize == 0) pageSize = 10;
+            if (currentPage == 0) currentPage = 1;
+
+            IEnumerable<ReviewShortDTO> results = GetReviews();
+
+            results = !string.IsNullOrEmpty(firstNameAuthor) ? results.Where(p => p.PaperVersion.Paper.Participancy.User.FirstName.Contains(firstNameAuthor, StringComparison.OrdinalIgnoreCase)) : results;
+            results = !string.IsNullOrEmpty(lastNameAuthor) ? results.Where(p => p.PaperVersion.Paper.Participancy.User.LastName.Contains(lastNameAuthor, StringComparison.OrdinalIgnoreCase)) : results;
+            results = !string.IsNullOrEmpty(firstNameCritic) ? results.Where(p => p.Critic.FirstName.Contains(firstNameCritic, StringComparison.OrdinalIgnoreCase)) : results;
+            results = !string.IsNullOrEmpty(lastNameCritic) ? results.Where(p => p.Critic.LastName.Contains(lastNameCritic, StringComparison.OrdinalIgnoreCase)) : results;
+            results = !string.IsNullOrEmpty(title) ? results.Where(p => p.PaperVersion.Paper.Title.Contains(title, StringComparison.OrdinalIgnoreCase)) : results;
+            results = !string.IsNullOrEmpty(status) ? results.Where(p => p.Recommendation == Convert.ToInt16(status)) : results;
+            
+
+            results = sortBy == 1 ? results.OrderBy(u => u.PaperVersion.Paper.Title) : results;
+            results = sortBy == 2 ? results.OrderByDescending(u => u.PaperVersion.Paper.Title) : results;
+            results = sortBy == 3 ? results.OrderBy(u => u.PaperVersion.Paper.Participancy.User.FirstName + u.PaperVersion.Paper.Participancy.User.LastName) : results;
+            results = sortBy == 4 ? results.OrderByDescending(u => u.PaperVersion.Paper.Participancy.User.FirstName + u.PaperVersion.Paper.Participancy.User.LastName) : results;
+            results = sortBy == 5 ? results.OrderBy(u => u.Critic.FirstName + u.Critic.LastName) : results;
+            results = sortBy == 6 ? results.OrderByDescending(u => u.Critic.FirstName + u.Critic.LastName) : results;
+            results = sortBy == 7 ? results.OrderBy(u => u.CreationDate) : results;
+            results = sortBy == 8  || sortBy == 0? results.OrderByDescending(u => u.CreationDate) : results;
+
+            int recordCount = results.Count();
+            int pageCount = (int)Math.Ceiling((decimal)recordCount / (decimal)pageSize);
+            results = results.Skip((currentPage - 1) * pageSize).Take(pageSize);
+
+
+            Page<ReviewShortDTO> papers = new Page<ReviewShortDTO>()
+            {
+                Results = results,
+                RecordCount = recordCount,
+                PageCount = pageCount,
+                CurrentPage = currentPage,
+                PageSize = pageSize
+
+            };
+
+            return papers;
+        }
+
+
+
+
+
         public int CreateReview(ReviewDTO review)
         {
             var entityReview = Mapper.Map<Review>(review);

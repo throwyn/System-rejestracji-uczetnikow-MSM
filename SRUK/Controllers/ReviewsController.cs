@@ -33,7 +33,8 @@ namespace SRUK.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IPaperRepository _paperRepository;
         private readonly IPaperVersionRepository _paperVersionRepository;
-        private readonly IReviewRepository _reviewRepository; 
+        private readonly IReviewRepository _reviewRepository;
+        private readonly ISeasonRepository _seasonRepository;
 
         public ReviewsController(
             IUserRepository userRepository,
@@ -43,7 +44,8 @@ namespace SRUK.Controllers
             RoleManager<IdentityRole> roleManager,
             IPaperRepository paperRepository,
             IPaperVersionRepository paperVersionRepository,
-            IReviewRepository reviewRepository
+            IReviewRepository reviewRepository,
+            ISeasonRepository seasonRepository
             )
         {
             _userRepository = userRepository;
@@ -54,26 +56,50 @@ namespace SRUK.Controllers
             _paperRepository = paperRepository;
             _paperVersionRepository = paperVersionRepository;
             _reviewRepository = reviewRepository;
+            _seasonRepository = seasonRepository;
         }
 
         [TempData]
         public string StatusMessage { get; set; }
 
         //GET: Reviews
-        public ActionResult Index()
+        public ActionResult Index(
+            int currentPage = 1,
+            short sortBy = 0,
+            string title = "",
+            string firstNameAuthor = "",
+            string lastNameAuthor = "",
+            string firstNameCritic = "",
+            string lastNameCritic = "",
+            string status = "")
         {
 
-            if (User.IsInRole("Admin"))
+            if (!User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Home");
+
+            var filteredList = _reviewRepository.GetFilteredReviews(
+             sortBy, title, firstNameAuthor,lastNameAuthor,firstNameCritic,lastNameCritic, status, 10, currentPage);
+
+            var model = new ReviewIndexViewModel
             {
-                var reviews = _reviewRepository.GetReviews();
-                var model = new ReviewIndexViewModel
-                {
-                    Reviews = reviews.ToList(),
-                    StatusMessage = StatusMessage
-                };
-                return View(model);
-            }
-            return RedirectToAction("Index", "Home");
+                FirstNameAuthor = firstNameAuthor,
+                LastNameAuthor = lastNameAuthor,
+                FirstNameCritic = firstNameCritic,
+                LastNameCritic = lastNameCritic,
+                Title = title,
+                Status = status,
+
+                Results = filteredList.Results,
+                CurrentPage = filteredList.CurrentPage,
+                PageCount = filteredList.PageCount,
+                PageSize = filteredList.PageSize,
+                RecordCount = filteredList.RecordCount,
+                StatusMessage = StatusMessage
+            };
+
+            ViewBag.Statuses = GetReviewsStatusesSelectListItem(status);
+            ViewBag.SortBy = GetReviewsSortBySelectListItem(sortBy);
+            return View(model);
 
         }
 
@@ -585,6 +611,69 @@ namespace SRUK.Controllers
                 {".odt","application/vnd.oasis.opendocument.text" }
             };
         }
+
+        private List<SelectListItem> GetSeasonsSelectListItem(string selectedValue)
+        {
+
+            var seasons = _seasonRepository.GetSeasons().ToList();
+
+            var result = new List<SelectListItem>()
+            {
+                new SelectListItem { Text = "Season", Value = "" }
+            };
+
+            foreach (var season in seasons)
+            {
+                result.Add(new SelectListItem { Text = season.EditionNumber, Value = season.Id.ToString() });
+            }
+
+            if (selectedValue != null && result.Where(r => r.Value == selectedValue).Count() > 0)
+                result.FirstOrDefault(r => r.Value == selectedValue).Selected = true;
+
+            return result;
+        }
+
+        private List<SelectListItem> GetReviewsStatusesSelectListItem(string selected)
+        {
+
+            var result = new List<SelectListItem>()
+            {
+                new SelectListItem { Text = "Status", Value = "" },
+                new SelectListItem { Text = "Created", Value = "0" },
+                new SelectListItem { Text = "Cancelled", Value = "1" },
+                new SelectListItem { Text = "Accepted", Value = "2" },
+                new SelectListItem { Text = "Accepted with minor changes", Value = "3" },
+                new SelectListItem { Text = "Major revision", Value = "4" },
+                new SelectListItem { Text = "Rejected", Value = "5" }
+            };
+            if (selected != null)
+                result.FirstOrDefault(r => r.Value == selected.ToString()).Selected = true;
+
+            return result;
+        }
+
+        private List<SelectListItem> GetReviewsSortBySelectListItem(int? selected)
+        {
+
+            var result = new List<SelectListItem>()
+            {
+                new SelectListItem { Text = "Sort by", Value = "" },
+                new SelectListItem { Text = "Title Asc", Value = "1" },
+                new SelectListItem { Text = "Title Desc", Value = "2" },
+                new SelectListItem { Text = "Author name Asc", Value = "3" },
+                new SelectListItem { Text = "Author name Desc", Value = "4" },
+                new SelectListItem { Text = "Critic name Asc", Value = "5" },
+                new SelectListItem { Text = "Critic name Desc", Value = "6" },
+                new SelectListItem { Text = "Oldest first", Value = "7" },
+                new SelectListItem { Text = "Latest first", Value = "8" }
+            };
+            if (selected > 0)
+                result.FirstOrDefault(r => r.Value == selected.ToString()).Selected = true;
+
+            return result;
+        }
+
+
 
         #endregion
 

@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using EntityFrameworkPaginate;
 using Microsoft.EntityFrameworkCore;
 using SRUK.Data;
 using SRUK.Entities;
+using SRUK.Extensions;
 using SRUK.Models;
 using SRUK.Services.Interfaces;
 using System;
@@ -34,6 +36,58 @@ namespace SRUK.Services
             var entityPaper =  _context.Paper.Include(p => p.Participancy).Include(p => p.Participancy.User).Include(p => p.Participancy.Season).Include(p => p.PaperVersions).Include("PaperVersions.Reviews").SingleOrDefault(p => p.Id == id && p.IsDeleted != true);
             var paper = Mapper.Map<PaperDTO>(entityPaper);
             return paper;
+        }
+
+        public Page<PaperShortDTO> GetFilteredPapers(
+            short sortBy,
+            string season,
+            string title,
+            string firstName,
+            string lastName,
+            string status,
+            int pageSize,
+            int currentPage
+        )
+        {
+
+            if (pageSize == 0) pageSize = 10;
+            if (currentPage == 0) currentPage = 1;
+
+            IEnumerable<PaperShortDTO> results = GetPapers();
+
+            results = !string.IsNullOrEmpty(firstName) ? results.Where(p => p.Participancy.User.FirstName.Contains(firstName, StringComparison.OrdinalIgnoreCase)) : results;
+            results = !string.IsNullOrEmpty(lastName) ? results.Where(p => p.Participancy.User.LastName.Contains(lastName, StringComparison.OrdinalIgnoreCase)) : results;
+            results = !string.IsNullOrEmpty(season) ?   results.Where(p => p.Participancy.Season.Id == Convert.ToInt32(season)) : results;
+            results = !string.IsNullOrEmpty(title) ?    results.Where(p => p.Title.Contains(title, StringComparison.OrdinalIgnoreCase)) : results;
+            results = !string.IsNullOrEmpty(status) ?   results.Where(p => p.Status == Convert.ToInt16(status)) : results;
+
+            results = sortBy == 1 ? results.OrderBy(u => u.Participancy.Season.EndDate) : results;
+            results = sortBy == 2 ? results.OrderByDescending(u => u.Participancy.Season.EndDate) : results;
+            results = sortBy == 3 ? results.OrderBy(u => u.Title) : results;
+            results = sortBy == 4 ? results.OrderByDescending(u => u.Title) : results;
+            results = sortBy == 5 ? results.OrderBy(u => u.Participancy.User.FirstName) : results;
+            results = sortBy == 6 ? results.OrderByDescending(u => u.Participancy.User.FirstName) : results;
+            results = sortBy == 7 ? results.OrderBy(u => u.Participancy.User.LastName) : results;
+            results = sortBy == 8 ? results.OrderByDescending(u => u.Participancy.User.LastName) : results;
+            results = sortBy == 9 ? results.OrderBy(u => u.CreationDate) : results;
+            results = sortBy == 10 || sortBy == 0 ? results.OrderByDescending(u => u.CreationDate) : results;
+
+            int recordCount = results.Count();
+            int pageCount = (int)Math.Ceiling((decimal)recordCount / (decimal)pageSize);
+            results = results.Skip((currentPage - 1) * pageSize).Take(pageSize);
+
+
+            Page<PaperShortDTO> papers = new Page<PaperShortDTO>()
+            {
+                Results = results,
+                RecordCount = recordCount,
+                PageCount = pageCount,
+                CurrentPage = currentPage,
+                PageSize = pageSize
+
+            };
+
+            return papers;
         }
 
         public bool TitleTaken(string title)

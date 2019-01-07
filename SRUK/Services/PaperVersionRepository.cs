@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using EntityFrameworkPaginate;
 using Microsoft.EntityFrameworkCore;
 using SRUK.Data;
 using SRUK.Entities;
+using SRUK.Extensions;
 using SRUK.Models;
 using SRUK.Services.Interfaces;
 using System;
@@ -26,6 +28,50 @@ namespace SRUK.Services
              _context.PaperVerison.Add(newPaper);
             _context.SaveChanges();
             return (int)newPaper.Id;
+        }
+        public Page<PaperVersionShortDTO> GetFilteredVersions(
+            short sortBy,
+            string title,
+            string firstName,
+            string lastName,
+            string status,
+            int pageSize,
+            int currentPage)
+        {
+            if (pageSize == 0) pageSize = 10;
+            if (currentPage == 0) currentPage = 1;
+
+            IEnumerable<PaperVersionShortDTO> results = GetVersions();
+
+            results = !string.IsNullOrEmpty(firstName) ? results.Where(p => p.Paper.Participancy.User.FirstName.Contains(firstName, StringComparison.OrdinalIgnoreCase)) : results;
+            results = !string.IsNullOrEmpty(lastName) ? results.Where(p => p.Paper.Participancy.User.LastName.Contains(lastName, StringComparison.OrdinalIgnoreCase)) : results;
+            results = !string.IsNullOrEmpty(title) ? results.Where(p => p.Paper.Title.Contains(title, StringComparison.OrdinalIgnoreCase)) : results;
+            results = !string.IsNullOrEmpty(status) ? results.Where(p => p.Status == Convert.ToInt16(status)) : results;
+            
+            results = sortBy == 1 ? results.OrderBy(u => u.Paper.Title) : results;
+            results = sortBy == 2 ? results.OrderByDescending(u => u.Paper.Title) : results;
+            results = sortBy == 3 ? results.OrderBy(u => u.Paper.Participancy.User.FirstName) : results;
+            results = sortBy == 4 ? results.OrderByDescending(u => u.Paper.Participancy.User.FirstName) : results;
+            results = sortBy == 5 ? results.OrderBy(u => u.Paper.Participancy.User.LastName) : results;
+            results = sortBy == 6 ? results.OrderByDescending(u => u.Paper.Participancy.User.LastName) : results;
+            results = sortBy == 7 ? results.OrderBy(u => u.CreationDate) : results;
+            results = sortBy == 8 || sortBy == 0 ? results.OrderByDescending(u => u.CreationDate) : results;
+
+            int recordCount = results.Count();
+            int pageCount = (int)Math.Ceiling((decimal)recordCount / (decimal)pageSize);
+            results = results.Skip((currentPage - 1) * pageSize).Take(pageSize);
+
+
+            Page<PaperVersionShortDTO> papers = new Page<PaperVersionShortDTO>()
+            {
+                Results = results,
+                RecordCount = recordCount,
+                PageCount = pageCount,
+                CurrentPage = currentPage,
+                PageSize = pageSize
+            };
+
+            return papers;
         }
 
         public PaperVersionDTO GetPaperVersion(long id)

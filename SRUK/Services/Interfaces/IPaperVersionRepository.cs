@@ -1,4 +1,5 @@
-﻿using SRUK.Models;
+﻿using EntityFrameworkPaginate;
+using SRUK.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace SRUK.Services.Interfaces
     {
         int AddPaperVersion(PaperVersionDTO paperVersion);
         PaperVersionDTO GetPaperVersion(long id);
+        Page<PaperVersionShortDTO> GetFilteredVersions(short sortBy,string title,string firstName,string lastName,string status,int pageSize,int currentPage);
         IEnumerable<PaperVersionShortDTO> GetVersions();
         int DeleteVersion(long id);
         int SetStatusDocumentRecieved(long id);

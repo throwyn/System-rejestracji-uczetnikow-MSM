@@ -59,20 +59,42 @@ namespace SRUK.Controllers
         public string StatusMessage { get; set; }
 
         // GET: Papers
-        public ActionResult Index()
+        public ActionResult Index(
+            int currentPage = 1, 
+            short sortBy = 0,
+            string season = "",
+            string title = "",
+            string firstName = "",
+            string lastName = "",
+            string status="")
         {
 
-            if (User.IsInRole("Admin"))
+            if (!User.IsInRole("Admin"))
+                return RedirectToAction("Index", "Home");
+
+            var filteredList = _paperRepository.GetFilteredPapers(
+             sortBy, season,title, firstName, lastName,status, 10, currentPage);
+
+            var model = new PaperIndexViewModel
             {
-                var papers = _paperRepository.GetPapers();
-                var model = new PaperIndexViewModel
-                {
-                    Papers = papers.ToList(),
-                    StatusMessage = StatusMessage
-                };
-                return View(model);
-            }
-            return RedirectToAction("Index", "Home");
+                Season = season,
+                FirstName = firstName,
+                LastName = lastName,
+                Title = title,
+                Status = status,
+
+                Results = filteredList.Results,
+                CurrentPage = filteredList.CurrentPage,
+                PageCount = filteredList.PageCount,
+                PageSize = filteredList.PageSize,
+                RecordCount = filteredList.RecordCount,
+                StatusMessage = StatusMessage
+            };
+
+            ViewBag.Statuses = GetPapersStatusesSelectListItem(status);
+            ViewBag.Seasons = GetSeasonsSelectListItem(season);
+            ViewBag.SortBy = GetPapersSortBySelectListItem(sortBy);
+            return View(model);
 
         }
 
@@ -397,7 +419,7 @@ namespace SRUK.Controllers
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var papers = _paperRepository.GetUserPapers(user.Id);
-            var model = new PaperIndexViewModel
+            var model = new MyPapersViewModel
             {
                 Papers = papers.ToList(),
                 StatusMessage = StatusMessage
@@ -443,14 +465,19 @@ namespace SRUK.Controllers
             {
                 try
                 {
-                    if (_paperRepository.TitleTaken(model.Title))
+                    var paper = _paperRepository.GetPaper(model.Id);
+                    if (paper.Title == model.Title)
+                    {
+                        StatusMessage = "Error. The title has not been corrected.";
+                        return RedirectToAction(nameof(MyPaperEdit), model.Id);
+                    }
+                    if (_paperRepository.TitleTakenExcept(model.Title,paper.Id))
                     {
                         StatusMessage = "Error. This title is already taken.";
                         return RedirectToAction(nameof(MyPaperEdit), model.Id);
                     }
 
                     var user = await _userManager.GetUserAsync(HttpContext.User);
-                    var paper = _paperRepository.GetPaper(model.Id);
                     var participancy = _participanciesRepository.GetParticipancy(paper.ParticipancyId);
                     if (participancy.User.Id != user.Id)
                     {
@@ -581,9 +608,70 @@ namespace SRUK.Controllers
             StatusMessage = "Error. Something went wrong.";
             return RedirectToAction(nameof(MyPapers));
         }
+        #region Helpers
 
+        private List<SelectListItem> GetSeasonsSelectListItem(string selectedValue)
+        {
 
+            var seasons = _seasonRepository.GetSeasons().ToList();
 
+            var result = new List<SelectListItem>()
+            {
+                new SelectListItem { Text = "Season", Value = "" }
+            };
+
+            foreach (var season in seasons)
+            {
+                result.Add(new SelectListItem { Text = season.EditionNumber, Value = season.Id.ToString() });
+            }
+
+            if (selectedValue != null && result.Where(r => r.Value == selectedValue).Count() > 0)
+                result.FirstOrDefault(r => r.Value == selectedValue).Selected = true;
+
+            return result;
+        }
+
+        private List<SelectListItem> GetPapersStatusesSelectListItem(string selected)
+        {
+
+            var result = new List<SelectListItem>()
+            {
+                new SelectListItem { Text = "Status", Value = "" },
+                new SelectListItem { Text = "Created", Value = "0" },
+                new SelectListItem { Text = "Topic accepted", Value = "1" },
+                new SelectListItem { Text = "Topic rejected", Value = "2" },
+                new SelectListItem { Text = "Accepted", Value = "3" },
+                new SelectListItem { Text = "Rejected", Value = "4" },
+            };
+            if (selected != null)
+                result.FirstOrDefault(r => r.Value == selected.ToString()).Selected = true;
+
+            return result;
+        }
+
+        private List<SelectListItem> GetPapersSortBySelectListItem(int? selected)
+        {
+
+            var result = new List<SelectListItem>()
+            {
+                new SelectListItem { Text = "Sort by", Value = "" },
+                new SelectListItem { Text = "Oldest season first", Value = "1" },
+                new SelectListItem { Text = "Latest season first", Value = "2" },
+                new SelectListItem { Text = "Title Asc", Value = "3" },
+                new SelectListItem { Text = "Title Desc", Value = "4" },
+                new SelectListItem { Text = "First name Asc", Value = "5" },
+                new SelectListItem { Text = "First name Desc", Value = "6" },
+                new SelectListItem { Text = "Last name Asc", Value = "7" },
+                new SelectListItem { Text = "Last name Desc", Value = "8" },
+                new SelectListItem { Text = "Oldest first", Value = "9" },
+                new SelectListItem { Text = "Latest first", Value = "10" }
+            };
+            if (selected > 0)
+                result.FirstOrDefault(r => r.Value == selected.ToString()).Selected = true;
+
+            return result;
+        }
+        #endregion
 
 
     }

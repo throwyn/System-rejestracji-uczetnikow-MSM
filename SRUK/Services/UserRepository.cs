@@ -109,7 +109,7 @@ namespace SRUK.Services
             results = sortBy == 9 ? results.OrderBy(u => u.Email) : results;
             results = sortBy == 10 ? results.OrderByDescending(u => u.Email) : results;
             results = sortBy == 11 ? results.OrderBy(u => u.Role) : results;
-            results = sortBy == 12 ? results.OrderByDescending(u => u.Role) : results;
+            results = sortBy == 12 || sortBy == 0 ? results.OrderByDescending(u => u.Role) : results;
 
             int recordCount = results.Count();
             int pageCount = (int)Math.Ceiling((decimal)recordCount / (decimal)pageSize);
