@@ -106,14 +106,14 @@ namespace SRUK.Services
         }
         public IEnumerable<PaperShortDTO> GetUserPapers(string userId)
         {
-            var entityPapers = _context.Paper.Include(p => p.PaperVersions).Include(p => p.Participancy.Season).Where(p => p.IsDeleted == false && p.Participancy.User.Id == userId).ToAsyncEnumerable().ToEnumerable();
+            IEnumerable<Paper> entityPapers = _context.Paper.Include(p => p.PaperVersions).Include(p => p.Participancy.Season).Where(p => p.IsDeleted == false && p.Participancy.User.Id == userId).OrderByDescending(r => r.CreationDate);
             var papers = Mapper.Map<IEnumerable<PaperShortDTO>>(entityPapers);
             return papers;
         }
 
         public IEnumerable<PaperShortDTO> GetPapers()
         {
-            var entityPapers = _context.Paper.Include(p => p.Participancy.Season).Include(p => p.Participancy.User).Where(p => p.IsDeleted == false).ToAsyncEnumerable().ToEnumerable();
+            IEnumerable<Paper> entityPapers = _context.Paper.Include(p => p.Participancy.Season).Include(p => p.Participancy.User).Where(p => p.IsDeleted == false).OrderByDescending(r => r.CreationDate);
             var papers = Mapper.Map<IEnumerable<PaperShortDTO>>(entityPapers);
             return papers;
         }

@@ -51,19 +51,19 @@
                     @Model.LockoutEnd.AddHours(DateTime.Now.Hour - DateTime.UtcNow.Hour).ToString("dd.MM.yyyy HH:mm")
                 </dd>
             }
-                <dt>
-                    @Html.DisplayNameFor(model => model.CreationDate)
-                </dt>
-                <dd>
-                    @Html.DisplayFor(model => model.CreationDate)
-                </dd>
-                <dt>
-                    @Html.DisplayNameFor(model => model.AccessFailedCount)
-                </dt>
-                <dd>
-                    @Html.DisplayFor(model => model.AccessFailedCount)
-                </dd>
-            </dl>
+            <dt>
+                @Html.DisplayNameFor(model => model.CreationDate)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.CreationDate)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.AccessFailedCount)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.AccessFailedCount)
+            </dd>
+        </dl>
     </div>
 
     <div class="col-md-4">
@@ -141,57 +141,156 @@
 
 </div>
 
+@if (Model.Participancies.Count() > 0)
+{
+    <div class="row">
+        <h4>User participancies</h4>
+        <hr />
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        Season
+                    </th>
+                    <th>
+                        Participation
+                    </th>
+                    <th>
+                        Publication
+                    </th>
+                    <th>
+                        Creation date
+                    </th>
+                </tr>
+            </thead>
+            <tbody style="text-align:center;">
+                @foreach (var item in Model.Participancies)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Season.EditionNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ConferenceParticipation)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Publication)
+                        </td>
+
+                        <td style='color: black; text-align: center; '>
+                            @Html.DisplayFor(modelItem => item.CreationDate)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
 @if (Model.Papers.Count() > 0)
 {
-<div class="row">
-    <h4>User papers</h4>
-    <hr />
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th style="width:350px;">
-                    Title
-                </th>
-                <th>
-                    Status
-                </th>
-                <th>
-                    Season
-                </th>
-                <th>
-                    Creation date
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Papers)
-            {
+    <div class="row">
+        <h4>User papers</h4>
+        <hr />
+        <table class="table table-hover">
+            <thead>
                 <tr>
-                    <td>
-                        @Html.ActionLink(item.Title, "Details", "Papers", new { Id = item.Id })
-                    </td>
-                    <td>
-                        @DictionariesHelper.PaperStatuses[item.Status]
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Participancy.Season.EditionNumber)
-                    </td>
-
-                    <td style='color: black; text-align: center; '>
-                        @Html.DisplayFor(modelItem => item.CreationDate)
-                    </td>
-                    <td style='color: black; text-align: center; '>
-                        <a asp-action="Edit" asp-controller="Papers" asp-route-id="@item.Id"><span class="glyphicon glyphicon-pencil" aria-hidden="true" data-toggle="tooltip" title="Edit"></span></a> |
-                        <a asp-action="Details" asp-controller="Papers" asp-route-id="@item.Id"><span class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Details"></span></a> |
-                        <a asp-action="Delete" asp-controller="Papers" asp-route-id="@item.Id"><span class="glyphicon glyphicon-trash" aria-hidden="true" data-toggle="tooltip" title="Delete"></span></a>
-                    </td>
+                    <th style="width:350px;">
+                        Title
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th>
+                        Season
+                    </th>
+                    <th>
+                        Creation date
+                    </th>
+                    <th></th>
                 </tr>
-            }
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Papers)
+                {
+                    <tr>
+                        <td>
+                            @Html.ActionLink(item.Title, "Details", "Papers", new { Id = item.Id })
+                        </td>
+                        <td>
+                            @DictionariesHelper.PaperStatuses[item.Status]
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Participancy.Season.EditionNumber)
+                        </td>
+
+                        <td style='color: black; text-align: center; '>
+                            @Html.DisplayFor(modelItem => item.CreationDate)
+                        </td>
+                        <td style='color: black; text-align: center; '>
+                            <a asp-action="Details" asp-controller="Papers" asp-route-id="@item.Id"><span class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Details"></span></a> 
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }
+@if (Model.Reviews.Count() > 0)
+{
+    <div class="row">
+        <h4>User reviews</h4>
+        <hr />
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th style="width:350px;">
+                        Title
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th>
+                        Season
+                    </th>
+                    <th>
+                        Creation date
+                    </th>
+                    <th>
+                        Completion date
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Reviews)
+                {
+                    <tr>
+                        <td>
+                            @Html.ActionLink(item.PaperVersion.Paper.Title, "Details", "Papers", new { Id = item.Id })
+                        </td>
+                        <td>
+                            @DictionariesHelper.RecommendationStatuses[item.Recommendation]
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.PaperVersion.Paper.Participancy.Season.EditionNumber)
+                        </td>
+
+                        <td style='color: black; text-align: center; '>
+                            @Html.DisplayFor(modelItem => item.CreationDate)
+                        </td>
+                        <td style='color: black; text-align: center; '>
+                            @Html.DisplayFor(modelItem => item.CompletionDate)
+                        </td>
+                        <td style='color: black; text-align: center; '>
+                            <a asp-action="Details" asp-controller="Papers" asp-route-id="@item.Id"><span class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Details"></span></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
 <div class="row">
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>

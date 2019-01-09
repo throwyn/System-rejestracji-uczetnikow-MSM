@@ -88,11 +88,11 @@ namespace SRUK
                 //Users
                 cfg.CreateMap<ApplicationUser, UserDTO>();
                 cfg.CreateMap<ApplicationUser, UserIndexViewModel>();
-                cfg.CreateMap<ApplicationUser, UserDetailsViewModel>();
                 cfg.CreateMap<ApplicationUser, UserEditViewModel>();
                 cfg.CreateMap<ApplicationUser, UserShortDTO>();
                 cfg.CreateMap<ApplicationUser, IndexViewModel>();
                 cfg.CreateMap<Page<ApplicationUser>,Page<UserShortDTO>>();
+                cfg.CreateMap<UserDTO, UserDetailsViewModel>();
 
 
                 cfg.CreateMap<IndexViewModel, ApplicationUser>()

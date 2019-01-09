@@ -24,7 +24,7 @@ namespace SRUK.Services
 
         public IEnumerable<ReviewShortDTO> GetReviews()
         {
-            var entityReviews = _context.Review.Include(r => r.PaperVersion).Include(r => r.PaperVersion.Paper).Include(r => r.PaperVersion.Paper.Participancy).Include(r => r.PaperVersion.Paper.Participancy.User).Include(r => r.Critic).Where(r => r.IsDeleted != true);
+            var entityReviews = _context.Review.Include(r => r.PaperVersion).Include(r => r.PaperVersion.Paper).Include(r => r.PaperVersion.Paper.Participancy).Include(r => r.PaperVersion.Paper.Participancy.User).Include(r => r.Critic).Where(r => r.IsDeleted != true).OrderByDescending(r=>r.CreationDate);
             var reviews = Mapper.Map<IEnumerable<ReviewShortDTO>>(entityReviews);
             return reviews;
         }
@@ -104,7 +104,7 @@ namespace SRUK.Services
         }
         public IEnumerable<ReviewShortDTO> GetUserReviews(string userId)
         {
-            var entityReviews = _context.Review.Include(r => r.PaperVersion).Include(r => r.PaperVersion.Paper).Include(r => r.PaperVersion.Paper.Participancy).Include(r => r.PaperVersion.Paper.Participancy.User).Where(r => r.CriticId == userId);
+            var entityReviews = _context.Review.Include(r => r.PaperVersion).Include(r => r.PaperVersion.Paper).Include(r => r.PaperVersion.Paper.Participancy).Include(r => r.PaperVersion.Paper.Participancy.User).Where(r => r.CriticId == userId).OrderByDescending(r => r.CreationDate);
             var reviews = Mapper.Map<IEnumerable<ReviewShortDTO>>(entityReviews);
 
             return reviews;
@@ -117,7 +117,7 @@ namespace SRUK.Services
         }
         public IEnumerable<ReviewDTO> GetPaperVersionReviews(long paperVersionId)
         {
-            var entityReview = _context.Review.Where(r => r.PaperVersionId == paperVersionId);
+            var entityReview = _context.Review.Where(r => r.PaperVersionId == paperVersionId).OrderByDescending(r => r.CreationDate);
             var reviews = Mapper.Map<IEnumerable<ReviewDTO>>(entityReview);
             return reviews;
         }

@@ -24,7 +24,7 @@ namespace SRUK.Services
 
         public IEnumerable<ParticipancyShortDTO> GetParticipancies()
         {
-            var entityParticipancies = _context.Participancy.Where(p => p.IsDeleted == false).Include(p => p.User).Include(p => p.Season);
+            var entityParticipancies = _context.Participancy.Where(p => p.IsDeleted == false).Include(p => p.User).Include(p => p.Season).OrderByDescending(r => r.CreationDate);
             var participancies = Mapper.Map<IEnumerable<ParticipancyShortDTO>>(entityParticipancies);
             return participancies;
         }
@@ -84,7 +84,7 @@ namespace SRUK.Services
 
         public IEnumerable<ParticipancyShortDTO> GetUserParticipancies(string userId)
         {
-            var entityParticipancies = _context.Participancy.Where(p => p.IsDeleted == false && p.UserId == userId).Include(p => p.User).Include(p => p.Season);
+            var entityParticipancies = _context.Participancy.Where(p => p.IsDeleted == false && p.UserId == userId).Include(p => p.User).Include(p => p.Season).OrderByDescending(r => r.CreationDate);
             var participancies = Mapper.Map<IEnumerable<ParticipancyShortDTO>>(entityParticipancies);
             return participancies;
         }

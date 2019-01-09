@@ -70,7 +70,7 @@ namespace SRUK.Controllers
         {
             if (!User.IsInRole("Admin"))
                 return RedirectToAction("Index", "Home");
-            var filteredList = _participanciesRepository.GetFilteredParticipancies(sortBy, firstName, lastName, season, conferenceParticipation, publication, 3, currentPage);
+            var filteredList = _participanciesRepository.GetFilteredParticipancies(sortBy, firstName, lastName, season, conferenceParticipation, publication, 10, currentPage);
 
             ViewBag.Seasons = GetSeasonsSelectListItem(season);
             ViewBag.SortBy = GetUsersSortBySelectListItem(sortBy);

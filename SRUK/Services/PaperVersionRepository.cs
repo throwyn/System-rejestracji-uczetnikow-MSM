@@ -82,7 +82,7 @@ namespace SRUK.Services
         }
         public IEnumerable<PaperVersionShortDTO> GetVersions()
         {
-            var entityVersions = _context.PaperVerison.Include(pv => pv.Paper).Include(pv => pv.Reviews).Include(pv => pv.Paper.Participancy).Include(pv => pv.Paper.Participancy.User).Where(pv => pv.IsDeleted != true);
+            var entityVersions = _context.PaperVerison.Include(pv => pv.Paper).Include(pv => pv.Reviews).Include(pv => pv.Paper.Participancy).Include(pv => pv.Paper.Participancy.User).Where(pv => pv.IsDeleted != true).OrderByDescending(r => r.CreationDate);
             var versions = Mapper.Map<IEnumerable<PaperVersionShortDTO>>(entityVersions);
             return versions;
         }

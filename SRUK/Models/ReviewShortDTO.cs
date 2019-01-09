@@ -27,5 +27,8 @@ namespace SRUK.Models
 
         [DisplayFormat(DataFormatString = "{0:g}")]
         public DateTime CreationDate { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:g}")]
+        public DateTime CompletionDate { get; set; }
     }
 }

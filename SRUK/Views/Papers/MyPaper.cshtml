@@ -48,9 +48,6 @@
                     ID
                 </th>
                 <th>
-                    Reviews
-                </th>
-                <th>
                     Added
                 </th>
                 <th>
@@ -61,6 +58,9 @@
                 </th>
                 <th>
                     Status
+                </th>
+                <th>
+                    Reviews
                 </th>
                 <th style="width:100px;"></th>
             </tr>
@@ -73,19 +73,6 @@
                     @Html.DisplayFor(modelItem => item.Id)
                 </td>
                 <td>
-                    @if (item.Reviews.Count > 0)
-                    {
-                        foreach (var review in item.Reviews)
-                        {
-                            <a asp-action="Review" asp-controller="Reviews" asp-route-id="@review.Id"><span class="glyphicon glyphicon-text-color" aria-hidden="true" data-toggle="tooltip" title="@DictionariesHelper.RecommendationStatuses[review.Recommendation]"></span></a>
-                        }
-                    }
-                    else
-                    {
-                    <text>None</text>
-                    }
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => item.CreationDate)
                 </td>
                 <td>
@@ -96,6 +83,22 @@
                 </td>
                 <td>
                     @DictionariesHelper.PaperVersionStatuses[item.Status]
+                </td>
+                <td>
+                    @if (item.Reviews.Count > 0)
+                    {
+                        var i = 1;
+                        foreach (var review in item.Reviews)
+                        {
+                            <a class="btn btn-default" asp-action="Review" asp-controller="Reviews" asp-route-id="@review.Id" title="@DictionariesHelper.RecommendationStatuses[review.Recommendation]">Review @i</a>
+                            i++;
+                        }
+
+                    }
+                    else
+                    {
+                        <text>None</text>
+                    }
                 </td>
                 <td style='color: black; text-align:center;'>
                     <a asp-action="Download" asp-controller="PaperVersions" asp-route-id="@item.Id"><span class="glyphicon glyphicon-download-alt" aria-hidden="true" data-toggle="tooltip" title="Download"></span></a>

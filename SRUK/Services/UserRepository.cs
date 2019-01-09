@@ -37,7 +37,7 @@ namespace SRUK.Services
 
         public List<UserShortDTO> GetUsers()
         {
-            var entityUsers = _context.Users.Where(u => u.IsDeleted != true).OrderBy(u => u.Id).ToAsyncEnumerable().ToEnumerable();
+            var entityUsers = _context.Users.Where(u => u.IsDeleted != true).OrderBy(u => u.CreationDate).ToAsyncEnumerable().ToEnumerable();
             List<UserShortDTO> users = new List<UserShortDTO>();
             
             foreach (var entityUser in entityUsers)
@@ -53,7 +53,7 @@ namespace SRUK.Services
         }
         public UserDTO GetUser(string id)
         {
-            var entityUser = _context.Users.Where(u => u.Id == id);
+            var entityUser = _context.Users.FirstOrDefault(u => u.Id == id);
             var user = Mapper.Map<UserDTO>(entityUser);
             return user;
         }

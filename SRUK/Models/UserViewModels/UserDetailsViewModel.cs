@@ -69,6 +69,8 @@ namespace SRUK.Models
         public string Address { get; set; }
 
 
+        public IEnumerable<ParticipancyShortDTO> Participancies { get; set; }
+        public IEnumerable<ReviewShortDTO> Reviews { get; set; }
         public IEnumerable<PaperShortDTO> Papers { get; set; }
 
         public string StatusMessage { get; set; }

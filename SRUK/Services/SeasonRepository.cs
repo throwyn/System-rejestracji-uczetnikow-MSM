@@ -29,7 +29,7 @@ namespace SRUK.Services
 
         public IEnumerable<SeasonShortDTO> GetSeasons()
         {
-            var entitySeason = _context.Season.ToAsyncEnumerable().OrderByDescending(s => s.Id).ToEnumerable();
+            var entitySeason = _context.Season.ToAsyncEnumerable().OrderByDescending(s => s.CreationDate).ToEnumerable();
             var seasons = Mapper.Map<IEnumerable<SeasonShortDTO>>(entitySeason);
             return seasons;
         }

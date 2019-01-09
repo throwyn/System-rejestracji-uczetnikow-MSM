@@ -372,7 +372,7 @@ namespace SRUK.Controllers
                 SeasonId = participancy.SeasonId,
                 Status = 0,
 
-                StatusMessage = StatusMessage
+                StatusMessage = "Before uploading a paper administration have to accept topic."
             };
             return View(model);
         }

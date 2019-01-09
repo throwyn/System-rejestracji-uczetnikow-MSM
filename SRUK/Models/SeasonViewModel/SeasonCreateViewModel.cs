@@ -18,12 +18,10 @@ namespace SRUK.Models
 
         [Required]
         [Display(Name = "Start date of conference")]
-        [DataType(DataType.DateTime)]
         public DateTime ConferenceStartDate { get; set; }
 
         [Required]
         [Display(Name = "End date of conference")]
-        [DataType(DataType.DateTime)]
         public DateTime ConferenceEndDate { get; set; }
 
         [Required]
@@ -37,12 +35,10 @@ namespace SRUK.Models
 
         [Required]
         [Display(Name = "Registration begins date")]
-        [DataType(DataType.DateTime)]
         public DateTime StartDate { get; set; }
 
         [Required]
         [Display(Name = "Registration deadline")]
-        [DataType(DataType.DateTime)]
         public DateTime EndDate { get; set; }
 
         public string StatusMessage { get; set; }

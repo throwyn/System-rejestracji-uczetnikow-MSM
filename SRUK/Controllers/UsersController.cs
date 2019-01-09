@@ -35,6 +35,8 @@ namespace SRUK.Controllers
         private readonly ILogger _logger;
         private readonly IPaperRepository _paperRepository;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IParticipanciesRepository _participanciesRepository;
+        private readonly IReviewRepository _reviewRepository;
 
         public UsersController(
             IUserRepository userRepository,
@@ -43,8 +45,10 @@ namespace SRUK.Controllers
             IEmailSender emailSender,
             ILogger<AccountController> logger,
             IPaperRepository paperRepository,
-            RoleManager<IdentityRole> roleManager
-            )
+            RoleManager<IdentityRole> roleManager,
+            IParticipanciesRepository participanciesRepository,
+            IReviewRepository reviewRepository
+             )
         {
             _userRepository = userRepository;
             //_serviceProvider = serviceProvider;
@@ -53,6 +57,8 @@ namespace SRUK.Controllers
             _logger = logger;
             _paperRepository = paperRepository;
             _roleManager = roleManager;
+            _participanciesRepository = participanciesRepository;
+            _reviewRepository = reviewRepository;
         }
 
         [TempData]
@@ -108,14 +114,17 @@ namespace SRUK.Controllers
             if (!User.IsInRole("Admin"))
                 return RedirectToAction("Index", "Home");
 
-            var entityUser = _userManager.FindByIdAsync(id).Result;
+            var entityUser = _userRepository.GetApplicationUser(id);
+            var userdto = _userRepository.GetUser(id);
             if (entityUser == null)
             {
                 StatusMessage = "Error. User do not exists.";
                 return RedirectToAction(nameof(Index));
             }
-            var user = Mapper.Map<UserDetailsViewModel>(entityUser);
+            var user = Mapper.Map<UserDetailsViewModel>(userdto);
             user.Papers = _paperRepository.GetUserPapers(user.Id);
+            user.Participancies = _participanciesRepository.GetUserParticipancies(user.Id);
+            user.Reviews = _reviewRepository.GetUserReviews(user.Id);
             user.Role = _userManager.GetRolesAsync(entityUser).Result.FirstOrDefault();
             user.StatusMessage = StatusMessage;
             return View(user);

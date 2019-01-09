@@ -88,7 +88,7 @@
                     {
                         foreach (var review in item.Reviews)
                         {
-                            <a asp-action="Review" asp-controller="Reviews" asp-route-id="@review.Id"><span class="glyphicon glyphicon-text-color" aria-hidden="true" data-toggle="tooltip" title="@DictionariesHelper.RecommendationStatuses[review.Recommendation]"></span></a>
+                            <a asp-action="Details" asp-controller="Reviews" asp-route-id="@review.Id"><span class="glyphicon glyphicon-text-color" aria-hidden="true" data-toggle="tooltip" title="@DictionariesHelper.RecommendationStatuses[review.Recommendation]"></span></a>
                         }
                     }
                     else
