@@ -29,6 +29,10 @@
         "css/bootstrap-select.min.css",
         "js/bootstrap-select.min.js"
       ]
+    },
+    {
+      "library": "jquery@3.3.1",
+      "destination": "wwwroot/lib/jquery/"
     }
   ]
 }

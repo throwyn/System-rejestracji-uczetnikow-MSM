@@ -42,7 +42,7 @@
                 <td>
                     @item.PaperVersion.Paper.Participancy.User.Degree @item.PaperVersion.Paper.Participancy.User.FirstName  @item.PaperVersion.Paper.Participancy.User.LastName
                 </td>
-                <td style="text-align:center;">
+                <td>
                     @if (item.Recommendation != 0)
                     {
                         @DictionariesHelper.RecommendationStatuses[item.Recommendation]
@@ -59,15 +59,15 @@
                     @Html.DisplayFor(modelItem => item.CreationDate)
                 </td>
                 <td style='color: black; text-align: center; '>
-                    <a asp-action="Download" asp-controller="Reviews" asp-route-id="@item.Id"><span class="glyphicon glyphicon-download-alt" aria-hidden="true" data-toggle="tooltip" title="Download"></span></a> |
                     @if (item.FileName == null)
                     {
-                        <a asp-action="AddReview" asp-controller="Reviews" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-text-color " aria-hidden="true" data-toggle="tooltip" title="Add Review"></span></a>
+                        <a asp-action="AddReview" asp-controller="Reviews" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-registration-mark " aria-hidden="true" data-toggle="tooltip" title="Add Review"></span></a>
                         <text>|</text>
                         <a asp-action="RejectReviewing" asp-controller="Reviews" asp-route-id="@item.Id"><span class=" glyphicon glyphicon-remove " aria-hidden="true" data-toggle="tooltip" title="Reject reviewing"></span></a>
                     }
                     else
                     {
+                    <a asp-action="Download" asp-controller="Reviews" asp-route-id="@item.Id"><span class="glyphicon glyphicon-download-alt" aria-hidden="true" data-toggle="tooltip" title="Download"></span></a><text> | </text>
                         <a asp-action="MyReview" asp-route-id="@item.Id"><span class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="tooltip" title="Details"></span></a>
                     }
                 </td>
