@@ -217,11 +217,9 @@ namespace SRUK.Controllers
             return View(model);
         }
 
-        // POST: Papers/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Papers/Edit
         [HttpPost]
-        [Route("Edit/{id}")]
+        [Route("Edit")]
         [ValidateAntiForgeryToken]
         public IActionResult EditAsync(PaperEditViewModel model)
         {
@@ -294,7 +292,7 @@ namespace SRUK.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Papers/Edit/5/ApproveTopic
+        // GET: Papers/ApproveTopic/5
         [HttpGet]
         [Route("ApproveTopic/{id}")]
         public IActionResult ApproveTopic(long id)
@@ -315,7 +313,7 @@ namespace SRUK.Controllers
             }
         }
 
-        // GET: Papers/Edit/5/RejectTopic
+        // GET: Papers/RejectTopic/5
         [HttpGet]
         [Route("RejectTopic/{id}")]
         public IActionResult RejectTopic(long id)

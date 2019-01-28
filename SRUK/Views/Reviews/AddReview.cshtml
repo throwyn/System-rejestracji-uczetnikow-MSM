@@ -15,10 +15,10 @@
     <input type="hidden" asp-for="Id" />
     <div class="row">
         <div class="col-md-3">
-            <div class="form-group row">
+            <div class="form-group ">
                 <p><b><a asp-action="Download" asp-controller="PaperVersions" asp-route-id="@Model.PaperVersion.Id">Download paper <span class="glyphicon glyphicon-download-alt" aria-hidden="true" data-toggle="tooltip" title="Download"></span></a></b></p>
             </div>
-            <div class="form-group row">
+            <div class="form-group ">
                 <p><label asp-for="Recommendation" class="control-label"></label></p>
                 <div class="col-md-12">
                     <p><label class="recommendationRadioLabel">@Html.RadioButtonFor(m => m.Recommendation, 2) Accepted</label></p>

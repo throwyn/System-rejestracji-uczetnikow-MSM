@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SRUK.Entities
 {
@@ -15,6 +13,7 @@ namespace SRUK.Entities
 
         [Required]
         public Participancy Participancy { get; set; }
+
         public long ParticipancyId { get; set; }
         
         [Required]
@@ -27,6 +26,7 @@ namespace SRUK.Entities
         public DateTime CreationDate { get; set; }
 
         public DateTime EditDate { get; set; }
+
         public DateTime SentToPrintDate { get; set; }
 
         public virtual ICollection<PaperVersion> PaperVersions { get; set; }
